@@ -12,6 +12,11 @@ interface Product {
   rating?: number;
 }
 
+interface Category {
+  name: string;
+  image: string;
+}
+
 interface Testimonial {
   id: number;
   name: string;
@@ -82,7 +87,7 @@ export default function Home() {
     },
   ];
 
-  const categories = [
+  const categories: Category[] = [
     { name: 'Jackets', image: 'https://images.unsplash.com/photo-1551028719-00167b16ebc5?w=300&h=300&fit=crop' },
     { name: 'T-Shirts', image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=300&h=300&fit=crop' },
     { name: 'Jeans', image: 'https://images.unsplash.com/photo-1542272604-787c62d465d1?w=300&h=300&fit=crop' },
@@ -142,41 +147,38 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-white">
+      {/* Top Banner */}
+      <div className="bg-pink-400 text-white text-center py-2 text-sm font-semibold">
+        🎉 GET FREE SHIPPING ABOVE ₹999
+      </div>
+
       {/* Header */}
       <header className="sticky top-0 z-50 bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            {/* Logo */}
+            {/* Mobile Menu Button */}
+            <button
+              onClick={() => setShowMobileMenu(!showMobileMenu)}
+              className="md:hidden p-2 hover:bg-gray-100 rounded-lg transition"
+            >
+              {showMobileMenu ? <X size={24} /> : <Menu size={24} />}
+            </button>
+
+            {/* Logo - Centered */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="text-2xl font-bold text-green-600 border-b-2 border-green-600 pb-1"
+              className="text-2xl font-bold text-gray-900 flex-1 text-center md:flex-none"
             >
-              BIH
+              BHAT IMPORTED CLOTHES
             </motion.div>
-
-            {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center gap-8">
-              {['Home', 'Shop', 'About', 'Contact'].map((item) => (
-                <motion.button
-                  key={item}
-                  whileHover={{ color: '#ec4899' }}
-                  onClick={() => scrollToSection(item.toLowerCase())}
-                  className={`font-medium transition ${
-                    activeSection === item.toLowerCase() ? 'text-pink-500' : 'text-gray-700'
-                  }`}
-                >
-                  {item}
-                </motion.button>
-              ))}
-            </nav>
 
             {/* Right Icons */}
             <div className="flex items-center gap-4">
-              <button className="p-2 hover:bg-gray-100 rounded-lg transition">
+              <button className="p-2 hover:bg-gray-100 rounded-lg transition hidden md:block">
                 <Search size={20} className="text-gray-700" />
               </button>
-              <button className="p-2 hover:bg-gray-100 rounded-lg transition">
+              <button className="p-2 hover:bg-gray-100 rounded-lg transition hidden md:block">
                 <User size={20} className="text-gray-700" />
               </button>
               <button
@@ -190,14 +192,24 @@ export default function Home() {
                   </span>
                 )}
               </button>
-              <button
-                onClick={() => setShowMobileMenu(!showMobileMenu)}
-                className="md:hidden p-2 hover:bg-gray-100 rounded-lg transition"
-              >
-                {showMobileMenu ? <X size={20} /> : <Menu size={20} />}
-              </button>
             </div>
           </div>
+
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex items-center justify-center gap-8 mt-4 pt-4 border-t">
+            {['Home', 'Shop', 'About', 'Contact'].map((item) => (
+              <motion.button
+                key={item}
+                whileHover={{ color: '#ec4899' }}
+                onClick={() => scrollToSection(item.toLowerCase())}
+                className={`font-medium transition ${
+                  activeSection === item.toLowerCase() ? 'text-pink-500' : 'text-gray-700'
+                }`}
+              >
+                {item}
+              </motion.button>
+            ))}
+          </nav>
 
           {/* Mobile Menu */}
           <AnimatePresence>
@@ -222,11 +234,6 @@ export default function Home() {
           </AnimatePresence>
         </div>
       </header>
-
-      {/* Banner */}
-      <section className="bg-gradient-to-r from-pink-100 to-rose-100 py-2 text-center">
-        <p className="text-sm font-semibold text-pink-600">🎉 WELCOME TO BHAT IMPORTED CLOTHES | GET FREE SHIPPING ABOVE ₹999</p>
-      </section>
 
       {/* Hero Section */}
       <section className="relative bg-gradient-to-r from-rose-100 via-pink-50 to-purple-100 py-12 md:py-20">
@@ -279,35 +286,38 @@ export default function Home() {
                 className="text-center p-4"
               >
                 <div className="text-4xl mb-2">{feature.icon}</div>
-                <h3 className="font-semibold text-gray-900 mb-1">{feature.title}</h3>
-                <p className="text-sm text-gray-600">{feature.desc}</p>
+                <h3 className="font-semibold text-gray-900 mb-1 text-sm">{feature.title}</h3>
+                <p className="text-xs text-gray-600">{feature.desc}</p>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Shop by Collection */}
+      {/* Shop by Collection - Circular Cards */}
       <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4">
-          <h2 className="text-4xl font-bold text-center mb-12">
-            <span className="text-pink-500">SHOP BY</span> COLLECTION
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
+            <span className="text-pink-400">SHOP BY</span> <span className="text-gray-900">COLLECTION</span>
           </h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {categories.map((category, index) => (
               <motion.div
                 key={index}
                 whileHover={{ scale: 1.05 }}
-                className="relative group cursor-pointer overflow-hidden rounded-lg"
+                className="flex flex-col items-center"
               >
-                <img
-                  src={category.image}
-                  alt={category.name}
-                  className="w-full h-64 object-cover group-hover:scale-110 transition duration-300"
-                />
-                <div className="absolute inset-0 bg-black/30 group-hover:bg-black/50 transition flex items-center justify-center">
-                  <h3 className="text-white text-xl font-bold">{category.name}</h3>
+                <div className="relative w-40 h-40 md:w-48 md:h-48 rounded-full overflow-hidden group cursor-pointer mb-4 shadow-lg">
+                  <img
+                    src={category.image}
+                    alt={category.name}
+                    className="w-full h-full object-cover group-hover:scale-110 transition duration-300"
+                  />
+                  <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <span className="text-white font-bold text-lg">View</span>
+                  </div>
                 </div>
+                <h3 className="text-gray-900 font-semibold text-center text-lg">{category.name}</h3>
               </motion.div>
             ))}
           </div>
@@ -317,7 +327,7 @@ export default function Home() {
       {/* Products */}
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4">
-          <h2 className="text-4xl font-bold text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
             EXPLORE <span className="text-pink-500">NEW ARRIVALS</span>
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -392,7 +402,7 @@ export default function Home() {
       {/* Testimonials */}
       <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4">
-          <h2 className="text-4xl font-bold text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
             Our customers <span className="text-pink-500">love us</span>
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -410,7 +420,7 @@ export default function Home() {
                     className="w-12 h-12 rounded-full object-cover"
                   />
                   <div>
-                    <h4 className="font-semibold text-gray-900">{testimonial.name}</h4>
+                    <h4 className="font-semibold text-gray-900 text-sm">{testimonial.name}</h4>
                     <div className="flex gap-1">
                       {[...Array(testimonial.rating)].map((_, i) => (
                         <Star key={i} size={12} fill="#fbbf24" color="#fbbf24" />
@@ -428,7 +438,7 @@ export default function Home() {
       {/* FAQ */}
       <section className="py-16 bg-white">
         <div className="max-w-3xl mx-auto px-4">
-          <h2 className="text-4xl font-bold text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
             FREQUENTLY ASKED <span className="text-pink-500">QUESTIONS</span>
           </h2>
           <div className="space-y-4">
@@ -454,7 +464,7 @@ export default function Home() {
       {/* Contact Section */}
       <section className="py-16 bg-gradient-to-r from-pink-100 to-rose-100">
         <div className="max-w-7xl mx-auto px-4">
-          <h2 className="text-4xl font-bold text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
             GET IN <span className="text-pink-500">TOUCH</span>
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
