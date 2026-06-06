@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShoppingBag, Heart, Search, User, Menu, X, Star, Phone, Mail, MapPin, Instagram, Facebook, Twitter, ChevronRight, Sparkles } from 'lucide-react';
+import { ShoppingBag, Heart, Search, User, Menu, X, Star, Phone, Mail, MapPin, Instagram, Facebook, Twitter, ChevronRight, ArrowRight, Check, Truck, Shield, Clock } from 'lucide-react';
 
 interface Product {
   id: number;
@@ -10,6 +10,7 @@ interface Product {
   image: string;
   category: string;
   rating?: number;
+  badge?: string;
 }
 
 interface Category {
@@ -31,17 +32,14 @@ export default function Home() {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [cart, setCart] = useState<Product[]>([]);
   const [favorites, setFavorites] = useState<number[]>([]);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
-    };
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    setIsDarkMode(prefersDark);
   }, []);
 
-  const products = [
+  const products: Product[] = [
     {
       id: 1,
       name: 'Premium Denim Jacket',
@@ -50,15 +48,17 @@ export default function Home() {
       image: 'https://images.unsplash.com/photo-1551028719-00167b16ebc5?w=400&h=400&fit=crop',
       category: 'Jackets',
       rating: 5,
+      badge: 'BESTSELLER',
     },
     {
       id: 2,
-      name: 'Premium Classic T-Shirt',
+      name: 'Classic Organic T-Shirt',
       price: 800,
       originalPrice: 1200,
       image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=400&fit=crop',
       category: 'T-Shirts',
       rating: 5,
+      badge: 'NEW',
     },
     {
       id: 3,
@@ -71,7 +71,7 @@ export default function Home() {
     },
     {
       id: 4,
-      name: 'Premium Casual Shirt',
+      name: 'Minimalist Casual Shirt',
       price: 1200,
       image: 'https://images.unsplash.com/photo-1596399514826-b22adfc7405b?w=400&h=400&fit=crop',
       category: 'Shirts',
@@ -79,16 +79,17 @@ export default function Home() {
     },
     {
       id: 5,
-      name: 'Premium Sports Hoodie',
+      name: 'Sustainable Hoodie',
       price: 1500,
       originalPrice: 2200,
       image: 'https://images.unsplash.com/photo-1556821552-5f0d2c5f3e6f?w=400&h=400&fit=crop',
       category: 'Hoodies',
       rating: 5,
+      badge: 'ECO',
     },
     {
       id: 6,
-      name: 'Premium Formal Blazer',
+      name: 'Formal Blazer',
       price: 3500,
       image: 'https://images.unsplash.com/photo-1591047990635-eea47cdc2e5e?w=400&h=400&fit=crop',
       category: 'Blazers',
@@ -108,40 +109,38 @@ export default function Home() {
       id: 1,
       name: 'Ahmed Khan',
       rating: 5,
-      text: 'Excellent quality and amazing prices! The imported clothes are authentic and stylish.',
+      text: 'Exceptional quality and authentic pieces. The attention to detail is impressive.',
       image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop',
     },
     {
       id: 2,
       name: 'Fatima Malik',
       rating: 5,
-      text: 'Best imported clothing store in the area. Great customer service and fast delivery!',
+      text: 'Fast delivery and great customer service. Highly recommend for imported fashion.',
       image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop',
     },
     {
       id: 3,
       name: 'Hassan Ahmed',
       rating: 5,
-      text: 'Highly recommend Bhat Imported Clothes. Quality is unmatched at these prices!',
+      text: 'Best quality-to-price ratio I\'ve found. Will definitely shop again.',
       image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop',
     },
     {
       id: 4,
       name: 'Zara Khan',
       rating: 5,
-      text: 'Amazing collection and super fast delivery. Will definitely shop again!',
+      text: 'Amazing collection with authentic imported pieces. Seamless shopping experience.',
       image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop',
     },
   ];
 
   const features = [
-    { icon: '👑', title: 'Premium Quality', desc: 'Authentic imported clothing' },
-    { icon: '❤️', title: 'Hypoallergenic', desc: 'Safe for all skin types' },
-    { icon: '💧', title: 'Durable', desc: 'Long-lasting fabric' },
-    { icon: '🛡️', title: 'Guaranteed', desc: 'Quality assured products' },
+    { icon: Truck, title: 'Free Shipping', desc: 'On orders above ₹999' },
+    { icon: Shield, title: 'Authentic Quality', desc: 'Guaranteed imported products' },
+    { icon: Clock, title: 'Fast Delivery', desc: '5-7 business days' },
+    { icon: Check, title: 'Secure Checkout', desc: '100% safe transactions' },
   ];
-
-  const announcements = ['🎉 Free Shipping Above ₹999', '⭐ Premium Quality Guaranteed', '🚀 Fast Delivery', '💝 Best Prices in Town'];
 
   const toggleFavorite = (id: number) => {
     setFavorites(favorites.includes(id) ? favorites.filter(f => f !== id) : [...favorites, id]);
@@ -156,109 +155,75 @@ export default function Home() {
     setShowMobileMenu(false);
   };
 
-  return (
-    <div className="min-h-screen bg-gradient-to-b from-purple-50 via-pink-50 to-blue-50 overflow-hidden">
-      {/* Animated Background Blobs */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
-        <motion.div
-          animate={{ 
-            x: [0, 100, 0],
-            y: [0, 50, 0],
-            scale: [1, 1.2, 1]
-          }}
-          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute -top-40 -left-40 w-80 h-80 bg-pink-300/20 rounded-full blur-3xl"
-        />
-        <motion.div
-          animate={{ 
-            x: [0, -100, 0],
-            y: [0, -50, 0],
-            scale: [1, 1.2, 1]
-          }}
-          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute -bottom-40 -right-40 w-80 h-80 bg-blue-300/20 rounded-full blur-3xl"
-        />
-        <motion.div
-          animate={{ 
-            rotate: 360,
-            y: [0, 20, 0]
-          }}
-          transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-          className="absolute top-1/2 left-1/4 w-64 h-64 bg-purple-300/15 rounded-full blur-3xl"
-        />
-      </div>
+  const cartTotal = cart.reduce((sum, item) => sum + item.price, 0);
 
-      {/* Top Banner with Ticker */}
+  return (
+    <div className={`min-h-screen transition-colors duration-300 ${isDarkMode ? 'bg-slate-950 text-slate-50' : 'bg-white text-slate-900'}`}>
+      {/* Top Announcement Bar */}
       <motion.div 
         initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        className="bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-white py-2 shadow-lg overflow-hidden relative z-10"
+        className={`${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-slate-100 border-slate-200'} border-b py-3 text-center text-sm font-medium`}
       >
-        <motion.div
-          animate={{ x: ['100%', '-100%'] }}
-          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-          className="flex gap-8 whitespace-nowrap text-sm font-semibold"
-        >
-          {[...announcements, ...announcements].map((announcement, i) => (
-            <span key={i}>{announcement}</span>
-          ))}
-        </motion.div>
+        <span className={isDarkMode ? 'text-slate-300' : 'text-slate-600'}>
+          ✓ Free Shipping Above ₹999 | ✓ Authentic Imported Clothing | ✓ Premium Quality Guaranteed
+        </span>
       </motion.div>
 
       {/* Header */}
-      <header className="sticky top-12 z-50 bg-gradient-to-r from-white via-purple-50 to-pink-50 border-b-4 border-pink-400 shadow-lg backdrop-blur-sm">
+      <header className={`sticky top-0 z-50 ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'} border-b backdrop-blur-sm`}>
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             {/* Mobile Menu Button */}
             <motion.button
-              whileHover={{ scale: 1.1, rotate: 90 }}
+              whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
               onClick={() => setShowMobileMenu(!showMobileMenu)}
-              className="md:hidden p-2 hover:bg-gray-100 rounded-lg transition"
+              className={`md:hidden p-2 rounded-lg transition ${isDarkMode ? 'hover:bg-slate-800' : 'hover:bg-slate-100'}`}
             >
               {showMobileMenu ? <X size={24} /> : <Menu size={24} />}
             </motion.button>
 
-            {/* Logo - Centered */}
+            {/* Logo */}
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               whileHover={{ scale: 1.05 }}
-              className="text-2xl font-bold bg-gradient-to-r from-pink-600 via-purple-600 to-blue-600 bg-clip-text text-transparent flex-1 text-center md:flex-none cursor-pointer"
+              className="text-xl font-bold tracking-tight flex-1 text-center md:flex-none cursor-pointer"
             >
-              BHAT IMPORTED CLOTHES
+              BHAT
             </motion.div>
 
             {/* Right Icons */}
             <div className="flex items-center gap-4">
               <motion.button 
-                whileHover={{ scale: 1.2, rotate: 10 }}
+                whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
-                className="p-2 hover:bg-gray-100 rounded-lg transition hidden md:block"
+                className={`p-2 rounded-lg transition hidden md:block ${isDarkMode ? 'hover:bg-slate-800' : 'hover:bg-slate-100'}`}
               >
-                <Search size={20} className="text-gray-700" />
+                <Search size={20} />
               </motion.button>
               <motion.button 
-                whileHover={{ scale: 1.2 }}
+                whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
-                className="p-2 hover:bg-gray-100 rounded-lg transition hidden md:block"
+                className={`p-2 rounded-lg transition hidden md:block ${isDarkMode ? 'hover:bg-slate-800' : 'hover:bg-slate-100'}`}
               >
-                <User size={20} className="text-gray-700" />
+                <User size={20} />
               </motion.button>
               <motion.button
-                whileHover={{ scale: 1.2 }}
+                whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
                 onClick={() => setShowCart(!showCart)}
-                className="p-2 hover:bg-gray-100 rounded-lg transition relative"
+                className={`p-2 rounded-lg transition relative ${isDarkMode ? 'hover:bg-slate-800' : 'hover:bg-slate-100'}`}
               >
-                <ShoppingBag size={20} className="text-gray-700" />
+                <ShoppingBag size={20} />
                 <AnimatePresence>
                   {cart.length > 0 && (
                     <motion.span 
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
                       exit={{ scale: 0 }}
-                      className="absolute -top-1 -right-1 bg-pink-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center"
+                      className="absolute -top-1 -right-1 bg-slate-900 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center"
                     >
                       {cart.length}
                     </motion.span>
@@ -269,15 +234,17 @@ export default function Home() {
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center justify-center gap-8 mt-4 pt-4 border-t">
+          <nav className="hidden md:flex items-center justify-center gap-8 mt-4 pt-4 border-t border-slate-200">
             {['Home', 'Shop', 'About', 'Contact'].map((item) => (
               <motion.button
                 key={item}
-                whileHover={{ scale: 1.1, color: '#ec4899' }}
+                whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => scrollToSection(item.toLowerCase())}
-                className={`font-medium transition ${
-                  activeSection === item.toLowerCase() ? 'text-pink-500' : 'text-gray-700'
+                className={`font-medium text-sm transition ${
+                  activeSection === item.toLowerCase() 
+                    ? 'text-slate-900 border-b-2 border-slate-900' 
+                    : isDarkMode ? 'text-slate-400 hover:text-slate-200' : 'text-slate-600 hover:text-slate-900'
                 }`}
               >
                 {item}
@@ -292,7 +259,7 @@ export default function Home() {
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
-                className="md:hidden flex flex-col gap-3 mt-4 pt-4 border-t"
+                className={`md:hidden flex flex-col gap-3 mt-4 pt-4 border-t ${isDarkMode ? 'border-slate-800' : 'border-slate-200'}`}
               >
                 {['Home', 'Shop', 'About', 'Contact'].map((item, i) => (
                   <motion.button
@@ -301,7 +268,7 @@ export default function Home() {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: i * 0.1 }}
                     onClick={() => scrollToSection(item.toLowerCase())}
-                    className="text-left font-medium text-gray-700 hover:text-pink-500 transition"
+                    className={`text-left font-medium transition ${isDarkMode ? 'text-slate-300 hover:text-slate-100' : 'text-slate-700 hover:text-slate-900'}`}
                   >
                     {item}
                   </motion.button>
@@ -313,9 +280,9 @@ export default function Home() {
       </header>
 
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-pink-200 via-purple-200 to-blue-200 py-12 md:py-20 shadow-lg overflow-hidden z-10">
+      <section className={`relative py-16 md:py-24 overflow-hidden ${isDarkMode ? 'bg-slate-900' : 'bg-slate-50'}`}>
         <div className="max-w-7xl mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <motion.div
               initial={{ opacity: 0, x: -50 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -323,274 +290,193 @@ export default function Home() {
               viewport={{ once: true }}
             >
               <motion.h1 
-                className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-gray-900 via-pink-600 to-purple-600 bg-clip-text text-transparent mb-4"
-                whileHover={{ scale: 1.05 }}
+                className="text-5xl md:text-6xl font-bold leading-tight mb-6 tracking-tight"
+                whileHover={{ scale: 1.02 }}
               >
-                PREMIUM IMPORTED <span className="text-transparent bg-gradient-to-r from-pink-600 to-blue-600 bg-clip-text">FASHION</span>
+                Premium Imported <span className="block mt-2">Fashion</span>
               </motion.h1>
-              <motion.p 
-                className="text-xl text-gray-700 mb-2"
-                animate={{ y: [0, 5, 0] }}
-                transition={{ duration: 3, repeat: Infinity }}
-              >
+              <p className={`text-lg mb-2 font-medium ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>
                 Singhpora Pattan, J&K
-              </motion.p>
-              <p className="text-gray-600 mb-6">Best Quality | Affordable Price | Unbeatable Selection</p>
+              </p>
+              <p className={`text-base mb-8 ${isDarkMode ? 'text-slate-500' : 'text-slate-600'}`}>
+                Authentic imported clothing with uncompromising quality and competitive pricing.
+              </p>
               <motion.button
-                whileHover={{ scale: 1.1, boxShadow: "0 10px 30px rgba(236, 72, 153, 0.4)" }}
+                whileHover={{ scale: 1.05, x: 5 }}
                 whileTap={{ scale: 0.95 }}
-                className="bg-pink-500 hover:bg-pink-600 text-white px-8 py-3 rounded-lg font-semibold transition shadow-lg"
+                className="bg-slate-900 text-white px-8 py-3 rounded-lg font-semibold transition flex items-center gap-2 hover:bg-slate-800"
               >
-                Shop Now
+                Shop Now <ArrowRight size={18} />
               </motion.button>
             </motion.div>
             <motion.div
-              initial={{ opacity: 0, x: 50, rotate: -5 }}
-              whileInView={{ opacity: 1, x: 0, rotate: 0 }}
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
               viewport={{ once: true }}
-              whileHover={{ scale: 1.05, rotate: 2 }}
-              className="relative h-96 bg-gradient-to-br from-gray-200 to-gray-300 rounded-lg overflow-hidden shadow-2xl"
+              whileHover={{ scale: 1.02 }}
+              className={`relative h-96 rounded-2xl overflow-hidden ${isDarkMode ? 'bg-slate-800' : 'bg-slate-200'} shadow-lg`}
             >
               <img
                 src="https://images.unsplash.com/photo-1595777707802-21b287e3f0c8?w=500&h=500&fit=crop"
                 alt="Hero"
                 className="w-full h-full object-cover"
               />
-              <motion.div
-                animate={{ scale: [1, 1.2, 1] }}
-                transition={{ duration: 2, repeat: Infinity }}
-                className="absolute inset-0 border-4 border-pink-400 rounded-lg"
-              />
             </motion.div>
           </div>
         </div>
       </section>
 
-      {/* Features */}
-      <section className="py-12 bg-gradient-to-r from-yellow-50 via-pink-50 to-purple-50 relative z-10">
+      {/* Features Section */}
+      <section className={`py-16 ${isDarkMode ? 'bg-slate-950' : 'bg-white'}`}>
         <div className="max-w-7xl mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {features.map((feature, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                whileHover={{ y: -10, scale: 1.05 }}
-                transition={{ delay: index * 0.1 }}
-                viewport={{ once: true }}
-                className="text-center p-4 bg-white rounded-lg shadow-md hover:shadow-xl transition"
-              >
-                <motion.div 
-                  className="text-4xl mb-2"
-                  animate={{ rotate: [0, 10, -10, 0] }}
-                  transition={{ duration: 2, repeat: Infinity, delay: index * 0.2 }}
-                >
-                  {feature.icon}
-                </motion.div>
-                <h3 className="font-semibold text-gray-900 mb-1 text-sm">{feature.title}</h3>
-                <p className="text-xs text-gray-600">{feature.desc}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Shop by Collection - Circular Cards */}
-      <section className="py-16 bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100 relative z-10">
-        <div className="max-w-7xl mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
-            <span className="bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">SHOP BY</span> <span className="bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">COLLECTION</span>
-          </h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {categories.map((category, index) => (
-              <motion.div
-                key={index}
-                whileHover={{ scale: 1.1 }}
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ delay: index * 0.1 }}
-                viewport={{ once: true }}
-                className="flex flex-col items-center"
-              >
+            {features.map((feature, index) => {
+              const Icon = feature.icon;
+              return (
                 <motion.div
-                  whileHover={{ rotate: 360 }}
-                  transition={{ duration: 0.6 }}
-                  className="relative w-40 h-40 md:w-48 md:h-48 rounded-full overflow-hidden group cursor-pointer mb-4 shadow-2xl border-4 border-gradient-to-r from-pink-400 to-purple-400"
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  whileHover={{ y: -5 }}
+                  transition={{ delay: index * 0.1 }}
+                  viewport={{ once: true }}
+                  className={`p-6 rounded-xl text-center transition ${isDarkMode ? 'bg-slate-900 hover:bg-slate-800' : 'bg-slate-50 hover:bg-slate-100'}`}
                 >
-                  <img
-                    src={category.image}
-                    alt={category.name}
-                    className="w-full h-full object-cover group-hover:scale-110 transition duration-300"
-                  />
-                  <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <span className="text-white font-bold text-lg">View</span>
-                  </div>
+                  <Icon className="w-8 h-8 mx-auto mb-3 text-slate-900 dark:text-slate-100" />
+                  <h3 className="font-semibold mb-1 text-sm">{feature.title}</h3>
+                  <p className={`text-xs ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>{feature.desc}</p>
                 </motion.div>
-                <h3 className="text-gray-900 font-semibold text-center text-lg">{category.name}</h3>
-              </motion.div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
 
-      {/* Products */}
-      <section className="py-16 bg-gradient-to-b from-pink-50 via-purple-50 to-blue-50 relative z-10">
+      {/* Products Section */}
+      <section className={`py-20 ${isDarkMode ? 'bg-slate-900' : 'bg-slate-50'}`}>
         <div className="max-w-7xl mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
-            EXPLORE <span className="bg-gradient-to-r from-pink-500 to-purple-600 bg-clip-text text-transparent">NEW ARRIVALS</span>
-          </h2>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mb-12"
+          >
+            <h2 className="text-4xl font-bold mb-2">Featured Collection</h2>
+            <p className={isDarkMode ? 'text-slate-400' : 'text-slate-600'}>Curated pieces for the modern wardrobe</p>
+          </motion.div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {products.map((product, index) => (
               <motion.div
                 key={product.id}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                whileHover={{ y: -15 }}
+                whileHover={{ y: -8 }}
                 transition={{ delay: index * 0.1 }}
                 viewport={{ once: true }}
-                className="group"
+                className={`rounded-xl overflow-hidden transition ${isDarkMode ? 'bg-slate-800 hover:bg-slate-750' : 'bg-white hover:shadow-lg'}`}
               >
-                <div className="relative bg-gray-100 rounded-lg overflow-hidden mb-4 h-64 shadow-lg hover:shadow-2xl transition">
+                <div className={`relative h-64 overflow-hidden ${isDarkMode ? 'bg-slate-700' : 'bg-slate-200'}`}>
                   <img
                     src={product.image}
                     alt={product.name}
-                    className="w-full h-full object-cover group-hover:scale-110 transition duration-300"
+                    className="w-full h-full object-cover transition hover:scale-105"
                   />
-                  {product.originalPrice && (
-                    <motion.div 
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      className="absolute top-4 right-4 bg-pink-500 text-white px-3 py-1 rounded-full text-sm font-bold shadow-lg"
-                    >
-                      -{Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}%
-                    </motion.div>
+                  {product.badge && (
+                    <div className="absolute top-3 left-3 bg-slate-900 text-white text-xs font-bold px-3 py-1 rounded-full">
+                      {product.badge}
+                    </div>
                   )}
                   <motion.button
-                    whileHover={{ scale: 1.2 }}
+                    whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
                     onClick={() => toggleFavorite(product.id)}
-                    className="absolute top-4 left-4 p-2 bg-white rounded-full hover:bg-gray-100 transition shadow-lg"
+                    className="absolute top-3 right-3 p-2 rounded-full bg-white shadow-lg transition"
                   >
                     <Heart
-                      size={20}
-                      fill={favorites.includes(product.id) ? 'currentColor' : 'none'}
-                      color={favorites.includes(product.id) ? '#ec4899' : '#d1d5db'}
+                      size={18}
+                      className={favorites.includes(product.id) ? 'fill-red-500 text-red-500' : 'text-slate-400'}
                     />
                   </motion.button>
                 </div>
-                <h3 className="font-semibold text-gray-900 mb-2">{product.name}</h3>
-                <div className="flex items-center justify-between mb-4">
-                  <div>
-                    <span className="text-lg font-bold text-pink-500">₹{product.price.toLocaleString()}</span>
+                <div className="p-5">
+                  <h3 className="font-semibold text-lg mb-2">{product.name}</h3>
+                  <div className="flex items-center gap-2 mb-4">
+                    {product.rating && (
+                      <div className="flex gap-1">
+                        {[...Array(product.rating)].map((_, i) => (
+                          <Star key={i} size={14} fill="currentColor" className="text-yellow-500" />
+                        ))}
+                      </div>
+                    )}
+                    <span className={`text-xs ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>
+                      ({product.rating} stars)
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2 mb-4">
+                    <span className="text-xl font-bold">₹{product.price.toLocaleString()}</span>
                     {product.originalPrice && (
-                      <span className="text-gray-500 line-through ml-2 text-sm">₹{product.originalPrice.toLocaleString()}</span>
+                      <span className={`text-sm line-through ${isDarkMode ? 'text-slate-500' : 'text-slate-400'}`}>
+                        ₹{product.originalPrice.toLocaleString()}
+                      </span>
                     )}
                   </div>
-                  {product.rating && (
-                    <div className="flex gap-1">
-                      {[...Array(product.rating)].map((_, i) => (
-                        <motion.div
-                          key={i}
-                          animate={{ scale: [1, 1.2, 1] }}
-                          transition={{ delay: i * 0.1, repeat: Infinity, duration: 1 }}
-                        >
-                          <Star key={i} size={14} fill="#fbbf24" color="#fbbf24" />
-                        </motion.div>
-                      ))}
-                    </div>
-                  )}
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => addToCart(product)}
+                    className="w-full bg-slate-900 text-white py-2 rounded-lg font-medium transition hover:bg-slate-800"
+                  >
+                    Add to Cart
+                  </motion.button>
                 </div>
-                <motion.button
-                  whileHover={{ scale: 1.05, boxShadow: "0 10px 25px rgba(236, 72, 153, 0.3)" }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => addToCart(product)}
-                  className="w-full bg-pink-500 hover:bg-pink-600 text-white py-2 rounded-lg font-semibold transition shadow-lg"
-                >
-                  Add to Cart
-                </motion.button>
               </motion.div>
             ))}
           </div>
-          <motion.div 
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            className="text-center mt-12"
-          >
-            <motion.button
-              whileHover={{ scale: 1.1, x: 10 }}
-              whileTap={{ scale: 0.95 }}
-              className="inline-flex items-center gap-2 text-pink-500 font-semibold hover:text-pink-600 transition"
-            >
-              VIEW ALL <ChevronRight size={20} />
-            </motion.button>
-          </motion.div>
         </div>
       </section>
 
-      {/* Testimonials */}
-      <section className="py-16 bg-gradient-to-r from-purple-100 via-pink-100 to-blue-100 relative z-10">
+      {/* Testimonials Section */}
+      <section className={`py-20 ${isDarkMode ? 'bg-slate-950' : 'bg-white'}`}>
         <div className="max-w-7xl mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
-            Our customers <span className="bg-gradient-to-r from-pink-500 to-purple-600 bg-clip-text text-transparent">love us</span>
-          </h2>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mb-12"
+          >
+            <h2 className="text-4xl font-bold mb-2">Loved by Customers</h2>
+            <p className={isDarkMode ? 'text-slate-400' : 'text-slate-600'}>Real reviews from real customers</p>
+          </motion.div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {testimonials.map((testimonial, index) => (
               <motion.div
                 key={testimonial.id}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                whileHover={{ y: -10, boxShadow: "0 20px 40px rgba(236, 72, 153, 0.2)" }}
+                whileHover={{ y: -5 }}
                 transition={{ delay: index * 0.1 }}
                 viewport={{ once: true }}
-                className="bg-gradient-to-br from-white to-purple-50 p-6 rounded-lg shadow-md hover:shadow-2xl transition border-2 border-purple-200"
+                className={`p-6 rounded-xl ${isDarkMode ? 'bg-slate-900 hover:bg-slate-800' : 'bg-slate-50 hover:bg-slate-100'} transition`}
               >
                 <div className="flex items-center gap-3 mb-4">
-                  <motion.img
-                    whileHover={{ scale: 1.1, rotate: 5 }}
+                  <img
                     src={testimonial.image}
                     alt={testimonial.name}
-                    className="w-12 h-12 rounded-full object-cover"
+                    className="w-10 h-10 rounded-full object-cover"
                   />
                   <div>
-                    <h4 className="font-semibold text-gray-900 text-sm">{testimonial.name}</h4>
-                    <div className="flex gap-1">
+                    <h4 className="font-semibold text-sm">{testimonial.name}</h4>
+                    <div className="flex gap-0.5">
                       {[...Array(testimonial.rating)].map((_, i) => (
-                        <Star key={i} size={12} fill="#fbbf24" color="#fbbf24" />
+                        <Star key={i} size={12} fill="currentColor" className="text-yellow-500" />
                       ))}
                     </div>
                   </div>
                 </div>
-                <p className="text-gray-700 text-sm">{testimonial.text}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* FAQ */}
-      <section className="py-16 bg-gradient-to-b from-blue-50 via-purple-50 to-pink-50 relative z-10">
-        <div className="max-w-3xl mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
-            FREQUENTLY ASKED <span className="bg-gradient-to-r from-pink-500 to-purple-600 bg-clip-text text-transparent">QUESTIONS</span>
-          </h2>
-          <div className="space-y-4">
-            {[
-              { q: 'Do you ship all over India?', a: 'Yes, we ship all over India with free shipping above ₹999.' },
-              { q: 'How long does delivery take?', a: 'Delivery typically takes 5-7 business days depending on location.' },
-              { q: 'How can we contact you?', a: 'You can reach us via WhatsApp, phone, or email. Check our contact page for details.' },
-            ].map((item, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                whileHover={{ x: 10 }}
-                transition={{ delay: index * 0.1 }}
-                viewport={{ once: true }}
-                className="border border-gray-200 rounded-lg p-4 hover:border-pink-300 transition bg-white shadow-sm hover:shadow-md"
-              >
-                <h3 className="font-semibold text-gray-900 mb-2">{item.q}</h3>
-                <p className="text-gray-700 text-sm">{item.a}</p>
+                <p className={`text-sm ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>{testimonial.text}</p>
               </motion.div>
             ))}
           </div>
@@ -598,110 +484,113 @@ export default function Home() {
       </section>
 
       {/* Contact Section */}
-      <section className="py-16 bg-gradient-to-br from-pink-200 via-purple-200 to-blue-200 shadow-lg relative z-10">
+      <section className={`py-20 ${isDarkMode ? 'bg-slate-900' : 'bg-slate-50'}`}>
         <div className="max-w-7xl mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
-            GET IN <span className="bg-gradient-to-r from-pink-600 to-blue-600 bg-clip-text text-transparent">TOUCH</span>
-          </h2>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mb-12"
+          >
+            <h2 className="text-4xl font-bold mb-2">Get in Touch</h2>
+            <p className={isDarkMode ? 'text-slate-400' : 'text-slate-600'}>We're here to help and answer any questions</p>
+          </motion.div>
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <motion.a
-              whileHover={{ scale: 1.05, y: -10 }}
-              whileTap={{ scale: 0.95 }}
+              whileHover={{ scale: 1.02, y: -5 }}
+              whileTap={{ scale: 0.98 }}
               href="tel:9103174217"
-              className="bg-gradient-to-br from-white to-pink-50 p-6 rounded-lg text-center hover:shadow-xl transition border-2 border-pink-300 shadow-lg"
+              className={`p-8 rounded-xl text-center transition ${isDarkMode ? 'bg-slate-800 hover:bg-slate-700' : 'bg-white hover:shadow-lg'}`}
             >
-              <motion.div animate={{ rotate: [0, 10, -10, 0] }} transition={{ duration: 2, repeat: Infinity }}>
-                <Phone className="w-8 h-8 text-pink-500 mx-auto mb-3" />
-              </motion.div>
-              <h3 className="font-semibold text-gray-900 mb-1">Call Us</h3>
-              <p className="text-pink-500 font-bold">9103174217</p>
+              <Phone className="w-8 h-8 mx-auto mb-4 text-slate-900 dark:text-slate-100" />
+              <h3 className="font-semibold mb-2">Call Us</h3>
+              <p className="text-slate-600 dark:text-slate-400 font-medium">9103174217</p>
             </motion.a>
             <motion.a
-              whileHover={{ scale: 1.05, y: -10 }}
-              whileTap={{ scale: 0.95 }}
+              whileHover={{ scale: 1.02, y: -5 }}
+              whileTap={{ scale: 0.98 }}
               href="https://wa.me/8899507736"
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-gradient-to-br from-white to-purple-50 p-6 rounded-lg text-center hover:shadow-xl transition border-2 border-purple-300 shadow-lg"
+              className={`p-8 rounded-xl text-center transition ${isDarkMode ? 'bg-slate-800 hover:bg-slate-700' : 'bg-white hover:shadow-lg'}`}
             >
-              <motion.div animate={{ rotate: [0, -10, 10, 0] }} transition={{ duration: 2, repeat: Infinity }}>
-                <Phone className="w-8 h-8 text-purple-500 mx-auto mb-3" />
-              </motion.div>
-              <h3 className="font-semibold text-gray-900 mb-1">WhatsApp</h3>
-              <p className="text-purple-500 font-bold">8899507736</p>
+              <Phone className="w-8 h-8 mx-auto mb-4 text-slate-900 dark:text-slate-100" />
+              <h3 className="font-semibold mb-2">WhatsApp</h3>
+              <p className="text-slate-600 dark:text-slate-400 font-medium">8899507736</p>
             </motion.a>
             <motion.a
-              whileHover={{ scale: 1.05, y: -10 }}
-              whileTap={{ scale: 0.95 }}
+              whileHover={{ scale: 1.02, y: -5 }}
+              whileTap={{ scale: 0.98 }}
               href="mailto:saqiblateef123456@gmail.com"
-              className="bg-gradient-to-br from-white to-blue-50 p-6 rounded-lg text-center hover:shadow-xl transition border-2 border-blue-300 shadow-lg"
+              className={`p-8 rounded-xl text-center transition ${isDarkMode ? 'bg-slate-800 hover:bg-slate-700' : 'bg-white hover:shadow-lg'}`}
             >
-              <motion.div animate={{ y: [0, -5, 0] }} transition={{ duration: 2, repeat: Infinity }}>
-                <Mail className="w-8 h-8 text-blue-500 mx-auto mb-3" />
-              </motion.div>
-              <h3 className="font-semibold text-gray-900 mb-1">Email</h3>
-              <p className="text-blue-500 font-bold text-sm">saqiblateef123456@gmail.com</p>
+              <Mail className="w-8 h-8 mx-auto mb-4 text-slate-900 dark:text-slate-100" />
+              <h3 className="font-semibold mb-2">Email</h3>
+              <p className="text-slate-600 dark:text-slate-400 font-medium text-sm">saqiblateef123456@gmail.com</p>
             </motion.a>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-gradient-to-r from-gray-900 via-purple-900 to-gray-900 text-white py-12 shadow-2xl relative z-10">
+      <footer className={`${isDarkMode ? 'bg-slate-950 border-slate-900' : 'bg-slate-900 text-white'} border-t py-12`}>
         <div className="max-w-7xl mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
             <div>
-              <h3 className="font-bold text-lg mb-4 text-pink-500">BHAT IMPORTED CLOTHES</h3>
-              <p className="text-gray-400 text-sm">Premium imported clothing with best quality and affordable prices.</p>
+              <h3 className="font-bold text-lg mb-4">BHAT</h3>
+              <p className={`text-sm ${isDarkMode ? 'text-slate-400' : 'text-slate-300'}`}>
+                Premium imported clothing with authentic quality and competitive pricing.
+              </p>
             </div>
             <div>
               <h4 className="font-semibold mb-4">Quick Links</h4>
-              <ul className="space-y-2 text-gray-400 text-sm">
-                <li><a href="#" className="hover:text-pink-500 transition">Home</a></li>
-                <li><a href="#" className="hover:text-pink-500 transition">Shop</a></li>
-                <li><a href="#" className="hover:text-pink-500 transition">About</a></li>
-                <li><a href="#" className="hover:text-pink-500 transition">Contact</a></li>
+              <ul className={`space-y-2 text-sm ${isDarkMode ? 'text-slate-400' : 'text-slate-300'}`}>
+                <li><a href="#" className="hover:text-white transition">Home</a></li>
+                <li><a href="#" className="hover:text-white transition">Shop</a></li>
+                <li><a href="#" className="hover:text-white transition">About</a></li>
+                <li><a href="#" className="hover:text-white transition">Contact</a></li>
               </ul>
             </div>
             <div>
               <h4 className="font-semibold mb-4">Support</h4>
-              <ul className="space-y-2 text-gray-400 text-sm">
-                <li><a href="#" className="hover:text-pink-500 transition">Shipping Policy</a></li>
-                <li><a href="#" className="hover:text-pink-500 transition">Returns</a></li>
-                <li><a href="#" className="hover:text-pink-500 transition">FAQ</a></li>
-                <li><a href="#" className="hover:text-pink-500 transition">Terms</a></li>
+              <ul className={`space-y-2 text-sm ${isDarkMode ? 'text-slate-400' : 'text-slate-300'}`}>
+                <li><a href="#" className="hover:text-white transition">Shipping Policy</a></li>
+                <li><a href="#" className="hover:text-white transition">Returns</a></li>
+                <li><a href="#" className="hover:text-white transition">FAQ</a></li>
+                <li><a href="#" className="hover:text-white transition">Terms</a></li>
               </ul>
             </div>
             <div>
               <h4 className="font-semibold mb-4">Follow Us</h4>
               <div className="flex gap-4">
                 <motion.a 
-                  whileHover={{ scale: 1.3, rotate: 10 }}
+                  whileHover={{ scale: 1.2 }}
                   href="https://www.instagram.com/bhat_imported_clothess" 
                   target="_blank" 
                   rel="noopener noreferrer" 
-                  className="text-gray-400 hover:text-pink-500 transition"
+                  className={`transition ${isDarkMode ? 'text-slate-400 hover:text-white' : 'text-slate-300 hover:text-white'}`}
                 >
                   <Instagram size={20} />
                 </motion.a>
                 <motion.a 
-                  whileHover={{ scale: 1.3, rotate: 10 }}
+                  whileHover={{ scale: 1.2 }}
                   href="#" 
-                  className="text-gray-400 hover:text-pink-500 transition"
+                  className={`transition ${isDarkMode ? 'text-slate-400 hover:text-white' : 'text-slate-300 hover:text-white'}`}
                 >
                   <Facebook size={20} />
                 </motion.a>
                 <motion.a 
-                  whileHover={{ scale: 1.3, rotate: 10 }}
+                  whileHover={{ scale: 1.2 }}
                   href="#" 
-                  className="text-gray-400 hover:text-pink-500 transition"
+                  className={`transition ${isDarkMode ? 'text-slate-400 hover:text-white' : 'text-slate-300 hover:text-white'}`}
                 >
                   <Twitter size={20} />
                 </motion.a>
               </div>
             </div>
           </div>
-          <div className="border-t border-gray-800 pt-8 text-center text-gray-400 text-sm">
+          <div className={`border-t ${isDarkMode ? 'border-slate-900' : 'border-slate-800'} pt-8 text-center text-sm ${isDarkMode ? 'text-slate-400' : 'text-slate-300'}`}>
             <p>&copy; 2026 BHAT IMPORTED CLOTHES. All rights reserved. | Singhpora Pattan, J&K</p>
           </div>
         </div>
@@ -714,16 +603,16 @@ export default function Home() {
             initial={{ x: 400, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: 400, opacity: 0 }}
-            className="fixed right-0 top-0 h-full w-full md:w-96 bg-gradient-to-b from-white via-purple-50 to-pink-50 border-l-4 border-purple-400 z-50 overflow-y-auto shadow-2xl"
+            className={`fixed right-0 top-0 h-full w-full md:w-96 z-50 overflow-y-auto shadow-2xl ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white'} border-l`}
           >
             <div className="p-6">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold text-gray-900">Shopping Cart</h2>
+                <h2 className="text-2xl font-bold">Cart</h2>
                 <motion.button 
-                  whileHover={{ scale: 1.2, rotate: 90 }}
+                  whileHover={{ scale: 1.1, rotate: 90 }}
                   whileTap={{ scale: 0.9 }}
                   onClick={() => setShowCart(false)} 
-                  className="p-2 hover:bg-gray-100 rounded-lg transition"
+                  className={`p-2 rounded-lg transition ${isDarkMode ? 'hover:bg-slate-800' : 'hover:bg-slate-100'}`}
                 >
                   <X size={24} />
                 </motion.button>
@@ -732,7 +621,7 @@ export default function Home() {
                 <motion.p 
                   animate={{ y: [0, 10, 0] }}
                   transition={{ duration: 2, repeat: Infinity }}
-                  className="text-gray-600 text-center py-8"
+                  className={`text-center py-8 ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}
                 >
                   Your cart is empty
                 </motion.p>
@@ -744,22 +633,28 @@ export default function Home() {
                         key={index} 
                         initial={{ opacity: 0, x: 20 }}
                         animate={{ opacity: 1, x: 0 }}
-                        className="flex gap-4 pb-4 border-b"
+                        className={`flex gap-4 pb-4 border-b ${isDarkMode ? 'border-slate-800' : 'border-slate-200'}`}
                       >
                         <img src={item.image} alt={item.name} className="w-16 h-16 rounded object-cover" />
                         <div className="flex-1">
-                          <p className="font-semibold text-gray-900 text-sm">{item.name}</p>
-                          <p className="text-pink-500 font-bold">₹{item.price.toLocaleString()}</p>
+                          <p className="font-semibold text-sm">{item.name}</p>
+                          <p className="text-slate-600 dark:text-slate-400 font-bold">₹{item.price.toLocaleString()}</p>
                         </div>
                       </motion.div>
                     ))}
                   </div>
+                  <div className={`border-t ${isDarkMode ? 'border-slate-800' : 'border-slate-200'} pt-4 mb-4`}>
+                    <div className="flex justify-between mb-4">
+                      <span className="font-semibold">Total:</span>
+                      <span className="font-bold text-lg">₹{cartTotal.toLocaleString()}</span>
+                    </div>
+                  </div>
                   <motion.button
-                    whileHover={{ scale: 1.05, boxShadow: "0 10px 30px rgba(236, 72, 153, 0.4)" }}
-                    whileTap={{ scale: 0.95 }}
-                    className="w-full bg-pink-500 hover:bg-pink-600 text-white py-3 rounded-lg font-semibold transition shadow-lg"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="w-full bg-slate-900 text-white py-3 rounded-lg font-semibold transition hover:bg-slate-800"
                   >
-                    Proceed to Checkout
+                    Checkout
                   </motion.button>
                 </>
               )}
