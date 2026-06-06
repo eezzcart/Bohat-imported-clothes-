@@ -136,8 +136,8 @@ export default function Home() {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
 
   const [websiteSettings, setWebsiteSettings] = useState({
-    websiteName: 'BHAT IMPORTED CLOTHES',
-    heroTitle: 'BHAT IMPORTED FASHION',
+    websiteName: 'BHAT IMPORTED CLOTHES - BHAT',
+    heroTitle: 'PREMIUM IMPORTED FASHION',
     heroSubtitle: 'Singhpora Pattan, J&K',
     heroDescription: 'Best Quality | Affordable Price | Unbeatable Selection',
     phone: '9103174217',
@@ -150,7 +150,7 @@ export default function Home() {
   const [products, setProducts] = useState<Product[]>([
     {
       id: 1,
-      name: 'Bhat Denim Jacket',
+      name: 'Premium Denim Jacket',
       description: 'High-quality imported denim jacket with perfect fit and durability.',
       price: 2500,
       originalPrice: 3500,
@@ -160,7 +160,7 @@ export default function Home() {
     },
     {
       id: 2,
-      name: 'Bhat Classic T-Shirt',
+      name: 'Premium Classic T-Shirt',
       description: 'Comfortable and stylish imported t-shirt for everyday wear.',
       price: 800,
       originalPrice: 1200,
@@ -170,7 +170,7 @@ export default function Home() {
     },
     {
       id: 3,
-      name: 'Bhat Slim Fit Jeans',
+      name: 'Premium Slim Fit Jeans',
       description: 'Premium imported jeans with perfect comfort and style.',
       price: 1800,
       originalPrice: 2500,
@@ -180,7 +180,7 @@ export default function Home() {
     },
     {
       id: 4,
-      name: 'Bhat Casual Shirt',
+      name: 'Premium Casual Shirt',
       description: 'Versatile imported casual shirt perfect for any occasion.',
       price: 1200,
       category: 'Shirts',
@@ -189,7 +189,7 @@ export default function Home() {
     },
     {
       id: 5,
-      name: 'Bhat Sports Hoodie',
+      name: 'Premium Sports Hoodie',
       description: 'Comfortable imported hoodie for sports and casual wear.',
       price: 1500,
       originalPrice: 2200,
@@ -199,7 +199,7 @@ export default function Home() {
     },
     {
       id: 6,
-      name: 'Bhat Formal Blazer',
+      name: 'Premium Formal Blazer',
       description: 'Sophisticated imported blazer for professional occasions.',
       price: 3500,
       category: 'Blazers',
@@ -211,7 +211,7 @@ export default function Home() {
   const [sales, setSales] = useState<Sale[]>([
     {
       id: 1,
-      title: 'Bhat Summer Flash Sale',
+      title: 'Premium Summer Flash Sale',
       description: 'Up to 40% off on selected imported items',
       discountPercentage: 40,
       imageUrl: 'https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?w=500&h=300&fit=crop',
@@ -219,7 +219,7 @@ export default function Home() {
     },
     {
       id: 2,
-      title: 'Bhat New Arrivals',
+      title: 'Premium New Arrivals',
       description: 'Latest imported collection - 25% off',
       discountPercentage: 25,
       imageUrl: 'https://images.unsplash.com/photo-1556821552-5f0d2c5f3e6f?w=500&h=300&fit=crop',
@@ -233,21 +233,21 @@ export default function Home() {
       name: 'Ahmed Khan',
       rating: 5,
       text: 'Excellent quality and amazing prices! The imported clothes are authentic and stylish.',
-      product: 'Bhat Denim Jacket',
+      product: 'Premium Denim Jacket',
     },
     {
       id: 2,
       name: 'Fatima Malik',
       rating: 5,
       text: 'Best imported clothing store in the area. Great customer service and fast delivery!',
-      product: 'Bhat Slim Fit Jeans',
+      product: 'Premium Slim Fit Jeans',
     },
     {
       id: 3,
       name: 'Hassan Ahmed',
       rating: 5,
       text: 'Highly recommend Bhat Imported Clothes. Quality is unmatched at these prices!',
-      product: 'Bhat Classic T-Shirt',
+      product: 'Premium Classic T-Shirt',
     },
   ]);
 
@@ -268,7 +268,7 @@ export default function Home() {
     },
     {
       id: 2,
-      code: 'BHAT30',
+      code: 'PREMIUM30',
       discountPercentage: 30,
       maxUses: 50,
       usedCount: 5,
