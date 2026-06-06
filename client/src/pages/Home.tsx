@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShoppingBag, Heart, Search, User, Menu, X, Star, Phone, Mail, MapPin, Instagram, Facebook, Twitter, ChevronRight } from 'lucide-react';
+import { ShoppingBag, Heart, Search, User, Menu, X, Star, Phone, Mail, MapPin, Instagram, Facebook, Twitter, ChevronRight, Sparkles } from 'lucide-react';
 
 interface Product {
   id: number;
@@ -31,6 +31,15 @@ export default function Home() {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [cart, setCart] = useState<Product[]>([]);
   const [favorites, setFavorites] = useState<number[]>([]);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePosition({ x: e.clientX, y: e.clientY });
+    };
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
 
   const products = [
     {
@@ -132,6 +141,8 @@ export default function Home() {
     { icon: '🛡️', title: 'Guaranteed', desc: 'Quality assured products' },
   ];
 
+  const announcements = ['🎉 Free Shipping Above ₹999', '⭐ Premium Quality Guaranteed', '🚀 Fast Delivery', '💝 Best Prices in Town'];
+
   const toggleFavorite = (id: number) => {
     setFavorites(favorites.includes(id) ? favorites.filter(f => f !== id) : [...favorites, id]);
   };
@@ -146,52 +157,114 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-purple-50 via-pink-50 to-blue-50">
-      {/* Top Banner */}
-      <div className="bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-white text-center py-2 text-sm font-semibold shadow-lg">
-        🎉 GET FREE SHIPPING ABOVE ₹999
+    <div className="min-h-screen bg-gradient-to-b from-purple-50 via-pink-50 to-blue-50 overflow-hidden">
+      {/* Animated Background Blobs */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
+        <motion.div
+          animate={{ 
+            x: [0, 100, 0],
+            y: [0, 50, 0],
+            scale: [1, 1.2, 1]
+          }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute -top-40 -left-40 w-80 h-80 bg-pink-300/20 rounded-full blur-3xl"
+        />
+        <motion.div
+          animate={{ 
+            x: [0, -100, 0],
+            y: [0, -50, 0],
+            scale: [1, 1.2, 1]
+          }}
+          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute -bottom-40 -right-40 w-80 h-80 bg-blue-300/20 rounded-full blur-3xl"
+        />
+        <motion.div
+          animate={{ 
+            rotate: 360,
+            y: [0, 20, 0]
+          }}
+          transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+          className="absolute top-1/2 left-1/4 w-64 h-64 bg-purple-300/15 rounded-full blur-3xl"
+        />
       </div>
 
+      {/* Top Banner with Ticker */}
+      <motion.div 
+        initial={{ y: -50, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        className="bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-white py-2 shadow-lg overflow-hidden relative z-10"
+      >
+        <motion.div
+          animate={{ x: ['100%', '-100%'] }}
+          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+          className="flex gap-8 whitespace-nowrap text-sm font-semibold"
+        >
+          {[...announcements, ...announcements].map((announcement, i) => (
+            <span key={i}>{announcement}</span>
+          ))}
+        </motion.div>
+      </motion.div>
+
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-gradient-to-r from-white via-purple-50 to-pink-50 border-b-4 border-pink-400 shadow-lg">
+      <header className="sticky top-12 z-50 bg-gradient-to-r from-white via-purple-50 to-pink-50 border-b-4 border-pink-400 shadow-lg backdrop-blur-sm">
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             {/* Mobile Menu Button */}
-            <button
+            <motion.button
+              whileHover={{ scale: 1.1, rotate: 90 }}
+              whileTap={{ scale: 0.9 }}
               onClick={() => setShowMobileMenu(!showMobileMenu)}
               className="md:hidden p-2 hover:bg-gray-100 rounded-lg transition"
             >
               {showMobileMenu ? <X size={24} /> : <Menu size={24} />}
-            </button>
+            </motion.button>
 
             {/* Logo - Centered */}
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="text-2xl font-bold bg-gradient-to-r from-pink-600 via-purple-600 to-blue-600 bg-clip-text text-transparent flex-1 text-center md:flex-none"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              whileHover={{ scale: 1.05 }}
+              className="text-2xl font-bold bg-gradient-to-r from-pink-600 via-purple-600 to-blue-600 bg-clip-text text-transparent flex-1 text-center md:flex-none cursor-pointer"
             >
               BHAT IMPORTED CLOTHES
             </motion.div>
 
             {/* Right Icons */}
             <div className="flex items-center gap-4">
-              <button className="p-2 hover:bg-gray-100 rounded-lg transition hidden md:block">
+              <motion.button 
+                whileHover={{ scale: 1.2, rotate: 10 }}
+                whileTap={{ scale: 0.9 }}
+                className="p-2 hover:bg-gray-100 rounded-lg transition hidden md:block"
+              >
                 <Search size={20} className="text-gray-700" />
-              </button>
-              <button className="p-2 hover:bg-gray-100 rounded-lg transition hidden md:block">
+              </motion.button>
+              <motion.button 
+                whileHover={{ scale: 1.2 }}
+                whileTap={{ scale: 0.9 }}
+                className="p-2 hover:bg-gray-100 rounded-lg transition hidden md:block"
+              >
                 <User size={20} className="text-gray-700" />
-              </button>
-              <button
+              </motion.button>
+              <motion.button
+                whileHover={{ scale: 1.2 }}
+                whileTap={{ scale: 0.9 }}
                 onClick={() => setShowCart(!showCart)}
                 className="p-2 hover:bg-gray-100 rounded-lg transition relative"
               >
                 <ShoppingBag size={20} className="text-gray-700" />
-                {cart.length > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-pink-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
-                    {cart.length}
-                  </span>
-                )}
-              </button>
+                <AnimatePresence>
+                  {cart.length > 0 && (
+                    <motion.span 
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      exit={{ scale: 0 }}
+                      className="absolute -top-1 -right-1 bg-pink-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center"
+                    >
+                      {cart.length}
+                    </motion.span>
+                  )}
+                </AnimatePresence>
+              </motion.button>
             </div>
           </div>
 
@@ -200,7 +273,8 @@ export default function Home() {
             {['Home', 'Shop', 'About', 'Contact'].map((item) => (
               <motion.button
                 key={item}
-                whileHover={{ color: '#ec4899' }}
+                whileHover={{ scale: 1.1, color: '#ec4899' }}
+                whileTap={{ scale: 0.95 }}
                 onClick={() => scrollToSection(item.toLowerCase())}
                 className={`font-medium transition ${
                   activeSection === item.toLowerCase() ? 'text-pink-500' : 'text-gray-700'
@@ -220,14 +294,17 @@ export default function Home() {
                 exit={{ opacity: 0, y: -10 }}
                 className="md:hidden flex flex-col gap-3 mt-4 pt-4 border-t"
               >
-                {['Home', 'Shop', 'About', 'Contact'].map((item) => (
-                  <button
+                {['Home', 'Shop', 'About', 'Contact'].map((item, i) => (
+                  <motion.button
                     key={item}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.1 }}
                     onClick={() => scrollToSection(item.toLowerCase())}
                     className="text-left font-medium text-gray-700 hover:text-pink-500 transition"
                   >
                     {item}
-                  </button>
+                  </motion.button>
                 ))}
               </motion.nav>
             )}
@@ -236,37 +313,54 @@ export default function Home() {
       </header>
 
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-pink-200 via-purple-200 to-blue-200 py-12 md:py-20 shadow-lg">
+      <section className="relative bg-gradient-to-br from-pink-200 via-purple-200 to-blue-200 py-12 md:py-20 shadow-lg overflow-hidden z-10">
         <div className="max-w-7xl mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
             <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
+              viewport={{ once: true }}
             >
-              <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-                PREMIUM IMPORTED <span className="text-pink-500">FASHION</span>
-              </h1>
-              <p className="text-xl text-gray-700 mb-2">Singhpora Pattan, J&K</p>
+              <motion.h1 
+                className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-gray-900 via-pink-600 to-purple-600 bg-clip-text text-transparent mb-4"
+                whileHover={{ scale: 1.05 }}
+              >
+                PREMIUM IMPORTED <span className="text-transparent bg-gradient-to-r from-pink-600 to-blue-600 bg-clip-text">FASHION</span>
+              </motion.h1>
+              <motion.p 
+                className="text-xl text-gray-700 mb-2"
+                animate={{ y: [0, 5, 0] }}
+                transition={{ duration: 3, repeat: Infinity }}
+              >
+                Singhpora Pattan, J&K
+              </motion.p>
               <p className="text-gray-600 mb-6">Best Quality | Affordable Price | Unbeatable Selection</p>
               <motion.button
-                whileHover={{ scale: 1.05 }}
+                whileHover={{ scale: 1.1, boxShadow: "0 10px 30px rgba(236, 72, 153, 0.4)" }}
                 whileTap={{ scale: 0.95 }}
-                className="bg-pink-500 hover:bg-pink-600 text-white px-8 py-3 rounded-lg font-semibold transition"
+                className="bg-pink-500 hover:bg-pink-600 text-white px-8 py-3 rounded-lg font-semibold transition shadow-lg"
               >
                 Shop Now
               </motion.button>
             </motion.div>
             <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, x: 50, rotate: -5 }}
+              whileInView={{ opacity: 1, x: 0, rotate: 0 }}
               transition={{ duration: 0.8 }}
-              className="relative h-96 bg-gradient-to-br from-gray-200 to-gray-300 rounded-lg overflow-hidden"
+              viewport={{ once: true }}
+              whileHover={{ scale: 1.05, rotate: 2 }}
+              className="relative h-96 bg-gradient-to-br from-gray-200 to-gray-300 rounded-lg overflow-hidden shadow-2xl"
             >
               <img
                 src="https://images.unsplash.com/photo-1595777707802-21b287e3f0c8?w=500&h=500&fit=crop"
                 alt="Hero"
                 className="w-full h-full object-cover"
+              />
+              <motion.div
+                animate={{ scale: [1, 1.2, 1] }}
+                transition={{ duration: 2, repeat: Infinity }}
+                className="absolute inset-0 border-4 border-pink-400 rounded-lg"
               />
             </motion.div>
           </div>
@@ -274,18 +368,26 @@ export default function Home() {
       </section>
 
       {/* Features */}
-      <section className="py-12 bg-gradient-to-r from-yellow-50 via-pink-50 to-purple-50">
+      <section className="py-12 bg-gradient-to-r from-yellow-50 via-pink-50 to-purple-50 relative z-10">
         <div className="max-w-7xl mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {features.map((feature, index) => (
               <motion.div
                 key={index}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
+                whileHover={{ y: -10, scale: 1.05 }}
                 transition={{ delay: index * 0.1 }}
-                className="text-center p-4"
+                viewport={{ once: true }}
+                className="text-center p-4 bg-white rounded-lg shadow-md hover:shadow-xl transition"
               >
-                <div className="text-4xl mb-2">{feature.icon}</div>
+                <motion.div 
+                  className="text-4xl mb-2"
+                  animate={{ rotate: [0, 10, -10, 0] }}
+                  transition={{ duration: 2, repeat: Infinity, delay: index * 0.2 }}
+                >
+                  {feature.icon}
+                </motion.div>
                 <h3 className="font-semibold text-gray-900 mb-1 text-sm">{feature.title}</h3>
                 <p className="text-xs text-gray-600">{feature.desc}</p>
               </motion.div>
@@ -295,7 +397,7 @@ export default function Home() {
       </section>
 
       {/* Shop by Collection - Circular Cards */}
-      <section className="py-16 bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100">
+      <section className="py-16 bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100 relative z-10">
         <div className="max-w-7xl mx-auto px-4">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
             <span className="bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">SHOP BY</span> <span className="bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">COLLECTION</span>
@@ -304,10 +406,18 @@ export default function Home() {
             {categories.map((category, index) => (
               <motion.div
                 key={index}
-                whileHover={{ scale: 1.05 }}
+                whileHover={{ scale: 1.1 }}
+                initial={{ opacity: 0, scale: 0.8 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                transition={{ delay: index * 0.1 }}
+                viewport={{ once: true }}
                 className="flex flex-col items-center"
               >
-                <div className="relative w-40 h-40 md:w-48 md:h-48 rounded-full overflow-hidden group cursor-pointer mb-4 shadow-lg">
+                <motion.div
+                  whileHover={{ rotate: 360 }}
+                  transition={{ duration: 0.6 }}
+                  className="relative w-40 h-40 md:w-48 md:h-48 rounded-full overflow-hidden group cursor-pointer mb-4 shadow-2xl border-4 border-gradient-to-r from-pink-400 to-purple-400"
+                >
                   <img
                     src={category.image}
                     alt={category.name}
@@ -316,7 +426,7 @@ export default function Home() {
                   <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <span className="text-white font-bold text-lg">View</span>
                   </div>
-                </div>
+                </motion.div>
                 <h3 className="text-gray-900 font-semibold text-center text-lg">{category.name}</h3>
               </motion.div>
             ))}
@@ -325,7 +435,7 @@ export default function Home() {
       </section>
 
       {/* Products */}
-      <section className="py-16 bg-gradient-to-b from-pink-50 via-purple-50 to-blue-50">
+      <section className="py-16 bg-gradient-to-b from-pink-50 via-purple-50 to-blue-50 relative z-10">
         <div className="max-w-7xl mx-auto px-4">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
             EXPLORE <span className="bg-gradient-to-r from-pink-500 to-purple-600 bg-clip-text text-transparent">NEW ARRIVALS</span>
@@ -334,32 +444,40 @@ export default function Home() {
             {products.map((product, index) => (
               <motion.div
                 key={product.id}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
+                whileHover={{ y: -15 }}
                 transition={{ delay: index * 0.1 }}
+                viewport={{ once: true }}
                 className="group"
               >
-                <div className="relative bg-gray-100 rounded-lg overflow-hidden mb-4 h-64">
+                <div className="relative bg-gray-100 rounded-lg overflow-hidden mb-4 h-64 shadow-lg hover:shadow-2xl transition">
                   <img
                     src={product.image}
                     alt={product.name}
                     className="w-full h-full object-cover group-hover:scale-110 transition duration-300"
                   />
                   {product.originalPrice && (
-                    <div className="absolute top-4 right-4 bg-pink-500 text-white px-3 py-1 rounded-full text-sm font-bold">
+                    <motion.div 
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      className="absolute top-4 right-4 bg-pink-500 text-white px-3 py-1 rounded-full text-sm font-bold shadow-lg"
+                    >
                       -{Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}%
-                    </div>
+                    </motion.div>
                   )}
-                  <button
+                  <motion.button
+                    whileHover={{ scale: 1.2 }}
+                    whileTap={{ scale: 0.9 }}
                     onClick={() => toggleFavorite(product.id)}
-                    className="absolute top-4 left-4 p-2 bg-white rounded-full hover:bg-gray-100 transition"
+                    className="absolute top-4 left-4 p-2 bg-white rounded-full hover:bg-gray-100 transition shadow-lg"
                   >
                     <Heart
                       size={20}
                       fill={favorites.includes(product.id) ? 'currentColor' : 'none'}
                       color={favorites.includes(product.id) ? '#ec4899' : '#d1d5db'}
                     />
-                  </button>
+                  </motion.button>
                 </div>
                 <h3 className="font-semibold text-gray-900 mb-2">{product.name}</h3>
                 <div className="flex items-center justify-between mb-4">
@@ -372,49 +490,64 @@ export default function Home() {
                   {product.rating && (
                     <div className="flex gap-1">
                       {[...Array(product.rating)].map((_, i) => (
-                        <Star key={i} size={14} fill="#fbbf24" color="#fbbf24" />
+                        <motion.div
+                          key={i}
+                          animate={{ scale: [1, 1.2, 1] }}
+                          transition={{ delay: i * 0.1, repeat: Infinity, duration: 1 }}
+                        >
+                          <Star key={i} size={14} fill="#fbbf24" color="#fbbf24" />
+                        </motion.div>
                       ))}
                     </div>
                   )}
                 </div>
                 <motion.button
-                  whileHover={{ scale: 1.05 }}
+                  whileHover={{ scale: 1.05, boxShadow: "0 10px 25px rgba(236, 72, 153, 0.3)" }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => addToCart(product)}
-                  className="w-full bg-pink-500 hover:bg-pink-600 text-white py-2 rounded-lg font-semibold transition"
+                  className="w-full bg-pink-500 hover:bg-pink-600 text-white py-2 rounded-lg font-semibold transition shadow-lg"
                 >
                   Add to Cart
                 </motion.button>
               </motion.div>
             ))}
           </div>
-          <div className="text-center mt-12">
+          <motion.div 
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            className="text-center mt-12"
+          >
             <motion.button
-              whileHover={{ scale: 1.05 }}
+              whileHover={{ scale: 1.1, x: 10 }}
+              whileTap={{ scale: 0.95 }}
               className="inline-flex items-center gap-2 text-pink-500 font-semibold hover:text-pink-600 transition"
             >
               VIEW ALL <ChevronRight size={20} />
             </motion.button>
-          </div>
+          </motion.div>
         </div>
       </section>
 
       {/* Testimonials */}
-      <section className="py-16 bg-gradient-to-r from-purple-100 via-pink-100 to-blue-100">
+      <section className="py-16 bg-gradient-to-r from-purple-100 via-pink-100 to-blue-100 relative z-10">
         <div className="max-w-7xl mx-auto px-4">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
             Our customers <span className="bg-gradient-to-r from-pink-500 to-purple-600 bg-clip-text text-transparent">love us</span>
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {testimonials.map((testimonial) => (
+            {testimonials.map((testimonial, index) => (
               <motion.div
                 key={testimonial.id}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                className="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition"
+                whileHover={{ y: -10, boxShadow: "0 20px 40px rgba(236, 72, 153, 0.2)" }}
+                transition={{ delay: index * 0.1 }}
+                viewport={{ once: true }}
+                className="bg-gradient-to-br from-white to-purple-50 p-6 rounded-lg shadow-md hover:shadow-2xl transition border-2 border-purple-200"
               >
                 <div className="flex items-center gap-3 mb-4">
-                  <img
+                  <motion.img
+                    whileHover={{ scale: 1.1, rotate: 5 }}
                     src={testimonial.image}
                     alt={testimonial.name}
                     className="w-12 h-12 rounded-full object-cover"
@@ -436,7 +569,7 @@ export default function Home() {
       </section>
 
       {/* FAQ */}
-      <section className="py-16 bg-gradient-to-b from-blue-50 via-purple-50 to-pink-50">
+      <section className="py-16 bg-gradient-to-b from-blue-50 via-purple-50 to-pink-50 relative z-10">
         <div className="max-w-3xl mx-auto px-4">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
             FREQUENTLY ASKED <span className="bg-gradient-to-r from-pink-500 to-purple-600 bg-clip-text text-transparent">QUESTIONS</span>
@@ -449,9 +582,12 @@ export default function Home() {
             ].map((item, index) => (
               <motion.div
                 key={index}
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                className="border border-gray-200 rounded-lg p-4 hover:border-pink-300 transition"
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                whileHover={{ x: 10 }}
+                transition={{ delay: index * 0.1 }}
+                viewport={{ once: true }}
+                className="border border-gray-200 rounded-lg p-4 hover:border-pink-300 transition bg-white shadow-sm hover:shadow-md"
               >
                 <h3 className="font-semibold text-gray-900 mb-2">{item.q}</h3>
                 <p className="text-gray-700 text-sm">{item.a}</p>
@@ -462,47 +598,56 @@ export default function Home() {
       </section>
 
       {/* Contact Section */}
-      <section className="py-16 bg-gradient-to-br from-pink-200 via-purple-200 to-blue-200 shadow-lg">
+      <section className="py-16 bg-gradient-to-br from-pink-200 via-purple-200 to-blue-200 shadow-lg relative z-10">
         <div className="max-w-7xl mx-auto px-4">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
             GET IN <span className="bg-gradient-to-r from-pink-600 to-blue-600 bg-clip-text text-transparent">TOUCH</span>
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <motion.a
-              whileHover={{ scale: 1.05 }}
+              whileHover={{ scale: 1.05, y: -10 }}
+              whileTap={{ scale: 0.95 }}
               href="tel:9103174217"
-              className="bg-white p-6 rounded-lg text-center hover:shadow-lg transition"
+              className="bg-gradient-to-br from-white to-pink-50 p-6 rounded-lg text-center hover:shadow-xl transition border-2 border-pink-300 shadow-lg"
             >
-              <Phone className="w-8 h-8 text-pink-500 mx-auto mb-3" />
+              <motion.div animate={{ rotate: [0, 10, -10, 0] }} transition={{ duration: 2, repeat: Infinity }}>
+                <Phone className="w-8 h-8 text-pink-500 mx-auto mb-3" />
+              </motion.div>
               <h3 className="font-semibold text-gray-900 mb-1">Call Us</h3>
               <p className="text-pink-500 font-bold">9103174217</p>
             </motion.a>
             <motion.a
-              whileHover={{ scale: 1.05 }}
+              whileHover={{ scale: 1.05, y: -10 }}
+              whileTap={{ scale: 0.95 }}
               href="https://wa.me/8899507736"
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-white p-6 rounded-lg text-center hover:shadow-lg transition"
+              className="bg-gradient-to-br from-white to-purple-50 p-6 rounded-lg text-center hover:shadow-xl transition border-2 border-purple-300 shadow-lg"
             >
-              <Phone className="w-8 h-8 text-pink-500 mx-auto mb-3" />
+              <motion.div animate={{ rotate: [0, -10, 10, 0] }} transition={{ duration: 2, repeat: Infinity }}>
+                <Phone className="w-8 h-8 text-purple-500 mx-auto mb-3" />
+              </motion.div>
               <h3 className="font-semibold text-gray-900 mb-1">WhatsApp</h3>
-              <p className="text-pink-500 font-bold">8899507736</p>
+              <p className="text-purple-500 font-bold">8899507736</p>
             </motion.a>
             <motion.a
-              whileHover={{ scale: 1.05 }}
+              whileHover={{ scale: 1.05, y: -10 }}
+              whileTap={{ scale: 0.95 }}
               href="mailto:saqiblateef123456@gmail.com"
-              className="bg-white p-6 rounded-lg text-center hover:shadow-lg transition"
+              className="bg-gradient-to-br from-white to-blue-50 p-6 rounded-lg text-center hover:shadow-xl transition border-2 border-blue-300 shadow-lg"
             >
-              <Mail className="w-8 h-8 text-pink-500 mx-auto mb-3" />
+              <motion.div animate={{ y: [0, -5, 0] }} transition={{ duration: 2, repeat: Infinity }}>
+                <Mail className="w-8 h-8 text-blue-500 mx-auto mb-3" />
+              </motion.div>
               <h3 className="font-semibold text-gray-900 mb-1">Email</h3>
-              <p className="text-pink-500 font-bold text-sm">saqiblateef123456@gmail.com</p>
+              <p className="text-blue-500 font-bold text-sm">saqiblateef123456@gmail.com</p>
             </motion.a>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-gradient-to-r from-gray-900 via-purple-900 to-gray-900 text-white py-12 shadow-2xl">
+      <footer className="bg-gradient-to-r from-gray-900 via-purple-900 to-gray-900 text-white py-12 shadow-2xl relative z-10">
         <div className="max-w-7xl mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
             <div>
@@ -530,15 +675,29 @@ export default function Home() {
             <div>
               <h4 className="font-semibold mb-4">Follow Us</h4>
               <div className="flex gap-4">
-                <a href="https://www.instagram.com/bhat_imported_clothess" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-pink-500 transition">
+                <motion.a 
+                  whileHover={{ scale: 1.3, rotate: 10 }}
+                  href="https://www.instagram.com/bhat_imported_clothess" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="text-gray-400 hover:text-pink-500 transition"
+                >
                   <Instagram size={20} />
-                </a>
-                <a href="#" className="text-gray-400 hover:text-pink-500 transition">
+                </motion.a>
+                <motion.a 
+                  whileHover={{ scale: 1.3, rotate: 10 }}
+                  href="#" 
+                  className="text-gray-400 hover:text-pink-500 transition"
+                >
                   <Facebook size={20} />
-                </a>
-                <a href="#" className="text-gray-400 hover:text-pink-500 transition">
+                </motion.a>
+                <motion.a 
+                  whileHover={{ scale: 1.3, rotate: 10 }}
+                  href="#" 
+                  className="text-gray-400 hover:text-pink-500 transition"
+                >
                   <Twitter size={20} />
-                </a>
+                </motion.a>
               </div>
             </div>
           </div>
@@ -552,37 +711,53 @@ export default function Home() {
       <AnimatePresence>
         {showCart && (
           <motion.div
-            initial={{ x: 400 }}
-            animate={{ x: 0 }}
-            exit={{ x: 400 }}
+            initial={{ x: 400, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: 400, opacity: 0 }}
             className="fixed right-0 top-0 h-full w-full md:w-96 bg-gradient-to-b from-white via-purple-50 to-pink-50 border-l-4 border-purple-400 z-50 overflow-y-auto shadow-2xl"
           >
             <div className="p-6">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-2xl font-bold text-gray-900">Shopping Cart</h2>
-                <button onClick={() => setShowCart(false)} className="p-2 hover:bg-gray-100 rounded-lg transition">
+                <motion.button 
+                  whileHover={{ scale: 1.2, rotate: 90 }}
+                  whileTap={{ scale: 0.9 }}
+                  onClick={() => setShowCart(false)} 
+                  className="p-2 hover:bg-gray-100 rounded-lg transition"
+                >
                   <X size={24} />
-                </button>
+                </motion.button>
               </div>
               {cart.length === 0 ? (
-                <p className="text-gray-600 text-center py-8">Your cart is empty</p>
+                <motion.p 
+                  animate={{ y: [0, 10, 0] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                  className="text-gray-600 text-center py-8"
+                >
+                  Your cart is empty
+                </motion.p>
               ) : (
                 <>
                   <div className="space-y-4 mb-6">
                     {cart.map((item, index) => (
-                      <div key={index} className="flex gap-4 pb-4 border-b">
+                      <motion.div 
+                        key={index} 
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        className="flex gap-4 pb-4 border-b"
+                      >
                         <img src={item.image} alt={item.name} className="w-16 h-16 rounded object-cover" />
                         <div className="flex-1">
                           <p className="font-semibold text-gray-900 text-sm">{item.name}</p>
                           <p className="text-pink-500 font-bold">₹{item.price.toLocaleString()}</p>
                         </div>
-                      </div>
+                      </motion.div>
                     ))}
                   </div>
                   <motion.button
-                    whileHover={{ scale: 1.05 }}
+                    whileHover={{ scale: 1.05, boxShadow: "0 10px 30px rgba(236, 72, 153, 0.4)" }}
                     whileTap={{ scale: 0.95 }}
-                    className="w-full bg-pink-500 hover:bg-pink-600 text-white py-3 rounded-lg font-semibold transition"
+                    className="w-full bg-pink-500 hover:bg-pink-600 text-white py-3 rounded-lg font-semibold transition shadow-lg"
                   >
                     Proceed to Checkout
                   </motion.button>
