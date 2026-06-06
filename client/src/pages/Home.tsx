@@ -146,14 +146,14 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-gradient-to-b from-purple-50 via-pink-50 to-blue-50">
       {/* Top Banner */}
-      <div className="bg-pink-400 text-white text-center py-2 text-sm font-semibold">
+      <div className="bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-white text-center py-2 text-sm font-semibold shadow-lg">
         🎉 GET FREE SHIPPING ABOVE ₹999
       </div>
 
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-white border-b border-gray-200">
+      <header className="sticky top-0 z-50 bg-gradient-to-r from-white via-purple-50 to-pink-50 border-b-4 border-pink-400 shadow-lg">
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             {/* Mobile Menu Button */}
@@ -168,7 +168,7 @@ export default function Home() {
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="text-2xl font-bold text-gray-900 flex-1 text-center md:flex-none"
+              className="text-2xl font-bold bg-gradient-to-r from-pink-600 via-purple-600 to-blue-600 bg-clip-text text-transparent flex-1 text-center md:flex-none"
             >
               BHAT IMPORTED CLOTHES
             </motion.div>
@@ -236,7 +236,7 @@ export default function Home() {
       </header>
 
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-r from-rose-100 via-pink-50 to-purple-100 py-12 md:py-20">
+      <section className="relative bg-gradient-to-br from-pink-200 via-purple-200 to-blue-200 py-12 md:py-20 shadow-lg">
         <div className="max-w-7xl mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
             <motion.div
@@ -274,7 +274,7 @@ export default function Home() {
       </section>
 
       {/* Features */}
-      <section className="py-12 bg-white">
+      <section className="py-12 bg-gradient-to-r from-yellow-50 via-pink-50 to-purple-50">
         <div className="max-w-7xl mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {features.map((feature, index) => (
@@ -295,10 +295,10 @@ export default function Home() {
       </section>
 
       {/* Shop by Collection - Circular Cards */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-16 bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100">
         <div className="max-w-7xl mx-auto px-4">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
-            <span className="text-pink-400">SHOP BY</span> <span className="text-gray-900">COLLECTION</span>
+            <span className="bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">SHOP BY</span> <span className="bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">COLLECTION</span>
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {categories.map((category, index) => (
@@ -325,10 +325,10 @@ export default function Home() {
       </section>
 
       {/* Products */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-gradient-to-b from-pink-50 via-purple-50 to-blue-50">
         <div className="max-w-7xl mx-auto px-4">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
-            EXPLORE <span className="text-pink-500">NEW ARRIVALS</span>
+            EXPLORE <span className="bg-gradient-to-r from-pink-500 to-purple-600 bg-clip-text text-transparent">NEW ARRIVALS</span>
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {products.map((product, index) => (
@@ -400,10 +400,10 @@ export default function Home() {
       </section>
 
       {/* Testimonials */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-16 bg-gradient-to-r from-purple-100 via-pink-100 to-blue-100">
         <div className="max-w-7xl mx-auto px-4">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
-            Our customers <span className="text-pink-500">love us</span>
+            Our customers <span className="bg-gradient-to-r from-pink-500 to-purple-600 bg-clip-text text-transparent">love us</span>
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {testimonials.map((testimonial) => (
@@ -436,10 +436,10 @@ export default function Home() {
       </section>
 
       {/* FAQ */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-gradient-to-b from-blue-50 via-purple-50 to-pink-50">
         <div className="max-w-3xl mx-auto px-4">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
-            FREQUENTLY ASKED <span className="text-pink-500">QUESTIONS</span>
+            FREQUENTLY ASKED <span className="bg-gradient-to-r from-pink-500 to-purple-600 bg-clip-text text-transparent">QUESTIONS</span>
           </h2>
           <div className="space-y-4">
             {[
@@ -462,10 +462,10 @@ export default function Home() {
       </section>
 
       {/* Contact Section */}
-      <section className="py-16 bg-gradient-to-r from-pink-100 to-rose-100">
+      <section className="py-16 bg-gradient-to-br from-pink-200 via-purple-200 to-blue-200 shadow-lg">
         <div className="max-w-7xl mx-auto px-4">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
-            GET IN <span className="text-pink-500">TOUCH</span>
+            GET IN <span className="bg-gradient-to-r from-pink-600 to-blue-600 bg-clip-text text-transparent">TOUCH</span>
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <motion.a
@@ -502,7 +502,7 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12">
+      <footer className="bg-gradient-to-r from-gray-900 via-purple-900 to-gray-900 text-white py-12 shadow-2xl">
         <div className="max-w-7xl mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
             <div>
@@ -555,7 +555,7 @@ export default function Home() {
             initial={{ x: 400 }}
             animate={{ x: 0 }}
             exit={{ x: 400 }}
-            className="fixed right-0 top-0 h-full w-full md:w-96 bg-white border-l border-gray-200 z-50 overflow-y-auto shadow-lg"
+            className="fixed right-0 top-0 h-full w-full md:w-96 bg-gradient-to-b from-white via-purple-50 to-pink-50 border-l-4 border-purple-400 z-50 overflow-y-auto shadow-2xl"
           >
             <div className="p-6">
               <div className="flex items-center justify-between mb-6">
