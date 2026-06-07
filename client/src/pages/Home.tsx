@@ -62,7 +62,7 @@ export default function Home() {
       name: 'Premium Denim Jacket',
       price: 2500,
       originalPrice: 3500,
-      image: 'https://images.unsplash.com/photo-1551028719-00167b16ebc5?w=400&h=400&fit=crop',
+      image: 'https://images.unsplash.com/photo-1551028719-00167b16ebc5?w=500&h=500&fit=crop&q=80',
       category: 'Jackets',
       rating: 5,
       badge: 'BESTSELLER',
@@ -73,7 +73,7 @@ export default function Home() {
       name: 'Classic Organic T-Shirt',
       price: 800,
       originalPrice: 1200,
-      image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=400&fit=crop',
+      image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=500&h=500&fit=crop&q=80',
       category: 'T-Shirts',
       rating: 5,
       badge: 'NEW',
@@ -84,7 +84,7 @@ export default function Home() {
       name: 'Premium Slim Fit Jeans',
       price: 1800,
       originalPrice: 2500,
-      image: 'https://images.unsplash.com/photo-1542272604-787c62d465d1?w=400&h=400&fit=crop',
+      image: 'https://images.unsplash.com/photo-1542272604-787c62d465d1?w=500&h=500&fit=crop&q=80',
       category: 'Jeans',
       rating: 5,
       description: 'Comfortable slim fit jeans with superior fabric quality and durability. A wardrobe essential.',
@@ -93,7 +93,7 @@ export default function Home() {
       id: 4,
       name: 'Minimalist Casual Shirt',
       price: 1200,
-      image: 'https://images.unsplash.com/photo-1596399514826-b22adfc7405b?w=400&h=400&fit=crop',
+      image: 'https://images.unsplash.com/photo-1596399514826-b22adfc7405b?w=500&h=500&fit=crop&q=80',
       category: 'Shirts',
       rating: 4,
       description: 'Versatile casual shirt that works for any occasion with clean minimalist design.',
@@ -103,7 +103,7 @@ export default function Home() {
       name: 'Sustainable Hoodie',
       price: 1500,
       originalPrice: 2200,
-      image: 'https://images.unsplash.com/photo-1556821552-5f0d2c5f3e6f?w=400&h=400&fit=crop',
+      image: 'https://images.unsplash.com/photo-1556821552-5f0d2c5f3e6f?w=500&h=500&fit=crop&q=80',
       category: 'Hoodies',
       rating: 5,
       badge: 'ECO',
@@ -113,7 +113,7 @@ export default function Home() {
       id: 6,
       name: 'Formal Blazer',
       price: 3500,
-      image: 'https://images.unsplash.com/photo-1591047990635-eea47cdc2e5e?w=400&h=400&fit=crop',
+      image: 'https://images.unsplash.com/photo-1591047990635-eea47cdc2e5e?w=500&h=500&fit=crop&q=80',
       category: 'Blazers',
       rating: 5,
       description: 'Premium formal blazer perfect for professional and special occasions.',
@@ -123,7 +123,7 @@ export default function Home() {
       name: 'Cotton Polo Shirt',
       price: 950,
       originalPrice: 1400,
-      image: 'https://images.unsplash.com/photo-1578761681033-6461ffad8d80?w=400&h=400&fit=crop',
+      image: 'https://images.unsplash.com/photo-1578761681033-6461ffad8d80?w=500&h=500&fit=crop&q=80',
       category: 'Shirts',
       rating: 4,
       description: 'Classic cotton polo shirt with premium finish. Great for casual or semi-formal wear.',
@@ -133,7 +133,7 @@ export default function Home() {
       name: 'Winter Parka Jacket',
       price: 4200,
       originalPrice: 5500,
-      image: 'https://images.unsplash.com/photo-1539533057440-7814baea1002?w=400&h=400&fit=crop',
+      image: 'https://images.unsplash.com/photo-1539533057440-7814baea1002?w=500&h=500&fit=crop&q=80',
       category: 'Jackets',
       rating: 5,
       badge: 'PREMIUM',
@@ -142,13 +142,13 @@ export default function Home() {
   ];
 
   const categories: Category[] = [
-    { name: 'All', image: 'https://images.unsplash.com/photo-1595777707802-21b287e3f0c8?w=300&h=300&fit=crop', description: 'All products' },
-    { name: 'Jackets', image: 'https://images.unsplash.com/photo-1551028719-00167b16ebc5?w=300&h=300&fit=crop', description: 'Premium imported jackets' },
-    { name: 'T-Shirts', image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=300&h=300&fit=crop', description: 'Comfortable everyday wear' },
-    { name: 'Jeans', image: 'https://images.unsplash.com/photo-1542272604-787c62d465d1?w=300&h=300&fit=crop', description: 'Authentic denim collection' },
-    { name: 'Hoodies', image: 'https://images.unsplash.com/photo-1556821552-5f0d2c5f3e6f?w=300&h=300&fit=crop', description: 'Cozy and stylish hoodies' },
-    { name: 'Shirts', image: 'https://images.unsplash.com/photo-1596399514826-b22adfc7405b?w=300&h=300&fit=crop', description: 'Casual and formal shirts' },
-    { name: 'Blazers', image: 'https://images.unsplash.com/photo-1591047990635-eea47cdc2e5e?w=300&h=300&fit=crop', description: 'Professional blazers' },
+    { name: 'All', image: 'https://images.unsplash.com/photo-1595777707802-21b287e3f0c8?w=400&h=400&fit=crop&q=80', description: 'All products' },
+    { name: 'Jackets', image: 'https://images.unsplash.com/photo-1551028719-00167b16ebc5?w=400&h=400&fit=crop&q=80', description: 'Premium imported jackets' },
+    { name: 'T-Shirts', image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=400&fit=crop&q=80', description: 'Comfortable everyday wear' },
+    { name: 'Jeans', image: 'https://images.unsplash.com/photo-1542272604-787c62d465d1?w=400&h=400&fit=crop&q=80', description: 'Authentic denim collection' },
+    { name: 'Hoodies', image: 'https://images.unsplash.com/photo-1556821552-5f0d2c5f3e6f?w=400&h=400&fit=crop&q=80', description: 'Cozy and stylish hoodies' },
+    { name: 'Shirts', image: 'https://images.unsplash.com/photo-1596399514826-b22adfc7405b?w=400&h=400&fit=crop&q=80', description: 'Casual and formal shirts' },
+    { name: 'Blazers', image: 'https://images.unsplash.com/photo-1591047990635-eea47cdc2e5e?w=400&h=400&fit=crop&q=80', description: 'Professional blazers' },
   ];
 
   const testimonials: Testimonial[] = [
@@ -420,7 +420,7 @@ export default function Home() {
                 >
                   <div className={`absolute inset-0 ${isDarkMode ? 'bg-gradient-to-br from-slate-700 to-slate-800' : 'bg-gradient-to-br from-blue-200 to-purple-200'}`} />
                   <img
-                    src="https://images.unsplash.com/photo-1595777707802-21b287e3f0c8?w=500&h=500&fit=crop"
+                    src="https://images.unsplash.com/photo-1595777707802-21b287e3f0c8?w=600&h=600&fit=crop&q=80"
                     alt="Hero"
                     className="w-full h-full object-cover"
                   />
