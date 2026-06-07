@@ -259,14 +259,14 @@ export default function Home() {
               {showMobileMenu ? <X size={24} /> : <Menu size={24} />}
             </motion.button>
 
-            {/* Logo with Gradient */}
+            {/* Logo with Image */}
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               whileHover={{ scale: 1.05 }}
-              className="text-2xl font-bold tracking-tight flex-1 text-center md:flex-none cursor-pointer bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent"
+              className="flex-1 text-center md:flex-none cursor-pointer"
             >
-              BHAT
+              <img src="/assets/logo.jpg" alt="BHAT Logo" className="h-12 mx-auto" />
             </motion.div>
 
             {/* Right Icons */}
@@ -387,13 +387,13 @@ export default function Home() {
                     className="text-5xl md:text-7xl font-bold leading-tight mb-6 tracking-tight bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent"
                     whileHover={{ scale: 1.02 }}
                   >
-                    Premium Imported <span className="block mt-2">Fashion</span>
+                    Bhat Imported <span className="block mt-2">Clothes</span>
                   </motion.h1>
                   <p className={`text-lg mb-2 font-medium ${isDarkMode ? 'text-slate-300' : 'text-slate-700'}`}>
                     📍 Singhpora Pattan, J&K
                   </p>
                   <p className={`text-base mb-8 leading-relaxed ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>
-                    Discover authentic imported clothing with uncompromising quality and competitive pricing. We bring you the finest fashion from around the world, curated specially for you. Experience the difference of genuine imported fashion.
+                    Discover authentic Bhat imported clothes with uncompromising quality and competitive pricing. We bring you the finest fashion from around the world, curated specially for you. Experience the difference of genuine imported fashion.
                   </p>
                   <motion.button
                     whileHover={{ scale: 1.05, x: 5 }}
@@ -780,13 +780,13 @@ export default function Home() {
               >
                 <h3 className="text-2xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Our Story</h3>
                 <p className={`mb-4 leading-relaxed ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>
-                  BHAT was founded with a simple mission: to bring authentic, premium imported fashion to customers in Kashmir and beyond. We started as a small boutique in Singhpora Pattan and have grown into a trusted name in imported clothing.
+                  BHAT Imported Clothes was founded with a simple mission: to bring authentic, premium imported fashion to customers in Kashmir and beyond. We started as a small boutique in Singhpora Pattan and have grown into a trusted name in imported clothing.
                 </p>
                 <p className={`mb-4 leading-relaxed ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>
-                  Our commitment to quality, authenticity, and customer satisfaction has made us the go-to destination for imported fashion enthusiasts. We work directly with international suppliers to ensure every piece meets our high standards.
+                  Our commitment to quality, authenticity, and customer satisfaction has made BHAT Imported Clothes the go-to destination for imported fashion enthusiasts. We work directly with international suppliers to ensure every piece meets our high standards.
                 </p>
                 <p className={`leading-relaxed ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>
-                  Today, we serve thousands of happy customers across India, delivering premium fashion with the personal touch that makes BHAT special.
+                  Today, we serve thousands of happy customers across India, delivering premium fashion with the personal touch that makes BHAT Imported Clothes special.
                 </p>
               </motion.div>
 
@@ -1074,9 +1074,9 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
             <div>
-              <h3 className="font-bold text-lg mb-4 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">BHAT</h3>
+              <h3 className="font-bold text-lg mb-4 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">BHAT IMPORTED CLOTHES</h3>
               <p className={`text-sm ${isDarkMode ? 'text-slate-400' : 'text-slate-300'}`}>
-                Premium imported clothing with authentic quality and competitive pricing. Your trusted fashion destination since 2020.
+                Bhat imported clothing with authentic quality and competitive pricing. Your trusted fashion destination since 2020.
               </p>
             </div>
             <div>
@@ -1127,7 +1127,7 @@ export default function Home() {
             </div>
           </div>
           <div className={`border-t ${isDarkMode ? 'border-slate-900' : 'border-slate-800'} pt-8 text-center text-sm ${isDarkMode ? 'text-slate-400' : 'text-slate-300'}`}>
-            <p>&copy; 2026 BHAT IMPORTED CLOTHES. All rights reserved. | Singhpora Pattan, J&K</p>
+            <p>&copy; 2026 BHAT IMPORTED CLOTHES. All rights reserved. | Singhpora Pattan, J&K | Authentic Fashion Since 2020</p>
           </div>
         </div>
       </footer>
