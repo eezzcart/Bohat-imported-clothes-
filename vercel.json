@@ -3,10 +3,11 @@
   "buildCommand": "pnpm install && pnpm build",
   "outputDirectory": "dist/public",
   "framework": "vite",
+  "cleanUrls": true,
   "rewrites": [
     {
       "source": "/(.*)",
-      "destination": "/$1"
+      "destination": "/index.html"
     }
   ]
 }
