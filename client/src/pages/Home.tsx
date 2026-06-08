@@ -407,30 +407,7 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center justify-center gap-8 mt-4 pt-4 border-t border-cyan-500/20">
-            {['Home', 'Shop', 'About', 'Contact'].map((item) => (
-              <motion.button
-                key={item}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => scrollToSection(item.toLowerCase())}
-                className={`font-medium text-sm transition relative ${
-                  activeSection === item.toLowerCase() 
-                    ? 'text-cyan-400 drop-shadow-lg drop-shadow-cyan-500/50' 
-                    : 'text-slate-400 hover:text-cyan-300'
-                }`}
-              >
-                {item}
-                {activeSection === item.toLowerCase() && (
-                  <motion.div
-                    layoutId="underline"
-                    className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-cyan-500 to-blue-500 shadow-lg shadow-cyan-500/50"
-                  />
-                )}
-              </motion.button>
-            ))}
-          </nav>
+
 
           {/* Mobile Menu */}
           <AnimatePresence>
