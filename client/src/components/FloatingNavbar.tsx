@@ -9,9 +9,9 @@ const FloatingNavbar = ({ onNavigate }: { onNavigate?: (section: string) => void
   const navItems = [
     { name: 'Home', section: 'home', icon: Home },
     { name: 'About', section: 'about', icon: Info },
-    { name: 'Admin', section: null, icon: User, isPlaceholder: true },
-    { name: 'Contact', section: 'contact', icon: Mail },
     { name: 'Shop', section: 'shop', icon: ShoppingBag },
+    { name: 'Contact', section: 'contact', icon: Mail },
+    { name: 'Admin', section: null, icon: User, isPlaceholder: true },
   ];
 
   const handleClick = (sectionId: string) => {
