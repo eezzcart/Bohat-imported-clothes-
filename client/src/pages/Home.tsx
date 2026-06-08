@@ -511,24 +511,53 @@ export default function Home() {
 
                 {/* Hero Image */}
                 <motion.div
-                  initial={{ opacity: 0, x: 50 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.8 }}
+                  initial={{ opacity: 0, x: 50, scale: 0.9 }}
+                  whileInView={{ opacity: 1, x: 0, scale: 1 }}
+                  transition={{ duration: 0.8, ease: "easeOut" }}
                   viewport={{ once: true }}
-                  whileHover={{ rotateY: 10, rotateX: -5 }}
-                  className="relative h-96 rounded-3xl overflow-hidden shadow-2xl shadow-cyan-500/30"
+                  whileHover={{ 
+                    scale: 1.02,
+                    rotateY: -5,
+                    rotateX: 2,
+                    transition: { duration: 0.4 }
+                  }}
+                  className="relative h-[500px] rounded-3xl overflow-hidden shadow-[0_0_50px_rgba(6,182,212,0.3)] border border-cyan-500/20 group"
                   style={{
-                    perspective: '1000px',
+                    perspective: '1200px',
                     transformStyle: 'preserve-3d',
                   }}
                 >
                   <div className="absolute inset-0 bg-gradient-to-br from-slate-800 to-slate-900" />
                   <img
-                    src="https://images.unsplash.com/photo-1595777707802-21b287e3f0c8?w=600&h=600&fit=crop&q=80"
-                    alt="Hero Fashion"
-                    className="w-full h-full object-cover"
+                    src="/assets/hero-fashion.jpg"
+                    alt="Bhat Imported Clothes Premium Collection"
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/40 to-transparent" />
+                  {/* Glassmorphism Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent opacity-60" />
+                  <div className="absolute inset-0 bg-cyan-500/10 mix-blend-overlay" />
+                  
+                  {/* Floating Badge */}
+                  <motion.div
+                    animate={{ y: [0, -10, 0] }}
+                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                    className="absolute top-6 right-6 bg-slate-900/80 backdrop-blur-md border border-cyan-500/30 px-4 py-2 rounded-full shadow-xl"
+                  >
+                    <span className="text-xs font-bold text-cyan-400 tracking-wider">EST. 2020</span>
+                  </motion.div>
+
+                  {/* Bottom Info */}
+                  <div className="absolute bottom-8 left-8 right-8">
+                    <div className="p-4 rounded-2xl bg-slate-900/40 backdrop-blur-md border border-white/10 shadow-2xl">
+                      <p className="text-sm font-medium text-slate-200">Premium Imported Collection</p>
+                      <div className="flex items-center gap-1 mt-1">
+                        {[...Array(5)].map((_, i) => (
+                          <Star key={i} size={12} fill="currentColor" className="text-cyan-400" />
+                        ))}
+                        <span className="text-xs text-slate-400 ml-2">Authenticity Guaranteed</span>
+                      </div>
+                    </div>
+                  </div>
                 </motion.div>
               </div>
             </div>
