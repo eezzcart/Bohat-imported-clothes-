@@ -29,38 +29,7 @@ interface Testimonial {
 }
 
 export default function Home() {
-  const [activeSection, setActiveSection] = useState('home');
-  const [showCart, setShowCart] = useState(false);
-  const [showMobileMenu, setShowMobileMenu] = useState(false);
-  const [cart, setCart] = useState<Product[]>([]);
-  const [favorites, setFavorites] = useState<number[]>([]);
-  
-  // Shop filter states
-  const [priceRange, setPriceRange] = useState([0, 5000]);
-  const [selectedCategory, setSelectedCategory] = useState('All');
-  const [searchTerm, setSearchTerm] = useState('');
-  
-  // Contact form states
-  const [contactForm, setContactForm] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    message: '',
-    subject: 'General Inquiry'
-  });
-  const [contactSubmitted, setContactSubmitted] = useState(false);
-  const [showReviewForm, setShowReviewForm] = useState(false);
-  const [customerReviews, setCustomerReviews] = useState<Testimonial[]>(testimonials);
-  const [reviewForm, setReviewForm] = useState({
-    name: '',
-    email: '',
-    rating: 5,
-    text: '',
-    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop'
-  });
-  const [reviewSubmitted, setReviewSubmitted] = useState(false);
-  const [showBubbleMenu, setShowBubbleMenu] = useState(false);
-
+  // Define static data first (before useState hooks)
   const products: Product[] = [
     {
       id: 1,
@@ -193,6 +162,41 @@ export default function Home() {
     { icon: Clock, title: 'Fast Delivery', desc: '5-7 business days', color: 'from-indigo-500 to-purple-500' },
     { icon: Check, title: 'Secure Checkout', desc: '100% safe transactions', color: 'from-cyan-400 to-blue-600' },
   ];
+
+  // Now define state hooks
+  const [activeSection, setActiveSection] = useState('home');
+  const [showCart, setShowCart] = useState(false);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const [cart, setCart] = useState<Product[]>([]);
+  const [favorites, setFavorites] = useState<number[]>([]);
+  
+  // Shop filter states
+  const [priceRange, setPriceRange] = useState([0, 5000]);
+  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [searchTerm, setSearchTerm] = useState('');
+  
+  // Contact form states
+  const [contactForm, setContactForm] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    message: '',
+    subject: 'General Inquiry'
+  });
+  const [contactSubmitted, setContactSubmitted] = useState(false);
+  const [showReviewForm, setShowReviewForm] = useState(false);
+  const [customerReviews, setCustomerReviews] = useState<Testimonial[]>(testimonials);
+  const [reviewForm, setReviewForm] = useState({
+    name: '',
+    email: '',
+    rating: 5,
+    text: '',
+    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop'
+  });
+  const [reviewSubmitted, setReviewSubmitted] = useState(false);
+  const [showBubbleMenu, setShowBubbleMenu] = useState(false);
+
+  
 
   const toggleFavorite = (id: number) => {
     setFavorites(favorites.includes(id) ? favorites.filter(f => f !== id) : [...favorites, id]);
