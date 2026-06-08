@@ -167,6 +167,7 @@ export default function Home() {
   const [activeSection, setActiveSection] = useState('home');
   const [showCart, setShowCart] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const [showCollection, setShowCollection] = useState(false);
   const [cart, setCart] = useState<Product[]>([]);
   const [favorites, setFavorites] = useState<number[]>([]);
   
@@ -832,24 +833,55 @@ export default function Home() {
                   />
                 </div>
 
-                {/* Category Filter */}
+                {/* Category Filter Dropdown */}
                 <div className="mb-6">
                   <label className="text-sm font-semibold mb-3 block text-slate-300">Category</label>
-                  <div className="space-y-2">
-                    {categories.map((cat) => (
-                      <motion.button
-                        key={cat.name}
-                        whileHover={{ x: 5 }}
-                        onClick={() => setSelectedCategory(cat.name)}
-                        className={`w-full text-left px-4 py-2 rounded-lg transition ${
-                          selectedCategory === cat.name
-                            ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg shadow-cyan-500/50'
-                            : 'hover:bg-slate-800/50 text-slate-300'
-                        }`}
+                  <div className="relative">
+                    <motion.button
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => setShowCollection(!showCollection)}
+                      className="w-full flex items-center justify-between px-4 py-3 rounded-xl border border-cyan-500/30 bg-slate-800/50 text-white transition hover:border-cyan-400 group"
+                    >
+                      <span className="font-medium">{selectedCategory === 'All' ? 'Collection' : selectedCategory}</span>
+                      <motion.div
+                        animate={{ rotate: showCollection ? 180 : 0 }}
+                        transition={{ duration: 0.3 }}
                       >
-                        {cat.name}
-                      </motion.button>
-                    ))}
+                        <ChevronRight className="w-5 h-5 text-cyan-400 transition-colors group-hover:text-cyan-300 rotate-90" />
+                      </motion.div>
+                    </motion.button>
+
+                    <AnimatePresence>
+                      {showCollection && (
+                        <motion.div
+                          initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                          animate={{ opacity: 1, y: 0, scale: 1 }}
+                          exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                          className="absolute z-20 left-0 right-0 mt-2 p-2 rounded-xl border border-cyan-500/30 bg-slate-900/95 backdrop-blur-xl shadow-2xl overflow-hidden"
+                        >
+                          <div className="max-h-60 overflow-y-auto custom-scrollbar">
+                            {categories.map((cat) => (
+                              <motion.button
+                                key={cat.name}
+                                whileHover={{ x: 4, backgroundColor: 'rgba(6, 182, 212, 0.1)' }}
+                                onClick={() => {
+                                  setSelectedCategory(cat.name);
+                                  setShowCollection(false);
+                                }}
+                                className={`w-full text-left px-4 py-2.5 rounded-lg transition flex items-center justify-between ${
+                                  selectedCategory === cat.name
+                                    ? 'text-cyan-400 font-bold bg-cyan-500/10'
+                                    : 'text-slate-300'
+                                }`}
+                              >
+                                {cat.name}
+                                {selectedCategory === cat.name && <Check size={16} className="text-cyan-400" />}
+                              </motion.button>
+                            ))}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </div>
                 </div>
 
