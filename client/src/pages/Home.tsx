@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShoppingBag, Heart, Search, User, Menu, X, Star, Phone, Mail, MapPin, Instagram, Facebook, Twitter, ChevronRight, ArrowRight, Check, Truck, Shield, Clock, Sparkles, Send, Award, Users, TrendingUp, Filter } from 'lucide-react';
+import { ShoppingBag, Heart, Search, User, Menu, X, Star, Phone, Mail, MapPin, Instagram, Facebook, Twitter, ChevronRight, ArrowRight, Check, Truck, Shield, Clock, Sparkles, Send, Award, Users, TrendingUp, Filter, Zap } from 'lucide-react';
 
 interface Product {
   id: number;
@@ -34,7 +34,6 @@ export default function Home() {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [cart, setCart] = useState<Product[]>([]);
   const [favorites, setFavorites] = useState<number[]>([]);
-  const [isDarkMode, setIsDarkMode] = useState(false);
   
   // Shop filter states
   const [priceRange, setPriceRange] = useState([0, 5000]);
@@ -50,11 +49,6 @@ export default function Home() {
     subject: 'General Inquiry'
   });
   const [contactSubmitted, setContactSubmitted] = useState(false);
-
-  useEffect(() => {
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    setIsDarkMode(prefersDark);
-  }, []);
 
   const products: Product[] = [
     {
@@ -183,10 +177,10 @@ export default function Home() {
   ];
 
   const features = [
-    { icon: Truck, title: 'Free Shipping', desc: 'On orders above ₹999', color: 'from-blue-500 to-cyan-500' },
-    { icon: Shield, title: 'Authentic Quality', desc: 'Guaranteed imported products', color: 'from-purple-500 to-pink-500' },
-    { icon: Clock, title: 'Fast Delivery', desc: '5-7 business days', color: 'from-orange-500 to-red-500' },
-    { icon: Check, title: 'Secure Checkout', desc: '100% safe transactions', color: 'from-green-500 to-emerald-500' },
+    { icon: Truck, title: 'Free Shipping', desc: 'On orders above ₹999', color: 'from-cyan-500 to-blue-500' },
+    { icon: Shield, title: 'Authentic Quality', desc: 'Guaranteed imported products', color: 'from-blue-500 to-indigo-500' },
+    { icon: Clock, title: 'Fast Delivery', desc: '5-7 business days', color: 'from-indigo-500 to-purple-500' },
+    { icon: Check, title: 'Secure Checkout', desc: '100% safe transactions', color: 'from-cyan-400 to-blue-600' },
   ];
 
   const toggleFavorite = (id: number) => {
@@ -204,7 +198,6 @@ export default function Home() {
 
   const cartTotal = cart.reduce((sum, item) => sum + item.price, 0);
 
-  // Filter products based on price, category, and search
   const filteredProducts = products.filter(product => {
     const matchesPrice = product.price >= priceRange[0] && product.price <= priceRange[1];
     const matchesCategory = selectedCategory === 'All' || product.category === selectedCategory;
@@ -223,7 +216,6 @@ export default function Home() {
 
   const handleContactSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Simulate form submission
     console.log('Contact form submitted:', contactForm);
     setContactSubmitted(true);
     setTimeout(() => {
@@ -233,20 +225,28 @@ export default function Home() {
   };
 
   return (
-    <div className={`min-h-screen transition-colors duration-300 ${isDarkMode ? 'bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-slate-50' : 'bg-gradient-to-br from-white via-blue-50 to-purple-50 text-slate-900'}`}>
-      {/* Top Announcement Bar with Glassmorphism */}
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-slate-50 overflow-hidden">
+      {/* Animated background lightning effect */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+      </div>
+
+      {/* Top Announcement Bar */}
       <motion.div 
         initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        className={`${isDarkMode ? 'bg-slate-900/40 border-slate-700/40' : 'bg-white/40 border-white/60'} border-b backdrop-blur-xl py-3 text-center text-sm font-medium sticky top-0 z-40`}
+        className="relative z-40 bg-slate-900/60 border-b border-cyan-500/30 backdrop-blur-xl py-3 text-center text-sm font-medium sticky top-0"
       >
-        <span className={isDarkMode ? 'text-slate-200' : 'text-slate-700'}>
+        <span className="text-slate-200 flex items-center justify-center gap-2">
+          <Zap size={16} className="text-cyan-400" />
           ✓ Free Shipping Above ₹999 | ✓ Authentic Imported Clothing | ✓ Premium Quality Guaranteed
+          <Zap size={16} className="text-cyan-400" />
         </span>
       </motion.div>
 
-      {/* Floating Header with Glassmorphism */}
-      <header className={`sticky top-12 z-50 ${isDarkMode ? 'bg-slate-900/30 border-slate-700/30' : 'bg-white/30 border-white/60'} border-b backdrop-blur-xl transition-all duration-300`}>
+      {/* Floating Header */}
+      <header className="sticky top-12 z-50 bg-slate-900/40 border-b border-cyan-500/20 backdrop-blur-xl transition-all duration-300">
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             {/* Mobile Menu Button */}
@@ -254,19 +254,19 @@ export default function Home() {
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
               onClick={() => setShowMobileMenu(!showMobileMenu)}
-              className={`md:hidden p-2 rounded-lg transition ${isDarkMode ? 'hover:bg-slate-700/50' : 'hover:bg-white/50'}`}
+              className="md:hidden p-2 rounded-lg transition hover:bg-slate-800/50 hover:shadow-lg hover:shadow-cyan-500/20"
             >
               {showMobileMenu ? <X size={24} /> : <Menu size={24} />}
             </motion.button>
 
-            {/* Logo with Image */}
+            {/* Logo */}
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               whileHover={{ scale: 1.05 }}
               className="flex-1 text-center md:flex-none cursor-pointer"
             >
-              <img src="/assets/logo.jpg" alt="BHAT Logo" className="h-12 mx-auto" />
+              <img src="/assets/logo.jpg" alt="BHAT Logo" className="h-12 mx-auto drop-shadow-lg" />
             </motion.div>
 
             {/* Right Icons */}
@@ -274,31 +274,31 @@ export default function Home() {
               <motion.button 
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
-                className={`p-2 rounded-lg transition hidden md:block ${isDarkMode ? 'hover:bg-slate-700/50' : 'hover:bg-white/50'}`}
+                className="p-2 rounded-lg transition hidden md:block hover:bg-slate-800/50 hover:shadow-lg hover:shadow-cyan-500/20"
               >
-                <Search size={20} />
+                <Search size={20} className="text-cyan-400" />
               </motion.button>
               <motion.button 
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
-                className={`p-2 rounded-lg transition hidden md:block ${isDarkMode ? 'hover:bg-slate-700/50' : 'hover:bg-white/50'}`}
+                className="p-2 rounded-lg transition hidden md:block hover:bg-slate-800/50 hover:shadow-lg hover:shadow-cyan-500/20"
               >
-                <User size={20} />
+                <User size={20} className="text-cyan-400" />
               </motion.button>
               <motion.button
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
                 onClick={() => setShowCart(!showCart)}
-                className={`p-2 rounded-lg transition relative ${isDarkMode ? 'hover:bg-slate-700/50' : 'hover:bg-white/50'}`}
+                className="p-2 rounded-lg transition relative hover:bg-slate-800/50 hover:shadow-lg hover:shadow-cyan-500/20"
               >
-                <ShoppingBag size={20} />
+                <ShoppingBag size={20} className="text-cyan-400" />
                 <AnimatePresence>
                   {cart.length > 0 && (
                     <motion.span 
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
                       exit={{ scale: 0 }}
-                      className="absolute -top-1 -right-1 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center"
+                      className="absolute -top-1 -right-1 bg-gradient-to-r from-cyan-500 to-blue-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center shadow-lg shadow-cyan-500/50"
                     >
                       {cart.length}
                     </motion.span>
@@ -309,7 +309,7 @@ export default function Home() {
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center justify-center gap-8 mt-4 pt-4 border-t border-slate-200/30">
+          <nav className="hidden md:flex items-center justify-center gap-8 mt-4 pt-4 border-t border-cyan-500/20">
             {['Home', 'Shop', 'About', 'Contact'].map((item) => (
               <motion.button
                 key={item}
@@ -318,15 +318,15 @@ export default function Home() {
                 onClick={() => scrollToSection(item.toLowerCase())}
                 className={`font-medium text-sm transition relative ${
                   activeSection === item.toLowerCase() 
-                    ? 'text-blue-600 dark:text-blue-400' 
-                    : isDarkMode ? 'text-slate-400 hover:text-slate-200' : 'text-slate-600 hover:text-slate-900'
+                    ? 'text-cyan-400 drop-shadow-lg drop-shadow-cyan-500/50' 
+                    : 'text-slate-400 hover:text-cyan-300'
                 }`}
               >
                 {item}
                 {activeSection === item.toLowerCase() && (
                   <motion.div
                     layoutId="underline"
-                    className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-600 to-purple-600"
+                    className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-cyan-500 to-blue-500 shadow-lg shadow-cyan-500/50"
                   />
                 )}
               </motion.button>
@@ -340,7 +340,7 @@ export default function Home() {
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
-                className={`md:hidden flex flex-col gap-3 mt-4 pt-4 border-t ${isDarkMode ? 'border-slate-700/30' : 'border-white/30'}`}
+                className="md:hidden flex flex-col gap-3 mt-4 pt-4 border-t border-cyan-500/20"
               >
                 {['Home', 'Shop', 'About', 'Contact'].map((item, i) => (
                   <motion.button
@@ -349,7 +349,7 @@ export default function Home() {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: i * 0.1 }}
                     onClick={() => scrollToSection(item.toLowerCase())}
-                    className={`text-left font-medium transition ${isDarkMode ? 'text-slate-300 hover:text-slate-100' : 'text-slate-700 hover:text-slate-900'}`}
+                    className="text-left font-medium transition text-slate-300 hover:text-cyan-300"
                   >
                     {item}
                   </motion.button>
@@ -363,9 +363,9 @@ export default function Home() {
       {/* HOME SECTION */}
       {activeSection === 'home' && (
         <>
-          {/* Hero Section with 3D Perspective */}
-          <section className={`relative py-16 md:py-32 overflow-hidden`}>
-            <div className="max-w-7xl mx-auto px-4">
+          {/* Hero Section */}
+          <section className="relative py-16 md:py-32 overflow-hidden">
+            <div className="max-w-7xl mx-auto px-4 relative z-10">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
                 <motion.div
                   initial={{ opacity: 0, x: -50 }}
@@ -379,59 +379,59 @@ export default function Home() {
                     transition={{ duration: 0.6 }}
                     className="flex items-center gap-2 mb-4"
                   >
-                    <Sparkles className="w-5 h-5 text-blue-600" />
-                    <span className="text-sm font-semibold text-blue-600">Welcome to BHAT</span>
+                    <Zap className="w-5 h-5 text-cyan-400 drop-shadow-lg drop-shadow-cyan-500/50" />
+                    <span className="text-sm font-semibold text-cyan-400">Welcome to BHAT</span>
                   </motion.div>
 
                   <motion.h1 
-                    className="text-5xl md:text-7xl font-bold leading-tight mb-6 tracking-tight bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent"
+                    className="text-5xl md:text-7xl font-bold leading-tight mb-6 tracking-tight text-slate-50"
                     whileHover={{ scale: 1.02 }}
                   >
-                    Bhat Imported <span className="block mt-2">Clothes</span>
+                    Bhat Imported <span className="block mt-2 bg-gradient-to-r from-cyan-400 via-blue-500 to-cyan-400 bg-clip-text text-transparent drop-shadow-lg">Clothes</span>
                   </motion.h1>
-                  <p className={`text-lg mb-2 font-medium ${isDarkMode ? 'text-slate-300' : 'text-slate-700'}`}>
+                  <p className="text-lg mb-2 font-medium text-slate-300">
                     📍 Singhpora Pattan, J&K
                   </p>
-                  <p className={`text-base mb-8 leading-relaxed ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>
-                    Discover authentic Bhat imported clothes with uncompromising quality and competitive pricing. We bring you the finest fashion from around the world, curated specially for you. Experience the difference of genuine imported fashion.
+                  <p className="text-base mb-8 leading-relaxed text-slate-400">
+                    Discover authentic Bhat imported clothes with uncompromising quality and competitive pricing. We bring you the finest fashion from around the world, curated specially for you. Experience the power of genuine imported fashion.
                   </p>
                   <motion.button
                     whileHover={{ scale: 1.05, x: 5 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={() => scrollToSection('shop')}
-                    className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-xl font-semibold transition flex items-center gap-2 hover:shadow-lg hover:shadow-blue-500/50"
+                    className="bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-8 py-4 rounded-xl font-semibold transition flex items-center gap-2 hover:shadow-xl hover:shadow-cyan-500/50 border border-cyan-400/50"
                   >
                     Shop Now <ArrowRight size={18} />
                   </motion.button>
                 </motion.div>
 
-                {/* 3D Hero Image */}
+                {/* Hero Image */}
                 <motion.div
                   initial={{ opacity: 0, x: 50 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.8 }}
                   viewport={{ once: true }}
                   whileHover={{ rotateY: 10, rotateX: -5 }}
-                  className={`relative h-96 rounded-3xl overflow-hidden shadow-2xl`}
+                  className="relative h-96 rounded-3xl overflow-hidden shadow-2xl shadow-cyan-500/30"
                   style={{
                     perspective: '1000px',
                     transformStyle: 'preserve-3d',
                   }}
                 >
-                  <div className={`absolute inset-0 ${isDarkMode ? 'bg-gradient-to-br from-slate-700 to-slate-800' : 'bg-gradient-to-br from-blue-200 to-purple-200'}`} />
+                  <div className="absolute inset-0 bg-gradient-to-br from-slate-800 to-slate-900" />
                   <img
                     src="https://images.unsplash.com/photo-1595777707802-21b287e3f0c8?w=600&h=600&fit=crop&q=80"
-                    alt="Hero"
+                    alt="Hero Fashion"
                     className="w-full h-full object-cover"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/40 to-transparent" />
                 </motion.div>
               </div>
             </div>
           </section>
 
-          {/* Features Section with Glassmorphism */}
-          <section className={`py-20 relative`}>
+          {/* Features Section */}
+          <section className="py-20 relative z-10">
             <div className="max-w-7xl mx-auto px-4">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -439,8 +439,8 @@ export default function Home() {
                 viewport={{ once: true }}
                 className="mb-12 text-center"
               >
-                <h2 className="text-4xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Why Choose BHAT?</h2>
-                <p className={isDarkMode ? 'text-slate-400' : 'text-slate-600'}>Experience excellence in every aspect of your shopping journey</p>
+                <h2 className="text-4xl font-bold mb-4 text-slate-50">Why Choose BHAT?</h2>
+                <p className="text-slate-400">Experience excellence in every aspect of your shopping journey</p>
               </motion.div>
 
               <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
@@ -454,13 +454,13 @@ export default function Home() {
                       whileHover={{ y: -10, scale: 1.05 }}
                       transition={{ delay: index * 0.1 }}
                       viewport={{ once: true }}
-                      className={`p-6 rounded-2xl backdrop-blur-xl border transition ${isDarkMode ? 'bg-slate-800/40 border-slate-700/40 hover:bg-slate-700/40' : 'bg-white/40 border-white/60 hover:bg-white/60'}`}
+                      className="p-6 rounded-2xl backdrop-blur-xl border border-cyan-500/30 bg-slate-900/40 hover:bg-slate-900/60 transition shadow-lg hover:shadow-cyan-500/30"
                     >
-                      <div className={`w-12 h-12 rounded-lg bg-gradient-to-br ${feature.color} p-2.5 mb-4 flex items-center justify-center text-white`}>
+                      <div className={`w-12 h-12 rounded-lg bg-gradient-to-br ${feature.color} p-2.5 mb-4 flex items-center justify-center text-white shadow-lg`}>
                         <Icon className="w-6 h-6" />
                       </div>
-                      <h3 className="font-semibold mb-2 text-sm">{feature.title}</h3>
-                      <p className={`text-xs ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>{feature.desc}</p>
+                      <h3 className="font-semibold mb-2 text-sm text-slate-50">{feature.title}</h3>
+                      <p className="text-xs text-slate-400">{feature.desc}</p>
                     </motion.div>
                   );
                 })}
@@ -469,7 +469,7 @@ export default function Home() {
           </section>
 
           {/* Categories Section */}
-          <section className={`py-20 ${isDarkMode ? 'bg-slate-800/20' : 'bg-gradient-to-r from-blue-100/50 to-purple-100/50'}`}>
+          <section className="py-20 relative z-10">
             <div className="max-w-7xl mx-auto px-4">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -477,8 +477,8 @@ export default function Home() {
                 viewport={{ once: true }}
                 className="mb-12 text-center"
               >
-                <h2 className="text-4xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Shop by Category</h2>
-                <p className={isDarkMode ? 'text-slate-400' : 'text-slate-600'}>Explore our diverse collection of premium imported clothing</p>
+                <h2 className="text-4xl font-bold mb-4 text-slate-50">Shop by Category</h2>
+                <p className="text-slate-400">Explore our diverse collection of premium imported clothing</p>
               </motion.div>
 
               <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
@@ -490,7 +490,7 @@ export default function Home() {
                     whileHover={{ scale: 1.05, rotateZ: 2 }}
                     transition={{ delay: index * 0.1 }}
                     viewport={{ once: true }}
-                    className={`relative h-48 rounded-2xl overflow-hidden cursor-pointer group`}
+                    className="relative h-48 rounded-2xl overflow-hidden cursor-pointer group border border-cyan-500/20 shadow-lg hover:shadow-cyan-500/40"
                     onClick={() => scrollToSection('shop')}
                   >
                     <img
@@ -498,10 +498,10 @@ export default function Home() {
                       alt={category.name}
                       className="w-full h-full object-cover transition group-hover:scale-110"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/40 to-transparent" />
                     <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
                       <h3 className="text-xl font-bold mb-1">{category.name}</h3>
-                      <p className="text-sm text-gray-200">{category.description}</p>
+                      <p className="text-sm text-slate-200">{category.description}</p>
                     </div>
                   </motion.div>
                 ))}
@@ -509,8 +509,8 @@ export default function Home() {
             </div>
           </section>
 
-          {/* Testimonials Section with Glassmorphism */}
-          <section className={`py-20`}>
+          {/* Testimonials Section */}
+          <section className="py-20 relative z-10">
             <div className="max-w-7xl mx-auto px-4">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -518,8 +518,8 @@ export default function Home() {
                 viewport={{ once: true }}
                 className="mb-12 text-center"
               >
-                <h2 className="text-4xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Loved by Customers</h2>
-                <p className={isDarkMode ? 'text-slate-400' : 'text-slate-600'}>Real reviews from real customers who trust our quality</p>
+                <h2 className="text-4xl font-bold mb-4 text-slate-50">Loved by Customers</h2>
+                <p className="text-slate-400">Real reviews from real customers who trust our quality</p>
               </motion.div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -531,24 +531,25 @@ export default function Home() {
                     whileHover={{ y: -5 }}
                     transition={{ delay: index * 0.1 }}
                     viewport={{ once: true }}
-                    className={`p-6 rounded-2xl backdrop-blur-xl border transition ${isDarkMode ? 'bg-slate-800/40 border-slate-700/40 hover:bg-slate-700/40' : 'bg-white/40 border-white/60 hover:bg-white/60'}`}
+                    className="p-6 rounded-2xl backdrop-blur-xl border border-cyan-500/30 bg-slate-900/40 hover:bg-slate-900/60 transition shadow-lg hover:shadow-cyan-500/30"
                   >
                     <div className="flex items-center gap-3 mb-4">
                       <img
                         src={testimonial.image}
                         alt={testimonial.name}
-                        className="w-12 h-12 rounded-full object-cover border-2 border-blue-500/50"
+                        className="w-12 h-12 rounded-full object-cover border-2 border-cyan-500/50"
+                        loading="lazy"
                       />
                       <div>
-                        <h4 className="font-semibold text-sm">{testimonial.name}</h4>
+                        <h4 className="font-semibold text-sm text-slate-50">{testimonial.name}</h4>
                         <div className="flex gap-0.5">
                           {[...Array(testimonial.rating)].map((_, i) => (
-                            <Star key={i} size={12} fill="currentColor" className="text-yellow-500" />
+                            <Star key={i} size={12} fill="currentColor" className="text-cyan-400" />
                           ))}
                         </div>
                       </div>
                     </div>
-                    <p className={`text-sm leading-relaxed ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>{testimonial.text}</p>
+                    <p className="text-sm leading-relaxed text-slate-400">{testimonial.text}</p>
                   </motion.div>
                 ))}
               </div>
@@ -559,15 +560,15 @@ export default function Home() {
 
       {/* SHOP SECTION */}
       {activeSection === 'shop' && (
-        <section className={`py-20`}>
+        <section className="py-20 relative z-10">
           <div className="max-w-7xl mx-auto px-4">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               className="mb-12"
             >
-              <h2 className="text-4xl font-bold mb-2 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Shop Our Collection</h2>
-              <p className={isDarkMode ? 'text-slate-400' : 'text-slate-600'}>Browse and filter our premium imported clothing collection</p>
+              <h2 className="text-4xl font-bold mb-2 text-slate-50">Shop Our Collection</h2>
+              <p className="text-slate-400">Browse and filter our premium imported clothing collection</p>
             </motion.div>
 
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
@@ -575,28 +576,28 @@ export default function Home() {
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
-                className={`rounded-2xl backdrop-blur-xl border p-6 h-fit ${isDarkMode ? 'bg-slate-800/40 border-slate-700/40' : 'bg-white/40 border-white/60'}`}
+                className="rounded-2xl backdrop-blur-xl border border-cyan-500/30 bg-slate-900/40 p-6 h-fit shadow-lg"
               >
                 <div className="flex items-center gap-2 mb-6">
-                  <Filter size={20} />
-                  <h3 className="text-lg font-bold">Filters</h3>
+                  <Filter size={20} className="text-cyan-400" />
+                  <h3 className="text-lg font-bold text-slate-50">Filters</h3>
                 </div>
 
                 {/* Search */}
                 <div className="mb-6">
-                  <label className="text-sm font-semibold mb-2 block">Search</label>
+                  <label className="text-sm font-semibold mb-2 block text-slate-300">Search</label>
                   <input
                     type="text"
                     placeholder="Search products..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className={`w-full px-4 py-2 rounded-lg border transition ${isDarkMode ? 'bg-slate-700/50 border-slate-600/50 text-white' : 'bg-white/50 border-white/60 text-slate-900'}`}
+                    className="w-full px-4 py-2 rounded-lg border border-cyan-500/30 bg-slate-800/50 text-white placeholder-slate-500 transition focus:border-cyan-400 focus:shadow-lg focus:shadow-cyan-500/30"
                   />
                 </div>
 
                 {/* Category Filter */}
                 <div className="mb-6">
-                  <label className="text-sm font-semibold mb-3 block">Category</label>
+                  <label className="text-sm font-semibold mb-3 block text-slate-300">Category</label>
                   <div className="space-y-2">
                     {categories.map((cat) => (
                       <motion.button
@@ -605,8 +606,8 @@ export default function Home() {
                         onClick={() => setSelectedCategory(cat.name)}
                         className={`w-full text-left px-4 py-2 rounded-lg transition ${
                           selectedCategory === cat.name
-                            ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white'
-                            : isDarkMode ? 'hover:bg-slate-700/50' : 'hover:bg-white/50'
+                            ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg shadow-cyan-500/50'
+                            : 'hover:bg-slate-800/50 text-slate-300'
                         }`}
                       >
                         {cat.name}
@@ -617,7 +618,7 @@ export default function Home() {
 
                 {/* Price Range Filter */}
                 <div className="mb-6">
-                  <label className="text-sm font-semibold mb-3 block">Price Range</label>
+                  <label className="text-sm font-semibold mb-3 block text-slate-300">Price Range</label>
                   <div className="space-y-3">
                     <input
                       type="range"
@@ -626,7 +627,7 @@ export default function Home() {
                       step="100"
                       value={priceRange[0]}
                       onChange={(e) => setPriceRange([parseInt(e.target.value), priceRange[1]])}
-                      className="w-full"
+                      className="w-full accent-cyan-500"
                     />
                     <input
                       type="range"
@@ -635,9 +636,9 @@ export default function Home() {
                       step="100"
                       value={priceRange[1]}
                       onChange={(e) => setPriceRange([priceRange[0], parseInt(e.target.value)])}
-                      className="w-full"
+                      className="w-full accent-cyan-500"
                     />
-                    <div className={`text-sm font-semibold ${isDarkMode ? 'text-slate-300' : 'text-slate-700'}`}>
+                    <div className="text-sm font-semibold text-cyan-400">
                       ₹{priceRange[0].toLocaleString()} - ₹{priceRange[1].toLocaleString()}
                     </div>
                   </div>
@@ -652,7 +653,7 @@ export default function Home() {
                     setSelectedCategory('All');
                     setSearchTerm('');
                   }}
-                  className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-2 rounded-lg font-semibold transition hover:shadow-lg"
+                  className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 text-white py-2 rounded-lg font-semibold transition hover:shadow-lg hover:shadow-cyan-500/50"
                 >
                   Reset Filters
                 </motion.button>
@@ -663,7 +664,7 @@ export default function Home() {
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  className={`text-sm font-semibold mb-6 ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}
+                  className="text-sm font-semibold mb-6 text-slate-400"
                 >
                   Showing {filteredProducts.length} products
                 </motion.div>
@@ -676,19 +677,20 @@ export default function Home() {
                       animate={{ opacity: 1, y: 0 }}
                       whileHover={{ y: -10 }}
                       transition={{ delay: index * 0.05 }}
-                      className={`rounded-2xl overflow-hidden backdrop-blur-xl border transition group ${isDarkMode ? 'bg-slate-800/40 border-slate-700/40 hover:bg-slate-700/40' : 'bg-white/40 border-white/60 hover:bg-white/60'}`}
+                      className="rounded-2xl overflow-hidden backdrop-blur-xl border border-cyan-500/30 bg-slate-900/40 hover:bg-slate-900/60 transition group shadow-lg hover:shadow-cyan-500/40"
                     >
-                      <div className={`relative h-64 overflow-hidden ${isDarkMode ? 'bg-slate-700' : 'bg-slate-200'}`}>
+                      <div className="relative h-64 overflow-hidden bg-slate-800">
                         <img
                           src={product.image}
                           alt={product.name}
                           className="w-full h-full object-cover transition group-hover:scale-110"
+                          loading="lazy"
                         />
                         {product.badge && (
                           <motion.div 
                             initial={{ scale: 0 }}
                             animate={{ scale: 1 }}
-                            className="absolute top-3 left-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-xs font-bold px-3 py-1 rounded-full"
+                            className="absolute top-3 left-3 bg-gradient-to-r from-cyan-500 to-blue-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg shadow-cyan-500/50"
                           >
                             {product.badge}
                           </motion.div>
@@ -697,33 +699,33 @@ export default function Home() {
                           whileHover={{ scale: 1.1 }}
                           whileTap={{ scale: 0.9 }}
                           onClick={() => toggleFavorite(product.id)}
-                          className="absolute top-3 right-3 p-2 rounded-full bg-white/80 backdrop-blur-sm shadow-lg transition hover:bg-white"
+                          className="absolute top-3 right-3 p-2 rounded-full bg-slate-900/80 backdrop-blur-sm shadow-lg transition hover:bg-slate-900 border border-cyan-500/30"
                         >
                           <Heart
                             size={18}
-                            className={favorites.includes(product.id) ? 'fill-red-500 text-red-500' : 'text-slate-400'}
+                            className={favorites.includes(product.id) ? 'fill-cyan-400 text-cyan-400' : 'text-slate-400'}
                           />
                         </motion.button>
                       </div>
                       <div className="p-6">
-                        <h3 className="font-semibold text-lg mb-2">{product.name}</h3>
-                        <p className={`text-sm mb-4 ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>{product.description}</p>
+                        <h3 className="font-semibold text-lg mb-2 text-slate-50">{product.name}</h3>
+                        <p className="text-sm mb-4 text-slate-400">{product.description}</p>
                         <div className="flex items-center gap-2 mb-4">
                           {product.rating && (
                             <div className="flex gap-1">
                               {[...Array(product.rating)].map((_, i) => (
-                                <Star key={i} size={14} fill="currentColor" className="text-yellow-500" />
+                                <Star key={i} size={14} fill="currentColor" className="text-cyan-400" />
                               ))}
                             </div>
                           )}
-                          <span className={`text-xs ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>
+                          <span className="text-xs text-slate-400">
                             ({product.rating} stars)
                           </span>
                         </div>
                         <div className="flex items-center gap-2 mb-4">
-                          <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">₹{product.price.toLocaleString()}</span>
+                          <span className="text-2xl font-bold text-cyan-400">₹{product.price.toLocaleString()}</span>
                           {product.originalPrice && (
-                            <span className={`text-sm line-through ${isDarkMode ? 'text-slate-500' : 'text-slate-400'}`}>
+                            <span className="text-sm line-through text-slate-500">
                               ₹{product.originalPrice.toLocaleString()}
                             </span>
                           )}
@@ -732,7 +734,7 @@ export default function Home() {
                           whileHover={{ scale: 1.02 }}
                           whileTap={{ scale: 0.98 }}
                           onClick={() => addToCart(product)}
-                          className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 rounded-lg font-medium transition hover:shadow-lg hover:shadow-blue-500/50"
+                          className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 text-white py-3 rounded-lg font-medium transition hover:shadow-lg hover:shadow-cyan-500/50"
                         >
                           Add to Cart
                         </motion.button>
@@ -747,7 +749,7 @@ export default function Home() {
                     animate={{ opacity: 1 }}
                     className="text-center py-12"
                   >
-                    <p className={`text-lg font-semibold ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>
+                    <p className="text-lg font-semibold text-slate-400">
                       No products found matching your filters
                     </p>
                   </motion.div>
@@ -760,15 +762,15 @@ export default function Home() {
 
       {/* ABOUT SECTION */}
       {activeSection === 'about' && (
-        <section className={`py-20`}>
+        <section className="py-20 relative z-10">
           <div className="max-w-7xl mx-auto px-4">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               className="mb-12"
             >
-              <h2 className="text-4xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">About BHAT</h2>
-              <p className={isDarkMode ? 'text-slate-400' : 'text-slate-600'}>Learn about our journey and mission</p>
+              <h2 className="text-4xl font-bold mb-4 text-slate-50">About BHAT</h2>
+              <p className="text-slate-400">Learn about our journey and mission</p>
             </motion.div>
 
             {/* About Content */}
@@ -776,16 +778,16 @@ export default function Home() {
               <motion.div
                 initial={{ opacity: 0, x: -30 }}
                 animate={{ opacity: 1, x: 0 }}
-                className={`rounded-2xl backdrop-blur-xl border p-8 ${isDarkMode ? 'bg-slate-800/40 border-slate-700/40' : 'bg-white/40 border-white/60'}`}
+                className="rounded-2xl backdrop-blur-xl border border-cyan-500/30 bg-slate-900/40 p-8 shadow-lg"
               >
-                <h3 className="text-2xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Our Story</h3>
-                <p className={`mb-4 leading-relaxed ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>
+                <h3 className="text-2xl font-bold mb-4 text-cyan-400">Our Story</h3>
+                <p className="mb-4 leading-relaxed text-slate-400">
                   BHAT Imported Clothes was founded with a simple mission: to bring authentic, premium imported fashion to customers in Kashmir and beyond. We started as a small boutique in Singhpora Pattan and have grown into a trusted name in imported clothing.
                 </p>
-                <p className={`mb-4 leading-relaxed ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>
+                <p className="mb-4 leading-relaxed text-slate-400">
                   Our commitment to quality, authenticity, and customer satisfaction has made BHAT Imported Clothes the go-to destination for imported fashion enthusiasts. We work directly with international suppliers to ensure every piece meets our high standards.
                 </p>
-                <p className={`leading-relaxed ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>
+                <p className="leading-relaxed text-slate-400">
                   Today, we serve thousands of happy customers across India, delivering premium fashion with the personal touch that makes BHAT Imported Clothes special.
                 </p>
               </motion.div>
@@ -793,44 +795,44 @@ export default function Home() {
               <motion.div
                 initial={{ opacity: 0, x: 30 }}
                 animate={{ opacity: 1, x: 0 }}
-                className={`rounded-2xl backdrop-blur-xl border p-8 ${isDarkMode ? 'bg-slate-800/40 border-slate-700/40' : 'bg-white/40 border-white/60'}`}
+                className="rounded-2xl backdrop-blur-xl border border-cyan-500/30 bg-slate-900/40 p-8 shadow-lg"
               >
-                <h3 className="text-2xl font-bold mb-6 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Our Values</h3>
+                <h3 className="text-2xl font-bold mb-6 text-cyan-400">Our Values</h3>
                 <div className="space-y-4">
                   <div className="flex gap-4">
-                    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-600 to-cyan-600 flex items-center justify-center text-white flex-shrink-0">
+                    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-white flex-shrink-0 shadow-lg">
                       <Check size={20} />
                     </div>
                     <div>
-                      <h4 className="font-semibold mb-1">Authenticity</h4>
-                      <p className={`text-sm ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>Every product is 100% authentic and verified</p>
+                      <h4 className="font-semibold mb-1 text-slate-50">Authenticity</h4>
+                      <p className="text-sm text-slate-400">Every product is 100% authentic and verified</p>
                     </div>
                   </div>
                   <div className="flex gap-4">
-                    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center text-white flex-shrink-0">
+                    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white flex-shrink-0 shadow-lg">
                       <Award size={20} />
                     </div>
                     <div>
-                      <h4 className="font-semibold mb-1">Quality</h4>
-                      <p className={`text-sm ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>We maintain the highest quality standards</p>
+                      <h4 className="font-semibold mb-1 text-slate-50">Quality</h4>
+                      <p className="text-sm text-slate-400">We maintain the highest quality standards</p>
                     </div>
                   </div>
                   <div className="flex gap-4">
-                    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-orange-600 to-red-600 flex items-center justify-center text-white flex-shrink-0">
+                    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white flex-shrink-0 shadow-lg">
                       <Users size={20} />
                     </div>
                     <div>
-                      <h4 className="font-semibold mb-1">Customer Focus</h4>
-                      <p className={`text-sm ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>Your satisfaction is our top priority</p>
+                      <h4 className="font-semibold mb-1 text-slate-50">Customer Focus</h4>
+                      <p className="text-sm text-slate-400">Your satisfaction is our top priority</p>
                     </div>
                   </div>
                   <div className="flex gap-4">
-                    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-green-600 to-emerald-600 flex items-center justify-center text-white flex-shrink-0">
+                    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center text-white flex-shrink-0 shadow-lg">
                       <TrendingUp size={20} />
                     </div>
                     <div>
-                      <h4 className="font-semibold mb-1">Innovation</h4>
-                      <p className={`text-sm ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>We continuously improve our services</p>
+                      <h4 className="font-semibold mb-1 text-slate-50">Innovation</h4>
+                      <p className="text-sm text-slate-400">We continuously improve our services</p>
                     </div>
                   </div>
                 </div>
@@ -852,12 +854,12 @@ export default function Home() {
                 <motion.div
                   key={index}
                   whileHover={{ y: -5 }}
-                  className={`rounded-2xl backdrop-blur-xl border p-6 text-center ${isDarkMode ? 'bg-slate-800/40 border-slate-700/40' : 'bg-white/40 border-white/60'}`}
+                  className="rounded-2xl backdrop-blur-xl border border-cyan-500/30 bg-slate-900/40 p-6 text-center shadow-lg hover:shadow-cyan-500/30"
                 >
-                  <div className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
+                  <div className="text-3xl font-bold text-cyan-400 mb-2">
                     {stat.value}
                   </div>
-                  <p className={`text-sm ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>{stat.label}</p>
+                  <p className="text-sm text-slate-400">{stat.label}</p>
                 </motion.div>
               ))}
             </motion.div>
@@ -867,7 +869,7 @@ export default function Home() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
             >
-              <h3 className="text-3xl font-bold mb-8 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Customer Reviews</h3>
+              <h3 className="text-3xl font-bold mb-8 text-slate-50">Customer Reviews</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {testimonials.map((testimonial, index) => (
                   <motion.div
@@ -876,24 +878,25 @@ export default function Home() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.1 }}
                     whileHover={{ y: -5 }}
-                    className={`p-6 rounded-2xl backdrop-blur-xl border ${isDarkMode ? 'bg-slate-800/40 border-slate-700/40' : 'bg-white/40 border-white/60'}`}
+                    className="p-6 rounded-2xl backdrop-blur-xl border border-cyan-500/30 bg-slate-900/40 shadow-lg hover:shadow-cyan-500/30"
                   >
                     <div className="flex items-center gap-3 mb-4">
                       <img
                         src={testimonial.image}
                         alt={testimonial.name}
-                        className="w-12 h-12 rounded-full object-cover border-2 border-blue-500/50"
+                        className="w-12 h-12 rounded-full object-cover border-2 border-cyan-500/50"
+                        loading="lazy"
                       />
                       <div>
-                        <h4 className="font-semibold">{testimonial.name}</h4>
+                        <h4 className="font-semibold text-slate-50">{testimonial.name}</h4>
                         <div className="flex gap-0.5">
                           {[...Array(testimonial.rating)].map((_, i) => (
-                            <Star key={i} size={14} fill="currentColor" className="text-yellow-500" />
+                            <Star key={i} size={14} fill="currentColor" className="text-cyan-400" />
                           ))}
                         </div>
                       </div>
                     </div>
-                    <p className={`leading-relaxed ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>{testimonial.text}</p>
+                    <p className="leading-relaxed text-slate-400">{testimonial.text}</p>
                   </motion.div>
                 ))}
               </div>
@@ -904,15 +907,15 @@ export default function Home() {
 
       {/* CONTACT SECTION */}
       {activeSection === 'contact' && (
-        <section className={`py-20`}>
+        <section className="py-20 relative z-10">
           <div className="max-w-7xl mx-auto px-4">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               className="mb-12 text-center"
             >
-              <h2 className="text-4xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Get in Touch</h2>
-              <p className={isDarkMode ? 'text-slate-400' : 'text-slate-600'}>We're here to help and answer any questions about our products</p>
+              <h2 className="text-4xl font-bold mb-4 text-slate-50">Get in Touch</h2>
+              <p className="text-slate-400">We're here to help and answer any questions about our products</p>
             </motion.div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
@@ -921,14 +924,14 @@ export default function Home() {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 whileHover={{ y: -5 }}
-                className={`rounded-2xl backdrop-blur-xl border p-8 text-center ${isDarkMode ? 'bg-slate-800/40 border-slate-700/40' : 'bg-white/40 border-white/60'}`}
+                className="rounded-2xl backdrop-blur-xl border border-cyan-500/30 bg-slate-900/40 p-8 text-center shadow-lg hover:shadow-cyan-500/40"
               >
-                <div className="w-16 h-16 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-500 p-3 mb-4 flex items-center justify-center text-white mx-auto">
+                <div className="w-16 h-16 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600 p-3 mb-4 flex items-center justify-center text-white mx-auto shadow-lg">
                   <Phone className="w-8 h-8" />
                 </div>
-                <h3 className="font-semibold text-lg mb-2">Call Us</h3>
-                <p className={`font-medium mb-2 ${isDarkMode ? 'text-slate-300' : 'text-slate-700'}`}>9103174217</p>
-                <p className={`text-sm ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>Available 9 AM - 9 PM IST</p>
+                <h3 className="font-semibold text-lg mb-2 text-slate-50">Call Us</h3>
+                <p className="font-medium mb-2 text-cyan-400">9103174217</p>
+                <p className="text-sm text-slate-400">Available 9 AM - 9 PM IST</p>
               </motion.div>
 
               <motion.div
@@ -936,14 +939,14 @@ export default function Home() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
                 whileHover={{ y: -5 }}
-                className={`rounded-2xl backdrop-blur-xl border p-8 text-center ${isDarkMode ? 'bg-slate-800/40 border-slate-700/40' : 'bg-white/40 border-white/60'}`}
+                className="rounded-2xl backdrop-blur-xl border border-cyan-500/30 bg-slate-900/40 p-8 text-center shadow-lg hover:shadow-cyan-500/40"
               >
-                <div className="w-16 h-16 rounded-lg bg-gradient-to-br from-green-500 to-emerald-500 p-3 mb-4 flex items-center justify-center text-white mx-auto">
+                <div className="w-16 h-16 rounded-lg bg-gradient-to-br from-cyan-400 to-blue-500 p-3 mb-4 flex items-center justify-center text-white mx-auto shadow-lg">
                   <Phone className="w-8 h-8" />
                 </div>
-                <h3 className="font-semibold text-lg mb-2">WhatsApp</h3>
-                <p className={`font-medium mb-2 ${isDarkMode ? 'text-slate-300' : 'text-slate-700'}`}>8899507736</p>
-                <p className={`text-sm ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>Quick responses guaranteed</p>
+                <h3 className="font-semibold text-lg mb-2 text-slate-50">WhatsApp</h3>
+                <p className="font-medium mb-2 text-cyan-400">8899507736</p>
+                <p className="text-sm text-slate-400">Quick responses guaranteed</p>
               </motion.div>
 
               <motion.div
@@ -951,14 +954,14 @@ export default function Home() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
                 whileHover={{ y: -5 }}
-                className={`rounded-2xl backdrop-blur-xl border p-8 text-center ${isDarkMode ? 'bg-slate-800/40 border-slate-700/40' : 'bg-white/40 border-white/60'}`}
+                className="rounded-2xl backdrop-blur-xl border border-cyan-500/30 bg-slate-900/40 p-8 text-center shadow-lg hover:shadow-cyan-500/40"
               >
-                <div className="w-16 h-16 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 p-3 mb-4 flex items-center justify-center text-white mx-auto">
+                <div className="w-16 h-16 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 p-3 mb-4 flex items-center justify-center text-white mx-auto shadow-lg">
                   <Mail className="w-8 h-8" />
                 </div>
-                <h3 className="font-semibold text-lg mb-2">Email</h3>
-                <p className={`font-medium text-sm mb-2 ${isDarkMode ? 'text-slate-300' : 'text-slate-700'}`}>saqiblateef123456@gmail.com</p>
-                <p className={`text-sm ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>Response within 24 hours</p>
+                <h3 className="font-semibold text-lg mb-2 text-slate-50">Email</h3>
+                <p className="font-medium text-sm mb-2 text-cyan-400">saqiblateef123456@gmail.com</p>
+                <p className="text-sm text-slate-400">Response within 24 hours</p>
               </motion.div>
             </div>
 
@@ -966,13 +969,13 @@ export default function Home() {
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              className={`rounded-2xl backdrop-blur-xl border p-8 max-w-2xl mx-auto ${isDarkMode ? 'bg-slate-800/40 border-slate-700/40' : 'bg-white/40 border-white/60'}`}
+              className="rounded-2xl backdrop-blur-xl border border-cyan-500/30 bg-slate-900/40 p-8 max-w-2xl mx-auto shadow-lg"
             >
-              <h3 className="text-2xl font-bold mb-6">Send us a Message</h3>
+              <h3 className="text-2xl font-bold mb-6 text-slate-50">Send us a Message</h3>
               <form onSubmit={handleContactSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label className="text-sm font-semibold mb-2 block">Full Name *</label>
+                    <label className="text-sm font-semibold mb-2 block text-slate-300">Full Name *</label>
                     <input
                       type="text"
                       name="name"
@@ -980,11 +983,11 @@ export default function Home() {
                       onChange={handleContactChange}
                       required
                       placeholder="Your name"
-                      className={`w-full px-4 py-3 rounded-lg border transition ${isDarkMode ? 'bg-slate-700/50 border-slate-600/50 text-white placeholder-slate-400' : 'bg-white/50 border-white/60 text-slate-900 placeholder-slate-500'}`}
+                      className="w-full px-4 py-3 rounded-lg border border-cyan-500/30 bg-slate-800/50 text-white placeholder-slate-500 transition focus:border-cyan-400 focus:shadow-lg focus:shadow-cyan-500/30"
                     />
                   </div>
                   <div>
-                    <label className="text-sm font-semibold mb-2 block">Email Address *</label>
+                    <label className="text-sm font-semibold mb-2 block text-slate-300">Email Address *</label>
                     <input
                       type="email"
                       name="email"
@@ -992,14 +995,14 @@ export default function Home() {
                       onChange={handleContactChange}
                       required
                       placeholder="your@email.com"
-                      className={`w-full px-4 py-3 rounded-lg border transition ${isDarkMode ? 'bg-slate-700/50 border-slate-600/50 text-white placeholder-slate-400' : 'bg-white/50 border-white/60 text-slate-900 placeholder-slate-500'}`}
+                      className="w-full px-4 py-3 rounded-lg border border-cyan-500/30 bg-slate-800/50 text-white placeholder-slate-500 transition focus:border-cyan-400 focus:shadow-lg focus:shadow-cyan-500/30"
                     />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label className="text-sm font-semibold mb-2 block">Phone Number *</label>
+                    <label className="text-sm font-semibold mb-2 block text-slate-300">Phone Number *</label>
                     <input
                       type="tel"
                       name="phone"
@@ -1007,16 +1010,16 @@ export default function Home() {
                       onChange={handleContactChange}
                       required
                       placeholder="Your phone number"
-                      className={`w-full px-4 py-3 rounded-lg border transition ${isDarkMode ? 'bg-slate-700/50 border-slate-600/50 text-white placeholder-slate-400' : 'bg-white/50 border-white/60 text-slate-900 placeholder-slate-500'}`}
+                      className="w-full px-4 py-3 rounded-lg border border-cyan-500/30 bg-slate-800/50 text-white placeholder-slate-500 transition focus:border-cyan-400 focus:shadow-lg focus:shadow-cyan-500/30"
                     />
                   </div>
                   <div>
-                    <label className="text-sm font-semibold mb-2 block">Subject *</label>
+                    <label className="text-sm font-semibold mb-2 block text-slate-300">Subject *</label>
                     <select
                       name="subject"
                       value={contactForm.subject}
                       onChange={handleContactChange}
-                      className={`w-full px-4 py-3 rounded-lg border transition ${isDarkMode ? 'bg-slate-700/50 border-slate-600/50 text-white' : 'bg-white/50 border-white/60 text-slate-900'}`}
+                      className="w-full px-4 py-3 rounded-lg border border-cyan-500/30 bg-slate-800/50 text-white transition focus:border-cyan-400 focus:shadow-lg focus:shadow-cyan-500/30"
                     >
                       <option>General Inquiry</option>
                       <option>Product Question</option>
@@ -1029,7 +1032,7 @@ export default function Home() {
                 </div>
 
                 <div>
-                  <label className="text-sm font-semibold mb-2 block">Message *</label>
+                  <label className="text-sm font-semibold mb-2 block text-slate-300">Message *</label>
                   <textarea
                     name="message"
                     value={contactForm.message}
@@ -1037,7 +1040,7 @@ export default function Home() {
                     required
                     placeholder="Tell us how we can help..."
                     rows={6}
-                    className={`w-full px-4 py-3 rounded-lg border transition resize-none ${isDarkMode ? 'bg-slate-700/50 border-slate-600/50 text-white placeholder-slate-400' : 'bg-white/50 border-white/60 text-slate-900 placeholder-slate-500'}`}
+                    className="w-full px-4 py-3 rounded-lg border border-cyan-500/30 bg-slate-800/50 text-white placeholder-slate-500 transition resize-none focus:border-cyan-400 focus:shadow-lg focus:shadow-cyan-500/30"
                   />
                 </div>
 
@@ -1045,7 +1048,7 @@ export default function Home() {
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   type="submit"
-                  className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 rounded-lg font-semibold transition hover:shadow-lg hover:shadow-blue-500/50 flex items-center justify-center gap-2"
+                  className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 text-white py-3 rounded-lg font-semibold transition hover:shadow-lg hover:shadow-cyan-500/50 flex items-center justify-center gap-2"
                 >
                   <Send size={18} />
                   Send Message
@@ -1057,7 +1060,7 @@ export default function Home() {
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -10 }}
-                      className="bg-green-500/20 border border-green-500/50 text-green-600 dark:text-green-400 px-4 py-3 rounded-lg text-center font-semibold"
+                      className="bg-cyan-500/20 border border-cyan-500/50 text-cyan-300 px-4 py-3 rounded-lg text-center font-semibold"
                     >
                       ✓ Message sent successfully! We'll get back to you soon.
                     </motion.div>
@@ -1070,85 +1073,85 @@ export default function Home() {
       )}
 
       {/* Footer */}
-      <footer className={`${isDarkMode ? 'bg-slate-950/80 border-slate-900/50' : 'bg-gradient-to-b from-slate-900 to-slate-950 text-white'} border-t backdrop-blur-xl py-12`}>
+      <footer className="bg-slate-950/80 border-t border-cyan-500/30 backdrop-blur-xl py-12 relative z-10">
         <div className="max-w-7xl mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
             <div>
-              <h3 className="font-bold text-lg mb-4 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">BHAT IMPORTED CLOTHES</h3>
-              <p className={`text-sm ${isDarkMode ? 'text-slate-400' : 'text-slate-300'}`}>
+              <h3 className="font-bold text-lg mb-4 text-cyan-400">BHAT IMPORTED CLOTHES</h3>
+              <p className="text-sm text-slate-400">
                 Bhat imported clothing with authentic quality and competitive pricing. Your trusted fashion destination since 2020.
               </p>
             </div>
             <div>
-              <h4 className="font-semibold mb-4">Quick Links</h4>
-              <ul className={`space-y-2 text-sm ${isDarkMode ? 'text-slate-400' : 'text-slate-300'}`}>
-                <li><motion.button onClick={() => scrollToSection('home')} className="hover:text-white transition">Home</motion.button></li>
-                <li><motion.button onClick={() => scrollToSection('shop')} className="hover:text-white transition">Shop</motion.button></li>
-                <li><motion.button onClick={() => scrollToSection('about')} className="hover:text-white transition">About</motion.button></li>
-                <li><motion.button onClick={() => scrollToSection('contact')} className="hover:text-white transition">Contact</motion.button></li>
+              <h4 className="font-semibold mb-4 text-slate-50">Quick Links</h4>
+              <ul className="space-y-2 text-sm text-slate-400">
+                <li><motion.button onClick={() => scrollToSection('home')} className="hover:text-cyan-400 transition">Home</motion.button></li>
+                <li><motion.button onClick={() => scrollToSection('shop')} className="hover:text-cyan-400 transition">Shop</motion.button></li>
+                <li><motion.button onClick={() => scrollToSection('about')} className="hover:text-cyan-400 transition">About</motion.button></li>
+                <li><motion.button onClick={() => scrollToSection('contact')} className="hover:text-cyan-400 transition">Contact</motion.button></li>
               </ul>
             </div>
             <div>
-              <h4 className="font-semibold mb-4">Support</h4>
-              <ul className={`space-y-2 text-sm ${isDarkMode ? 'text-slate-400' : 'text-slate-300'}`}>
-                <li><a href="#" className="hover:text-white transition">Shipping Policy</a></li>
-                <li><a href="#" className="hover:text-white transition">Returns</a></li>
-                <li><a href="#" className="hover:text-white transition">FAQ</a></li>
-                <li><a href="#" className="hover:text-white transition">Terms</a></li>
+              <h4 className="font-semibold mb-4 text-slate-50">Support</h4>
+              <ul className="space-y-2 text-sm text-slate-400">
+                <li><a href="#" className="hover:text-cyan-400 transition">Shipping Policy</a></li>
+                <li><a href="#" className="hover:text-cyan-400 transition">Returns</a></li>
+                <li><a href="#" className="hover:text-cyan-400 transition">FAQ</a></li>
+                <li><a href="#" className="hover:text-cyan-400 transition">Terms</a></li>
               </ul>
             </div>
             <div>
-              <h4 className="font-semibold mb-4">Follow Us</h4>
+              <h4 className="font-semibold mb-4 text-slate-50">Follow Us</h4>
               <div className="flex gap-4">
                 <motion.a 
                   whileHover={{ scale: 1.2 }}
                   href="https://www.instagram.com/bhat_imported_clothess" 
                   target="_blank" 
                   rel="noopener noreferrer" 
-                  className={`transition ${isDarkMode ? 'text-slate-400 hover:text-white' : 'text-slate-300 hover:text-white'}`}
+                  className="text-slate-400 hover:text-cyan-400 transition"
                 >
                   <Instagram size={20} />
                 </motion.a>
                 <motion.a 
                   whileHover={{ scale: 1.2 }}
                   href="#" 
-                  className={`transition ${isDarkMode ? 'text-slate-400 hover:text-white' : 'text-slate-300 hover:text-white'}`}
+                  className="text-slate-400 hover:text-cyan-400 transition"
                 >
                   <Facebook size={20} />
                 </motion.a>
                 <motion.a 
                   whileHover={{ scale: 1.2 }}
                   href="#" 
-                  className={`transition ${isDarkMode ? 'text-slate-400 hover:text-white' : 'text-slate-300 hover:text-white'}`}
+                  className="text-slate-400 hover:text-cyan-400 transition"
                 >
                   <Twitter size={20} />
                 </motion.a>
               </div>
             </div>
           </div>
-          <div className={`border-t ${isDarkMode ? 'border-slate-900' : 'border-slate-800'} pt-8 text-center text-sm ${isDarkMode ? 'text-slate-400' : 'text-slate-300'}`}>
+          <div className="border-t border-cyan-500/30 pt-8 text-center text-sm text-slate-400">
             <p>&copy; 2026 BHAT IMPORTED CLOTHES. All rights reserved. | Singhpora Pattan, J&K | Authentic Fashion Since 2020</p>
           </div>
         </div>
       </footer>
 
-      {/* Cart Sidebar with Glassmorphism */}
+      {/* Cart Sidebar */}
       <AnimatePresence>
         {showCart && (
           <motion.div
             initial={{ x: 400, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: 400, opacity: 0 }}
-            className={`fixed right-0 top-0 h-full w-full md:w-96 z-50 overflow-y-auto shadow-2xl ${isDarkMode ? 'bg-slate-900/95 border-slate-800/50' : 'bg-white/95 border-white/60'} border-l backdrop-blur-xl`}
+            className="fixed right-0 top-0 h-full w-full md:w-96 z-50 overflow-y-auto shadow-2xl shadow-cyan-500/30 bg-slate-900/95 border-l border-cyan-500/30 backdrop-blur-xl"
           >
             <div className="p-6">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Cart</h2>
+                <h2 className="text-2xl font-bold text-cyan-400">Cart</h2>
                 <motion.button 
                   whileHover={{ scale: 1.1, rotate: 90 }}
                   whileTap={{ scale: 0.9 }}
                   onClick={() => setShowCart(false)} 
-                  className={`p-2 rounded-lg transition ${isDarkMode ? 'hover:bg-slate-800/50' : 'hover:bg-white/50'}`}
+                  className="p-2 rounded-lg transition hover:bg-slate-800/50"
                 >
                   <X size={24} />
                 </motion.button>
@@ -1157,7 +1160,7 @@ export default function Home() {
                 <motion.p 
                   animate={{ y: [0, 10, 0] }}
                   transition={{ duration: 2, repeat: Infinity }}
-                  className={`text-center py-8 ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}
+                  className="text-center py-8 text-slate-400"
                 >
                   Your cart is empty
                 </motion.p>
@@ -1169,26 +1172,26 @@ export default function Home() {
                         key={index} 
                         initial={{ opacity: 0, x: 20 }}
                         animate={{ opacity: 1, x: 0 }}
-                        className={`flex gap-4 pb-4 border-b ${isDarkMode ? 'border-slate-800/50' : 'border-white/50'}`}
+                        className="flex gap-4 pb-4 border-b border-cyan-500/30"
                       >
                         <img src={item.image} alt={item.name} className="w-16 h-16 rounded object-cover" />
                         <div className="flex-1">
-                          <p className="font-semibold text-sm">{item.name}</p>
-                          <p className={`font-bold ${isDarkMode ? 'text-slate-300' : 'text-slate-700'}`}>₹{item.price.toLocaleString()}</p>
+                          <p className="font-semibold text-sm text-slate-50">{item.name}</p>
+                          <p className="font-bold text-cyan-400">₹{item.price.toLocaleString()}</p>
                         </div>
                       </motion.div>
                     ))}
                   </div>
-                  <div className={`border-t ${isDarkMode ? 'border-slate-800/50' : 'border-white/50'} pt-4 mb-4`}>
+                  <div className="border-t border-cyan-500/30 pt-4 mb-4">
                     <div className="flex justify-between mb-4">
-                      <span className="font-semibold">Total:</span>
-                      <span className="font-bold text-lg bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">₹{cartTotal.toLocaleString()}</span>
+                      <span className="font-semibold text-slate-50">Total:</span>
+                      <span className="font-bold text-lg text-cyan-400">₹{cartTotal.toLocaleString()}</span>
                     </div>
                   </div>
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 rounded-lg font-semibold transition hover:shadow-lg hover:shadow-blue-500/50"
+                    className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 text-white py-3 rounded-lg font-semibold transition hover:shadow-lg hover:shadow-cyan-500/50"
                   >
                     Checkout
                   </motion.button>
