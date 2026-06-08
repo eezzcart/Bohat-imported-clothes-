@@ -1,3 +1,4 @@
+import React from 'react';
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
@@ -33,8 +34,21 @@ function App() {
       >
         <TooltipProvider>
           <Toaster />
-          <Router />
-          <FloatingNavbar />
+          <Switch>
+            <Route path="/">
+              {(params) => {
+                const [activeSection, setActiveSection] = React.useState('home');
+                return (
+                  <>
+                    <Home activeSection={activeSection} onSectionChange={setActiveSection} />
+                    <FloatingNavbar onNavigate={setActiveSection} />
+                  </>
+                );
+              }}
+            </Route>
+            <Route path="/404" component={NotFound} />
+            <Route component={NotFound} />
+          </Switch>
         </TooltipProvider>
       </ThemeProvider>
     </ErrorBoundary>

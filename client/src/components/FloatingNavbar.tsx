@@ -3,7 +3,7 @@ import { useLocation } from 'wouter';
 import { Home, Info, Mail, ShoppingBag, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-const FloatingNavbar = () => {
+const FloatingNavbar = ({ onNavigate }: { onNavigate?: (section: string) => void }) => {
   const [location] = useLocation();
 
   const navItems = [
@@ -14,14 +14,14 @@ const FloatingNavbar = () => {
     { name: 'Shop', section: 'shop', icon: ShoppingBag },
   ];
 
-  const scrollToSection = (sectionId: string) => {
+  const handleClick = (sectionId: string) => {
     if (location !== '/') {
       window.location.href = '/#' + sectionId;
       return;
     }
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+    if (onNavigate) {
+      onNavigate(sectionId);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
@@ -59,7 +59,7 @@ const FloatingNavbar = () => {
           return (
             <button
               key={item.name}
-              onClick={() => item.section && scrollToSection(item.section)}
+              onClick={() => item.section && handleClick(item.section)}
               className={cn(
                 "flex flex-col items-center gap-1 transition-all duration-300",
                 "text-slate-400 hover:text-cyan-400 cursor-pointer"

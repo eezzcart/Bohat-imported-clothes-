@@ -28,7 +28,7 @@ interface Testimonial {
   image: string;
 }
 
-export default function Home() {
+export default function Home({ activeSection: propActiveSection, onSectionChange }: { activeSection?: string, onSectionChange?: (section: string) => void }) {
   // Define static data first (before useState hooks)
   const products: Product[] = [
     {
@@ -164,7 +164,8 @@ export default function Home() {
   ];
 
   // Now define state hooks
-  const [activeSection, setActiveSection] = useState('home');
+  const activeSection = propActiveSection || 'home';
+  const setActiveSection = onSectionChange || (() => {});
   const [showCart, setShowCart] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [showCollection, setShowCollection] = useState(false);
@@ -331,116 +332,13 @@ export default function Home() {
         </motion.button>
       </motion.div>
 
-      {/* Top Announcement Bar */}
-      <motion.div 
-        initial={{ y: -50, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        className="relative z-40 bg-slate-900/60 border-b border-cyan-500/30 backdrop-blur-xl py-3 text-center text-sm font-medium sticky top-0"
-      >
-        <span className="text-slate-200 flex items-center justify-center gap-2">
-          <Zap size={16} className="text-cyan-400" />
-          ✓ Free Shipping Above ₹999 | ✓ Authentic Imported Clothing | ✓ Premium Quality Guaranteed
-          <Zap size={16} className="text-cyan-400" />
-        </span>
-      </motion.div>
-
-      {/* Floating Header */}
-      <header className="sticky top-12 z-50 bg-slate-900/40 border-b border-cyan-500/20 backdrop-blur-xl transition-all duration-300">
-        <div className="max-w-7xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            {/* Mobile Menu Button */}
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              onClick={() => setShowMobileMenu(!showMobileMenu)}
-              className="md:hidden p-2 rounded-lg transition hover:bg-slate-800/50 hover:shadow-lg hover:shadow-cyan-500/20"
-            >
-              {showMobileMenu ? <X size={24} /> : <Menu size={24} />}
-            </motion.button>
-
-            {/* Logo */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              whileHover={{ scale: 1.05 }}
-              className="flex-1 text-center md:flex-none cursor-pointer"
-            >
-              <img src="/assets/logo.jpg" alt="BHAT Logo" className="h-16 md:h-20 mx-auto drop-shadow-2xl" />
-            </motion.div>
-
-            {/* Right Icons */}
-            <div className="flex items-center gap-4">
-              <motion.button 
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-                className="p-2 rounded-lg transition hidden md:block hover:bg-slate-800/50 hover:shadow-lg hover:shadow-cyan-500/20"
-              >
-                <Search size={20} className="text-cyan-400" />
-              </motion.button>
-              <motion.button 
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-                className="p-2 rounded-lg transition hidden md:block hover:bg-slate-800/50 hover:shadow-lg hover:shadow-cyan-500/20"
-              >
-                <User size={20} className="text-cyan-400" />
-              </motion.button>
-              <motion.button
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-                onClick={() => setShowCart(!showCart)}
-                className="p-2 rounded-lg transition relative hover:bg-slate-800/50 hover:shadow-lg hover:shadow-cyan-500/20"
-              >
-                <ShoppingBag size={20} className="text-cyan-400" />
-                <AnimatePresence>
-                  {cart.length > 0 && (
-                    <motion.span 
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      exit={{ scale: 0 }}
-                      className="absolute -top-1 -right-1 bg-gradient-to-r from-cyan-500 to-blue-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center shadow-lg shadow-cyan-500/50"
-                    >
-                      {cart.length}
-                    </motion.span>
-                  )}
-                </AnimatePresence>
-              </motion.button>
-            </div>
-          </div>
-
-
-
-          {/* Mobile Menu */}
-          <AnimatePresence>
-            {showMobileMenu && (
-              <motion.nav
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                className="md:hidden flex flex-col gap-3 mt-4 pt-4 border-t border-cyan-500/20"
-              >
-                {['Home', 'Shop', 'About', 'Contact'].map((item, i) => (
-                  <motion.button
-                    key={item}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: i * 0.1 }}
-                    onClick={() => scrollToSection(item.toLowerCase())}
-                    className="text-left font-medium transition text-slate-300 hover:text-cyan-300"
-                  >
-                    {item}
-                  </motion.button>
-                ))}
-              </motion.nav>
-            )}
-          </AnimatePresence>
-        </div>
-      </header>
+      {/* Removed Top Announcement Bar and Header per user request */}
 
       {/* HOME SECTION */}
       {activeSection === 'home' && (
         <>
           {/* Hero Section */}
-          <section className="relative py-16 md:py-32 overflow-hidden">
+          <section id="home" className="relative py-16 md:py-32 overflow-hidden">
             <div className="max-w-7xl mx-auto px-4 relative z-10">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
                 <motion.div
@@ -542,7 +440,7 @@ export default function Home() {
           </section>
 
           {/* Why BHAT Section */}
-          <section className="py-20 relative z-10">
+          <section id="about" className="py-20 relative z-10">
             <div className="max-w-7xl mx-auto px-4">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -775,7 +673,7 @@ export default function Home() {
 
       {/* SHOP SECTION */}
       {activeSection === 'shop' && (
-        <section className="py-20 relative z-10">
+        <section id="shop" className="py-20 relative z-10">
           <div className="max-w-7xl mx-auto px-4">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -1262,7 +1160,7 @@ export default function Home() {
 
       {/* CONTACT SECTION */}
       {activeSection === 'contact' && (
-        <section className="py-20 relative z-10">
+        <section id="contact" className="py-20 relative z-10">
           <div className="max-w-7xl mx-auto px-4">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
