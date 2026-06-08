@@ -225,12 +225,44 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-slate-50 overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-slate-50 overflow-x-hidden">
       {/* Animated background lightning effect */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl animate-pulse" />
         <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
       </div>
+
+      {/* Floating Navigation Panel */}
+      <motion.div
+        initial={{ opacity: 0, x: -100 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.8 }}
+        className="fixed left-6 top-1/2 -translate-y-1/2 z-40 hidden lg:flex flex-col gap-4 rounded-2xl backdrop-blur-xl border border-cyan-500/30 bg-slate-900/50 p-6 shadow-2xl shadow-cyan-500/20"
+      >
+        {['Home', 'About', 'Contact'].map((item, index) => (
+          <motion.button
+            key={item}
+            whileHover={{ scale: 1.1, x: 10 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => scrollToSection(item.toLowerCase())}
+            className={`px-4 py-3 rounded-lg font-semibold text-sm transition relative group ${
+              activeSection === item.toLowerCase()
+                ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg shadow-cyan-500/50'
+                : 'text-slate-300 hover:text-cyan-300 hover:bg-slate-800/50'
+            }`}
+          >
+            <span className="flex items-center gap-2">
+              {item}
+              {activeSection === item.toLowerCase() && (
+                <motion.div
+                  layoutId="floatingIndicator"
+                  className="w-2 h-2 rounded-full bg-cyan-300 shadow-lg shadow-cyan-500/50"
+                />
+              )}
+            </span>
+          </motion.button>
+        ))}
+      </motion.div>
 
       {/* Top Announcement Bar */}
       <motion.div 
@@ -389,11 +421,17 @@ export default function Home() {
                   >
                     Bhat Imported <span className="block mt-2 bg-gradient-to-r from-cyan-400 via-blue-500 to-cyan-400 bg-clip-text text-transparent drop-shadow-lg">Clothes</span>
                   </motion.h1>
-                  <p className="text-lg mb-2 font-medium text-slate-300">
-                    📍 Singhpora Pattan, J&K
+                  <p className="text-lg mb-4 font-medium text-slate-300 flex items-center gap-2">
+                    <MapPin size={20} className="text-cyan-400" /> Singhpora Pattan, J&K
+                  </p>
+                  <p className="text-base mb-6 leading-relaxed text-slate-400">
+                    Welcome to BHAT Imported Clothes – your ultimate destination for authentic, premium imported fashion. Since 2020, we've been dedicated to bringing you the finest clothing from around the world, carefully curated and quality-tested to ensure you get nothing but the best.
+                  </p>
+                  <p className="text-base mb-6 leading-relaxed text-slate-400">
+                    We believe that great fashion should be accessible to everyone. Our mission is simple: deliver authentic imported clothing at competitive prices without compromising on quality. Every piece in our collection tells a story of craftsmanship, style, and excellence.
                   </p>
                   <p className="text-base mb-8 leading-relaxed text-slate-400">
-                    Discover authentic Bhat imported clothes with uncompromising quality and competitive pricing. We bring you the finest fashion from around the world, curated specially for you. Experience the power of genuine imported fashion.
+                    Whether you're looking for premium denim, elegant blazers, comfortable hoodies, or casual wear, BHAT has something special for you. Experience the difference that authentic imported fashion can make in your wardrobe.
                   </p>
                   <motion.button
                     whileHover={{ scale: 1.05, x: 5 }}
@@ -430,7 +468,7 @@ export default function Home() {
             </div>
           </section>
 
-          {/* Features Section */}
+          {/* Why BHAT Section */}
           <section className="py-20 relative z-10">
             <div className="max-w-7xl mx-auto px-4">
               <motion.div
@@ -440,7 +478,7 @@ export default function Home() {
                 className="mb-12 text-center"
               >
                 <h2 className="text-4xl font-bold mb-4 text-slate-50">Why Choose BHAT?</h2>
-                <p className="text-slate-400">Experience excellence in every aspect of your shopping journey</p>
+                <p className="text-slate-400 max-w-2xl mx-auto">We're not just another clothing store. We're a community of fashion enthusiasts dedicated to bringing you authentic, premium imported clothing with exceptional service and unbeatable prices.</p>
               </motion.div>
 
               <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
@@ -468,6 +506,85 @@ export default function Home() {
             </div>
           </section>
 
+          {/* Premium Promise Section */}
+          <section className="py-20 relative z-10">
+            <div className="max-w-7xl mx-auto px-4">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="mb-12 text-center"
+              >
+                <h2 className="text-4xl font-bold mb-4 text-slate-50">Our Premium Promise</h2>
+                <p className="text-slate-400">What sets BHAT apart from the rest</p>
+              </motion.div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <motion.div
+                  initial={{ opacity: 0, x: -30 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  className="rounded-2xl backdrop-blur-xl border border-cyan-500/30 bg-slate-900/40 p-8 shadow-lg hover:shadow-cyan-500/30 transition"
+                >
+                  <div className="w-14 h-14 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600 p-3 mb-4 flex items-center justify-center text-white shadow-lg">
+                    <Sparkles className="w-7 h-7" />
+                  </div>
+                  <h3 className="text-xl font-bold mb-3 text-slate-50">Curated Collection</h3>
+                  <p className="text-slate-400 leading-relaxed">
+                    Every item in our collection is hand-picked and quality-tested. We work directly with international suppliers to ensure authenticity and premium quality. No compromises, no shortcuts – just pure fashion excellence.
+                  </p>
+                </motion.div>
+
+                <motion.div
+                  initial={{ opacity: 0, x: 30 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  className="rounded-2xl backdrop-blur-xl border border-cyan-500/30 bg-slate-900/40 p-8 shadow-lg hover:shadow-cyan-500/30 transition"
+                >
+                  <div className="w-14 h-14 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 p-3 mb-4 flex items-center justify-center text-white shadow-lg">
+                    <Award className="w-7 h-7" />
+                  </div>
+                  <h3 className="text-xl font-bold mb-3 text-slate-50">Best Value Guarantee</h3>
+                  <p className="text-slate-400 leading-relaxed">
+                    We believe premium quality shouldn't break the bank. Our competitive pricing strategy ensures you get the best value for your money. Compare us with anyone – we're confident you'll find us unbeatable.
+                  </p>
+                </motion.div>
+
+                <motion.div
+                  initial={{ opacity: 0, x: -30 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.1 }}
+                  viewport={{ once: true }}
+                  className="rounded-2xl backdrop-blur-xl border border-cyan-500/30 bg-slate-900/40 p-8 shadow-lg hover:shadow-cyan-500/30 transition"
+                >
+                  <div className="w-14 h-14 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 p-3 mb-4 flex items-center justify-center text-white shadow-lg">
+                    <Users className="w-7 h-7" />
+                  </div>
+                  <h3 className="text-xl font-bold mb-3 text-slate-50">Community Driven</h3>
+                  <p className="text-slate-400 leading-relaxed">
+                    We're more than just a store – we're a community. Our customers are our family. We listen to your feedback, understand your needs, and continuously improve to serve you better. Your satisfaction is our success.
+                  </p>
+                </motion.div>
+
+                <motion.div
+                  initial={{ opacity: 0, x: 30 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.1 }}
+                  viewport={{ once: true }}
+                  className="rounded-2xl backdrop-blur-xl border border-cyan-500/30 bg-slate-900/40 p-8 shadow-lg hover:shadow-cyan-500/30 transition"
+                >
+                  <div className="w-14 h-14 rounded-lg bg-gradient-to-br from-cyan-400 to-blue-500 p-3 mb-4 flex items-center justify-center text-white shadow-lg">
+                    <Zap className="w-7 h-7" />
+                  </div>
+                  <h3 className="text-xl font-bold mb-3 text-slate-50">Lightning Fast Service</h3>
+                  <p className="text-slate-400 leading-relaxed">
+                    From order processing to delivery, we keep things moving. Our efficient logistics network ensures your fashion reaches you quickly. Plus, our responsive customer support is always ready to help.
+                  </p>
+                </motion.div>
+              </div>
+            </div>
+          </section>
+
           {/* Categories Section */}
           <section className="py-20 relative z-10">
             <div className="max-w-7xl mx-auto px-4">
@@ -481,7 +598,7 @@ export default function Home() {
                 <p className="text-slate-400">Explore our diverse collection of premium imported clothing</p>
               </motion.div>
 
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {categories.slice(1, 5).map((category, index) => (
                   <motion.div
                     key={index}
@@ -509,6 +626,31 @@ export default function Home() {
             </div>
           </section>
 
+          {/* Call to Action Section */}
+          <section className="py-20 relative z-10">
+            <div className="max-w-7xl mx-auto px-4">
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="rounded-3xl backdrop-blur-xl border border-cyan-500/30 bg-gradient-to-r from-slate-900/60 via-slate-800/60 to-slate-900/60 p-12 text-center shadow-2xl shadow-cyan-500/20"
+              >
+                <h2 className="text-4xl font-bold mb-4 text-slate-50">Ready to Elevate Your Style?</h2>
+                <p className="text-lg text-slate-400 mb-8 max-w-2xl mx-auto">
+                  Discover our exclusive collection of authentic imported clothing. From casual wear to formal attire, find everything you need to express your unique style.
+                </p>
+                <motion.button
+                  whileHover={{ scale: 1.05, x: 5 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => scrollToSection('shop')}
+                  className="bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-10 py-4 rounded-xl font-semibold transition flex items-center gap-2 hover:shadow-xl hover:shadow-cyan-500/50 border border-cyan-400/50 mx-auto"
+                >
+                  Explore Collection <ArrowRight size={20} />
+                </motion.button>
+              </motion.div>
+            </div>
+          </section>
+
           {/* Testimonials Section */}
           <section className="py-20 relative z-10">
             <div className="max-w-7xl mx-auto px-4">
@@ -519,38 +661,38 @@ export default function Home() {
                 className="mb-12 text-center"
               >
                 <h2 className="text-4xl font-bold mb-4 text-slate-50">Loved by Customers</h2>
-                <p className="text-slate-400">Real reviews from real customers who trust our quality</p>
+                <p className="text-slate-400 max-w-2xl mx-auto">Join thousands of satisfied customers who have transformed their wardrobes with BHAT Imported Clothes. Read their real stories and see why they keep coming back.</p>
               </motion.div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {testimonials.map((testimonial, index) => (
-                  <motion.div
-                    key={testimonial.id}
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    whileHover={{ y: -5 }}
-                    transition={{ delay: index * 0.1 }}
-                    viewport={{ once: true }}
-                    className="p-6 rounded-2xl backdrop-blur-xl border border-cyan-500/30 bg-slate-900/40 hover:bg-slate-900/60 transition shadow-lg hover:shadow-cyan-500/30"
-                  >
-                    <div className="flex items-center gap-3 mb-4">
-                      <img
-                        src={testimonial.image}
-                        alt={testimonial.name}
-                        className="w-12 h-12 rounded-full object-cover border-2 border-cyan-500/50"
-                        loading="lazy"
-                      />
-                      <div>
-                        <h4 className="font-semibold text-sm text-slate-50">{testimonial.name}</h4>
-                        <div className="flex gap-0.5">
-                          {[...Array(testimonial.rating)].map((_, i) => (
-                            <Star key={i} size={12} fill="currentColor" className="text-cyan-400" />
-                          ))}
+                    <motion.div
+                      key={testimonial.id}
+                      initial={{ opacity: 0, y: 30 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      whileHover={{ y: -5, scale: 1.02 }}
+                      transition={{ delay: index * 0.1 }}
+                      viewport={{ once: true }}
+                      className="p-6 rounded-2xl backdrop-blur-xl border border-cyan-500/30 bg-slate-900/40 hover:bg-slate-900/60 shadow-lg hover:shadow-cyan-500/40 transition"
+                    >
+                      <div className="flex items-center gap-3 mb-4">
+                        <img
+                          src={testimonial.image}
+                          alt={testimonial.name}
+                          className="w-12 h-12 rounded-full object-cover border-2 border-cyan-500/50"
+                          loading="lazy"
+                        />
+                        <div>
+                          <h4 className="font-semibold text-slate-50">{testimonial.name}</h4>
+                          <div className="flex gap-0.5">
+                            {[...Array(testimonial.rating)].map((_, i) => (
+                              <Star key={i} size={14} fill="currentColor" className="text-cyan-400" />
+                            ))}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    <p className="text-sm leading-relaxed text-slate-400">{testimonial.text}</p>
-                  </motion.div>
+                      <p className="leading-relaxed text-slate-400">"{testimonial.text}"</p>
+                    </motion.div>
                 ))}
               </div>
             </div>
