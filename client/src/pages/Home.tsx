@@ -49,6 +49,17 @@ export default function Home() {
     subject: 'General Inquiry'
   });
   const [contactSubmitted, setContactSubmitted] = useState(false);
+  const [showReviewForm, setShowReviewForm] = useState(false);
+  const [customerReviews, setCustomerReviews] = useState<Testimonial[]>(testimonials);
+  const [reviewForm, setReviewForm] = useState({
+    name: '',
+    email: '',
+    rating: 5,
+    text: '',
+    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop'
+  });
+  const [reviewSubmitted, setReviewSubmitted] = useState(false);
+  const [showBubbleMenu, setShowBubbleMenu] = useState(false);
 
   const products: Product[] = [
     {
@@ -224,6 +235,33 @@ export default function Home() {
     }, 3000);
   };
 
+  const handleReviewChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setReviewForm(prev => ({
+      ...prev,
+      [name]: name === 'rating' ? parseInt(value) : value
+    }));
+  };
+
+  const handleReviewSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const newReview: Testimonial = {
+      id: customerReviews.length + 1,
+      name: reviewForm.name,
+      rating: reviewForm.rating,
+      text: reviewForm.text,
+      image: reviewForm.image
+    };
+    setCustomerReviews([newReview, ...customerReviews]);
+    console.log('Review submitted:', newReview);
+    setReviewSubmitted(true);
+    setTimeout(() => {
+      setReviewSubmitted(false);
+      setReviewForm({ name: '', email: '', rating: 5, text: '', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop' });
+      setShowReviewForm(false);
+    }, 3000);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-slate-50 overflow-x-hidden">
       {/* Animated background lightning effect */}
@@ -232,36 +270,60 @@ export default function Home() {
         <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
       </div>
 
-      {/* Floating Navigation Panel */}
+      {/* Floating Bubble Navigation */}
       <motion.div
-        initial={{ opacity: 0, x: -100 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.8 }}
-        className="fixed left-6 top-1/2 -translate-y-1/2 z-40 hidden lg:flex flex-col gap-4 rounded-2xl backdrop-blur-xl border border-cyan-500/30 bg-slate-900/50 p-6 shadow-2xl shadow-cyan-500/20"
+        initial={{ opacity: 0, scale: 0 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="fixed right-6 bottom-6 z-40 hidden lg:block"
       >
-        {['Home', 'About', 'Contact'].map((item, index) => (
-          <motion.button
-            key={item}
-            whileHover={{ scale: 1.1, x: 10 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => scrollToSection(item.toLowerCase())}
-            className={`px-4 py-3 rounded-lg font-semibold text-sm transition relative group ${
-              activeSection === item.toLowerCase()
-                ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg shadow-cyan-500/50'
-                : 'text-slate-300 hover:text-cyan-300 hover:bg-slate-800/50'
-            }`}
+        <AnimatePresence>
+          {showBubbleMenu && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0 }}
+              className="absolute bottom-24 right-0 flex flex-col gap-3"
+            >
+              {['Home', 'About', 'Contact'].map((item, index) => (
+                <motion.button
+                  key={item}
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 20 }}
+                  transition={{ delay: index * 0.1 }}
+                  whileHover={{ scale: 1.1, x: -10 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => {
+                    scrollToSection(item.toLowerCase());
+                    setShowBubbleMenu(false);
+                  }}
+                  className={`w-14 h-14 rounded-full font-semibold text-sm transition flex items-center justify-center shadow-lg transition-all ${
+                    activeSection === item.toLowerCase()
+                      ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-cyan-500/50'
+                      : 'bg-slate-800/80 text-slate-300 hover:bg-slate-700 hover:text-cyan-300 hover:shadow-cyan-500/30'
+                  }`}
+                  title={item}
+                >
+                  {item.charAt(0)}
+                </motion.button>
+              ))}
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <motion.button
+          whileHover={{ scale: 1.15 }}
+          whileTap={{ scale: 0.9 }}
+          onClick={() => setShowBubbleMenu(!showBubbleMenu)}
+          className="w-16 h-16 rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-2xl shadow-cyan-500/50 flex items-center justify-center font-bold text-xl transition hover:shadow-cyan-500/70"
+        >
+          <motion.div
+            animate={{ rotate: showBubbleMenu ? 45 : 0 }}
+            transition={{ duration: 0.3 }}
           >
-            <span className="flex items-center gap-2">
-              {item}
-              {activeSection === item.toLowerCase() && (
-                <motion.div
-                  layoutId="floatingIndicator"
-                  className="w-2 h-2 rounded-full bg-cyan-300 shadow-lg shadow-cyan-500/50"
-                />
-              )}
-            </span>
-          </motion.button>
-        ))}
+            {showBubbleMenu ? <X size={28} /> : <Menu size={28} />}
+          </motion.div>
+        </motion.button>
       </motion.div>
 
       {/* Top Announcement Bar */}
@@ -665,7 +727,7 @@ export default function Home() {
               </motion.div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {testimonials.map((testimonial, index) => (
+                {customerReviews.map((testimonial, index) => (
                     <motion.div
                       key={testimonial.id}
                       initial={{ opacity: 0, y: 30 }}
@@ -1011,9 +1073,118 @@ export default function Home() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
             >
-              <h3 className="text-3xl font-bold mb-8 text-slate-50">Customer Reviews</h3>
+              <div className="flex items-center justify-between mb-8">
+                <h3 className="text-3xl font-bold text-slate-50">Customer Reviews</h3>
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setShowReviewForm(!showReviewForm)}
+                  className="bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-6 py-2 rounded-lg font-semibold transition hover:shadow-lg hover:shadow-cyan-500/50"
+                >
+                  {showReviewForm ? 'Close' : '+ Share Your Review'}
+                </motion.button>
+              </div>
+
+              {/* Review Submission Form */}
+              <AnimatePresence>
+                {showReviewForm && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    className="rounded-2xl backdrop-blur-xl border border-cyan-500/30 bg-slate-900/40 p-8 mb-8 shadow-lg"
+                  >
+                    <h4 className="text-2xl font-bold mb-6 text-slate-50">Share Your Experience</h4>
+                    <form onSubmit={handleReviewSubmit} className="space-y-6">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                          <label className="text-sm font-semibold mb-2 block text-slate-300">Your Name *</label>
+                          <input
+                            type="text"
+                            name="name"
+                            value={reviewForm.name}
+                            onChange={handleReviewChange}
+                            required
+                            placeholder="Your name"
+                            className="w-full px-4 py-3 rounded-lg border border-cyan-500/30 bg-slate-800/50 text-white placeholder-slate-500 transition focus:border-cyan-400 focus:shadow-lg focus:shadow-cyan-500/30"
+                          />
+                        </div>
+                        <div>
+                          <label className="text-sm font-semibold mb-2 block text-slate-300">Email Address *</label>
+                          <input
+                            type="email"
+                            name="email"
+                            value={reviewForm.email}
+                            onChange={handleReviewChange}
+                            required
+                            placeholder="your@email.com"
+                            className="w-full px-4 py-3 rounded-lg border border-cyan-500/30 bg-slate-800/50 text-white placeholder-slate-500 transition focus:border-cyan-400 focus:shadow-lg focus:shadow-cyan-500/30"
+                          />
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="text-sm font-semibold mb-2 block text-slate-300">Rating *</label>
+                        <div className="flex gap-2">
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <motion.button
+                              key={star}
+                              whileHover={{ scale: 1.2 }}
+                              whileTap={{ scale: 0.9 }}
+                              type="button"
+                              onClick={() => setReviewForm(prev => ({ ...prev, rating: star }))}
+                              className={`text-3xl transition ${
+                                star <= reviewForm.rating ? 'text-cyan-400' : 'text-slate-600'
+                              }`}
+                            >
+                              ★
+                            </motion.button>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="text-sm font-semibold mb-2 block text-slate-300">Your Review *</label>
+                        <textarea
+                          name="text"
+                          value={reviewForm.text}
+                          onChange={handleReviewChange}
+                          required
+                          placeholder="Share your experience with BHAT Imported Clothes..."
+                          rows={5}
+                          className="w-full px-4 py-3 rounded-lg border border-cyan-500/30 bg-slate-800/50 text-white placeholder-slate-500 transition resize-none focus:border-cyan-400 focus:shadow-lg focus:shadow-cyan-500/30"
+                        />
+                      </div>
+
+                      <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        type="submit"
+                        className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 text-white py-3 rounded-lg font-semibold transition hover:shadow-lg hover:shadow-cyan-500/50 flex items-center justify-center gap-2"
+                      >
+                        <Send size={18} />
+                        Submit Review
+                      </motion.button>
+
+                      <AnimatePresence>
+                        {reviewSubmitted && (
+                          <motion.div
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -10 }}
+                            className="bg-cyan-500/20 border border-cyan-500/50 text-cyan-300 px-4 py-3 rounded-lg text-center font-semibold"
+                          >
+                            ✓ Thank you! Your review has been submitted successfully.
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </form>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {testimonials.map((testimonial, index) => (
+                {customerReviews.map((testimonial, index) => (
                   <motion.div
                     key={testimonial.id}
                     initial={{ opacity: 0, y: 20 }}
