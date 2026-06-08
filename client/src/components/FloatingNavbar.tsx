@@ -21,57 +21,75 @@ const FloatingNavbar = ({ onNavigate }: { onNavigate?: (section: string) => void
     }
     if (onNavigate) {
       onNavigate(sectionId);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      const element = document.getElementById(sectionId);
+      if (element) {
+        const offset = 80; // Height of the fixed navbar
+        const bodyRect = document.body.getBoundingClientRect().top;
+        const elementRect = element.getBoundingClientRect().top;
+        const elementPosition = elementRect - bodyRect;
+        const offsetPosition = elementPosition - offset;
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+      }
     }
   };
 
   return (
-    <div className="fixed top-6 left-1/2 -translate-x-1/2 z-[60] px-4 w-full max-w-lg">
+    <div className="fixed top-0 left-0 right-0 z-[60] w-full">
       <nav className={cn(
-        "relative flex items-center justify-between px-6 py-3 rounded-full",
-        "bg-slate-900/40 backdrop-blur-xl border border-white/10",
-        "shadow-[0_8px_32px_0_rgba(0,0,0,0.37)]",
-        "after:absolute after:inset-0 after:rounded-full after:shadow-[0_0_20px_rgba(34,211,238,0.2)] after:-z-10"
+        "flex items-center justify-between px-6 py-4 w-full",
+        "bg-slate-900/80 backdrop-blur-xl border-b border-white/10",
+        "shadow-lg"
       )}>
-        {navItems.map((item) => {
-          const Icon = item.icon;
+        <div className="max-w-7xl mx-auto w-full flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg shadow-cyan-500/20">
+              <ShoppingBag className="w-5 h-5 text-white" />
+            </div>
+            <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400">
+              BHAT
+            </span>
+          </div>
 
-          if (item.isPlaceholder) {
-            return (
-              <div
-                key={item.name}
-                className="relative -bottom-6 flex flex-col items-center"
-              >
-                <div className={cn(
-                  "w-14 h-14 rounded-full flex items-center justify-center transition-all duration-300",
-                  "bg-gradient-to-tr from-cyan-500 to-blue-600 shadow-lg shadow-cyan-500/50",
-                  "hover:scale-110 active:scale-95 cursor-pointer"
-                )}>
-                  <Icon className="w-6 h-6 text-white" />
-                </div>
-                <span className="mt-1 text-[10px] font-bold text-cyan-400 uppercase tracking-widest">
-                  {item.name}
-                </span>
-              </div>
-            );
-          }
+          <div className="flex items-center gap-8">
+            {navItems.map((item) => {
+              const Icon = item.icon;
 
-          return (
-            <button
-              key={item.name}
-              onClick={() => item.section && handleClick(item.section)}
-              className={cn(
-                "flex flex-col items-center gap-1 transition-all duration-300",
-                "text-slate-400 hover:text-cyan-400 cursor-pointer"
-              )}
-            >
-              <Icon className="w-5 h-5" />
-              <span className="text-[10px] font-bold uppercase tracking-widest">
-                {item.name}
-              </span>
-            </button>
-          );
-        })}
+              if (item.isPlaceholder) {
+                return (
+                  <div
+                    key={item.name}
+                    className="hidden md:flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-tr from-cyan-500 to-blue-600 text-white shadow-lg shadow-cyan-500/20 hover:scale-105 transition-transform cursor-pointer"
+                  >
+                    <Icon className="w-4 h-4" />
+                    <span className="text-xs font-bold uppercase tracking-widest">
+                      {item.name}
+                    </span>
+                  </div>
+                );
+              }
+
+              return (
+                <button
+                  key={item.name}
+                  onClick={() => item.section && handleClick(item.section)}
+                  className={cn(
+                    "flex items-center gap-2 transition-all duration-300",
+                    "text-slate-400 hover:text-cyan-400 cursor-pointer group"
+                  )}
+                >
+                  <Icon className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                  <span className="hidden sm:inline text-xs font-bold uppercase tracking-widest">
+                    {item.name}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
       </nav>
     </div>
   );

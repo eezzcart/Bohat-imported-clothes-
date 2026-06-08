@@ -40,8 +40,8 @@ function App() {
                 const [activeSection, setActiveSection] = React.useState('home');
                 return (
                   <>
-                    <Home activeSection={activeSection} onSectionChange={setActiveSection} />
                     <FloatingNavbar onNavigate={setActiveSection} />
+                    <Home activeSection={activeSection} onSectionChange={setActiveSection} />
                   </>
                 );
               }}
