@@ -365,7 +365,7 @@ export default function Home() {
               whileHover={{ scale: 1.05 }}
               className="flex-1 text-center md:flex-none cursor-pointer"
             >
-              <img src="/assets/logo.jpg" alt="BHAT Logo" className="h-12 mx-auto drop-shadow-lg" />
+              <img src="/assets/logo.jpg" alt="BHAT Logo" className="h-16 md:h-20 mx-auto drop-shadow-2xl" />
             </motion.div>
 
             {/* Right Icons */}
