@@ -11,14 +11,9 @@ const FloatingNavbar = ({ onNavigate }: { onNavigate?: (section: string) => void
     { name: 'About', section: 'about', icon: Info },
     { name: 'Shop', section: 'shop', icon: ShoppingBag },
     { name: 'Contact', section: 'contact', icon: Mail },
-    { name: 'Admin', section: 'admin', icon: User, isPlaceholder: false, isExternal: true },
   ];
 
-  const handleClick = (sectionId: string, isExternal?: boolean) => {
-    if (isExternal) {
-      window.location.href = '/' + sectionId;
-      return;
-    }
+  const handleClick = (sectionId: string) => {
     if (location !== '/') {
       window.location.href = '/#' + sectionId;
       return;
@@ -61,26 +56,10 @@ const FloatingNavbar = ({ onNavigate }: { onNavigate?: (section: string) => void
           <div className="flex items-center gap-8">
             {navItems.map((item) => {
               const Icon = item.icon;
-
-              if (item.isPlaceholder) {
-                return (
-                  <button
-                    key={item.name}
-                    onClick={() => item.section && handleClick(item.section, (item as any).isExternal)}
-                    className="hidden md:flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-tr from-cyan-500 to-blue-600 text-white shadow-lg shadow-cyan-500/20 hover:scale-105 transition-transform cursor-pointer border-none"
-                  >
-                    <Icon className="w-4 h-4" />
-                    <span className="text-xs font-bold uppercase tracking-widest">
-                      {item.name}
-                    </span>
-                  </button>
-                );
-              }
-
               return (
                 <button
                   key={item.name}
-                  onClick={() => item.section && handleClick(item.section, (item as any).isExternal)}
+                  onClick={() => handleClick(item.section)}
                   className={cn(
                     "flex items-center gap-2 transition-all duration-300",
                     "text-slate-400 hover:text-cyan-400 cursor-pointer group"
@@ -93,6 +72,17 @@ const FloatingNavbar = ({ onNavigate }: { onNavigate?: (section: string) => void
                 </button>
               );
             })}
+            
+            {/* New working Admin Button */}
+            <button
+              onClick={() => window.location.href = '/admin'}
+              className="flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-tr from-cyan-500 to-blue-600 text-white shadow-lg shadow-cyan-500/20 hover:scale-105 transition-transform cursor-pointer border-none"
+            >
+              <User className="w-4 h-4" />
+              <span className="text-xs font-bold uppercase tracking-widest">
+                Admin
+              </span>
+            </button>
           </div>
         </div>
       </nav>
