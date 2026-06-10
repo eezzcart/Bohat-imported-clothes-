@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "mysql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1781005037699,
+      "tag": "0000_mute_king_bedlam",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1781005962298,
+      "tag": "0001_medical_clint_barton",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1781007645085,
+      "tag": "0002_numerous_dark_beast",
+      "breakpoints": true
+    }
+  ]
+}

@@ -1,14 +1,44 @@
+import "dotenv/config";
 import express from "express";
 import { createServer } from "http";
 import path from "path";
 import { fileURLToPath } from "url";
+import { createExpressMiddleware } from "@trpc/server/adapters/express";
+import { registerOAuthRoutes } from "./_core/oauth";
+import { registerStorageProxy } from "./_core/storageProxy";
+import { appRouter } from "./routers";
+import { createContext } from "./_core/context";
+import { initializeDefaultAdmin } from "./routers/auth";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 async function startServer() {
+  // Initialize default admin account on startup
+  try {
+    await initializeDefaultAdmin();
+  } catch (e) {
+    console.error("Failed to initialize default admin:", e);
+  }
+
   const app = express();
   const server = createServer(app);
+
+  // Configure body parser with larger size limit for file uploads
+  app.use(express.json({ limit: "50mb" }));
+  app.use(express.urlencoded({ limit: "50mb", extended: true }));
+
+  registerStorageProxy(app);
+  registerOAuthRoutes(app);
+
+  // tRPC API
+  app.use(
+    "/api/trpc",
+    createExpressMiddleware({
+      router: appRouter,
+      createContext,
+    })
+  );
 
   // Serve static files from dist/public in production
   const staticPath =
