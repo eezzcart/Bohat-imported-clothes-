@@ -160,14 +160,15 @@ export const authRouter = router({
   }),
 });
 
+import { getDb } from "../db";
+import { users } from "../../drizzle/schema";
+import { eq } from "drizzle-orm";
+
 // Helper function to update user password
 async function updateUserPassword(userId: number, passwordHash: string) {
-  const db = require("../db").getDb();
+  const db = getDb();
   const dbInstance = await db();
   if (!dbInstance) throw new Error("Database not available");
-
-  const { users } = require("../drizzle/schema");
-  const { eq } = require("drizzle-orm");
 
   await dbInstance.update(users).set({ passwordHash }).where(eq(users.id, userId));
 }
