@@ -19,7 +19,7 @@ export async function getDb() {
 }
 
 // Create a new user with username and password
-export async function createUser(username: string, passwordHash: string, name?: string, email?: string): Promise<any> {
+export async function createUser(username: string, passwordHash: string, name?: string, email?: string, role: "user" | "admin" = "user"): Promise<any> {
   const db = await getDb();
   if (!db) {
     throw new Error("Database not available");
@@ -31,7 +31,7 @@ export async function createUser(username: string, passwordHash: string, name?: 
     name,
     email,
     loginMethod: "username",
-    role: "user",
+    role,
     lastSignedIn: new Date(),
   });
 

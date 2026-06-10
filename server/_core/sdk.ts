@@ -277,7 +277,18 @@ class SDKServer {
 
     const sessionUserId = session.openId;
     const signedInAt = new Date();
-    let user = await db.getUserByOpenId(sessionUserId);
+    let user: any = null;
+
+    // Handle local username/password sessions (prefixed with 'local_')
+    if (sessionUserId.startsWith('local_')) {
+      const userId = parseInt(sessionUserId.substring(6), 10);
+      if (!isNaN(userId)) {
+        user = await db.getUserById(userId);
+      }
+    } else {
+      // Handle OAuth sessions
+      user = await db.getUserByOpenId(sessionUserId);
+    }
 
     // If user not in DB, sync from OAuth server automatically
     if (!user) {

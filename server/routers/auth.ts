@@ -16,7 +16,7 @@ export async function initializeDefaultAdmin() {
     const existingAdmin = await getUserByUsername(DEFAULT_ADMIN_USERNAME);
     if (!existingAdmin) {
       const passwordHash = await bcrypt.hash(DEFAULT_ADMIN_PASSWORD, SALT_ROUNDS);
-      await createUser(DEFAULT_ADMIN_USERNAME, passwordHash, "Admin", "admin@shop.local");
+      await createUser(DEFAULT_ADMIN_USERNAME, passwordHash, "Admin", "admin@shop.local", "admin");
       console.log("[Auth] Default admin account created. Username: admin, Password: admin123");
     }
   } catch (error) {
@@ -61,7 +61,9 @@ export const authRouter = router({
 
         // Create session token (using JWT from SDK)
         const { sdk } = require("../_core/sdk");
-        const sessionToken = await sdk.createSessionToken(user.id.toString(), {
+        // Use a special prefix to indicate this is a local username/password session
+        const sessionOpenId = `local_${user.id}`;
+        const sessionToken = await sdk.createSessionToken(sessionOpenId, {
           name: user.name || user.username,
           expiresInMs: 30 * 24 * 60 * 60 * 1000, // 30 days
         });
