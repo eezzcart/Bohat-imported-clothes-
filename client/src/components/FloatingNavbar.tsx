@@ -64,15 +64,16 @@ const FloatingNavbar = ({ onNavigate }: { onNavigate?: (section: string) => void
 
               if (item.isPlaceholder) {
                 return (
-                  <div
+                  <button
                     key={item.name}
-                    className="hidden md:flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-tr from-cyan-500 to-blue-600 text-white shadow-lg shadow-cyan-500/20 hover:scale-105 transition-transform cursor-pointer"
+                    onClick={() => item.section && handleClick(item.section, (item as any).isExternal)}
+                    className="hidden md:flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-tr from-cyan-500 to-blue-600 text-white shadow-lg shadow-cyan-500/20 hover:scale-105 transition-transform cursor-pointer border-none"
                   >
                     <Icon className="w-4 h-4" />
                     <span className="text-xs font-bold uppercase tracking-widest">
                       {item.name}
                     </span>
-                  </div>
+                  </button>
                 );
               }
 
