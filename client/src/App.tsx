@@ -64,6 +64,13 @@ const trpcClient = trpc.createClient({
 function Router() {
   return (
     <Switch>
+      <Route path={"/login"} component={LoginPage} />
+      <Route path={"/admin"} component={AdminDashboard} />
+      <Route path={"/admin/products"} component={ProductsPage} />
+      <Route path={"/admin/products/new"} component={ProductForm} />
+      <Route path={"/admin/products/:id"} component={ProductForm} />
+      <Route path={"/admin/categories"} component={CategoriesPage} />
+      <Route path={"/404"} component={NotFound} />
       <Route path="/">
         {(params) => {
           const [activeSection, setActiveSection] = React.useState('home');
@@ -75,13 +82,6 @@ function Router() {
           );
         }}
       </Route>
-      <Route path={"/login"} component={LoginPage} />
-      <Route path={"/admin"} component={AdminDashboard} />
-      <Route path={"/admin/products"} component={ProductsPage} />
-      <Route path={"/admin/products/new"} component={ProductForm} />
-      <Route path={"/admin/products/:id"} component={ProductForm} />
-      <Route path={"/admin/categories"} component={CategoriesPage} />
-      <Route path={"/404"} component={NotFound} />
       <Route component={NotFound} />
     </Switch>
   );
