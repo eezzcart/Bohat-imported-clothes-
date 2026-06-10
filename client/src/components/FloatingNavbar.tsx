@@ -11,10 +11,14 @@ const FloatingNavbar = ({ onNavigate }: { onNavigate?: (section: string) => void
     { name: 'About', section: 'about', icon: Info },
     { name: 'Shop', section: 'shop', icon: ShoppingBag },
     { name: 'Contact', section: 'contact', icon: Mail },
-    { name: 'Admin', section: null, icon: User, isPlaceholder: true },
+    { name: 'Admin', section: 'admin', icon: User, isPlaceholder: false, isExternal: true },
   ];
 
-  const handleClick = (sectionId: string) => {
+  const handleClick = (sectionId: string, isExternal?: boolean) => {
+    if (isExternal) {
+      window.location.href = '/' + sectionId;
+      return;
+    }
     if (location !== '/') {
       window.location.href = '/#' + sectionId;
       return;
@@ -75,7 +79,7 @@ const FloatingNavbar = ({ onNavigate }: { onNavigate?: (section: string) => void
               return (
                 <button
                   key={item.name}
-                  onClick={() => item.section && handleClick(item.section)}
+                  onClick={() => item.section && handleClick(item.section, (item as any).isExternal)}
                   className={cn(
                     "flex items-center gap-2 transition-all duration-300",
                     "text-slate-400 hover:text-cyan-400 cursor-pointer group"
