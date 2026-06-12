@@ -25,7 +25,7 @@ export default function ProductDetail() {
     onSuccess: async () => {
       toast.success('Product deleted successfully');
       await utils.products.list.invalidate();
-      navigate('/admin/products');
+      navigate('..');
     },
     onError: (error) => {
       toast.error(error.message || 'Failed to delete product');
@@ -42,7 +42,7 @@ export default function ProductDetail() {
       <div className="flex flex-col items-center justify-center py-24">
         <AlertCircle className="mb-4 h-12 w-12 text-red-400" />
         <h2 className="text-lg font-semibold text-slate-900">Invalid Product ID</h2>
-        <button onClick={() => navigate('/admin/products')} className="mt-4 rounded-lg bg-violet-600 px-4 py-2 text-sm font-medium text-white hover:bg-violet-700">Back to Products</button>
+        <button onClick={() => navigate('..')} className="mt-4 rounded-lg bg-violet-600 px-4 py-2 text-sm font-medium text-white hover:bg-violet-700">Back to Products</button>
       </div>
     );
   }
@@ -60,7 +60,7 @@ export default function ProductDetail() {
       <div className="flex flex-col items-center justify-center py-24">
         <AlertCircle className="mb-4 h-12 w-12 text-red-400" />
         <h2 className="text-lg font-semibold text-slate-900">Product Not Found</h2>
-        <button onClick={() => navigate('/admin/products')} className="mt-4 rounded-lg bg-violet-600 px-4 py-2 text-sm font-medium text-white hover:bg-violet-700">Back to Products</button>
+        <button onClick={() => navigate('..')} className="mt-4 rounded-lg bg-violet-600 px-4 py-2 text-sm font-medium text-white hover:bg-violet-700">Back to Products</button>
       </div>
     );
   }
@@ -73,7 +73,7 @@ export default function ProductDetail() {
   return (
     <div className="mx-auto max-w-4xl">
       <button
-        onClick={() => navigate('/admin/products')}
+        onClick={() => navigate('..')}
         className="mb-6 flex items-center gap-2 text-sm font-medium text-slate-500 hover:text-slate-700 transition-colors"
       >
         <ArrowLeft className="h-4 w-4" />
@@ -158,7 +158,7 @@ export default function ProductDetail() {
             {/* Actions */}
             <div className="mt-6 flex gap-3 border-t border-slate-200 pt-5">
               <button
-                onClick={() => navigate(`/admin/products/edit/${product.id}`)}
+                onClick={() => navigate(`../edit/${product.id}`)}
                 className="flex items-center gap-2 rounded-lg bg-violet-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-violet-700 transition-colors"
               >
                 <Edit className="h-4 w-4" />

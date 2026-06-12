@@ -22,7 +22,7 @@ export default function EditProduct() {
       toast.success('Product updated successfully');
       await utils.products.list.invalidate();
       await utils.products.getById.invalidate({ id: productId! });
-      navigate('/admin/products');
+      navigate('..');
     },
     onError: (error) => {
       toast.error(error.message || 'Failed to update product');
@@ -92,7 +92,7 @@ export default function EditProduct() {
         <h2 className="text-lg font-semibold text-slate-900">Invalid Product ID</h2>
         <p className="mt-1 text-sm text-slate-500">The product ID is invalid.</p>
         <button
-          onClick={() => navigate('/admin/products')}
+          onClick={() => navigate('..')}
           className="mt-4 rounded-lg bg-violet-600 px-4 py-2 text-sm font-medium text-white hover:bg-violet-700"
         >
           Back to Products
@@ -116,7 +116,7 @@ export default function EditProduct() {
         <h2 className="text-lg font-semibold text-slate-900">Product Not Found</h2>
         <p className="mt-1 text-sm text-slate-500">The product you're trying to edit doesn't exist.</p>
         <button
-          onClick={() => navigate('/admin/products')}
+          onClick={() => navigate('..')}
           className="mt-4 rounded-lg bg-violet-600 px-4 py-2 text-sm font-medium text-white hover:bg-violet-700"
         >
           Back to Products
@@ -128,7 +128,7 @@ export default function EditProduct() {
   return (
     <div className="mx-auto max-w-2xl">
       <button
-        onClick={() => navigate('/admin/products')}
+        onClick={() => navigate('..')}
         className="mb-6 flex items-center gap-2 text-sm font-medium text-slate-500 hover:text-slate-700 transition-colors"
       >
         <ArrowLeft className="h-4 w-4" />
@@ -139,7 +139,7 @@ export default function EditProduct() {
         <ProductForm
           product={product}
           onSave={handleSave}
-          onCancel={() => navigate('/admin/products')}
+          onCancel={() => navigate('..')}
         />
       </div>
     </div>

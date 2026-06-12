@@ -12,12 +12,12 @@ export default function App() {
   return (
     <Routes>
       <Route element={<Layout />}>
-        <Route path="/admin" element={<Dashboard />} />
-        <Route path="/admin/products" element={<Products />} />
-        <Route path="/admin/products/add" element={<AddProduct />} />
-        <Route path="/admin/products/edit/:id" element={<EditProduct />} />
-        <Route path="/admin/products/:id" element={<ProductDetail />} />
-        <Route path="/admin/categories" element={<Categories />} />
+        <Route index element={<Dashboard />} />
+        <Route path="products" element={<Products />} />
+        <Route path="products/add" element={<AddProduct />} />
+        <Route path="products/edit/:id" element={<EditProduct />} />
+        <Route path="products/:id" element={<ProductDetail />} />
+        <Route path="categories" element={<Categories />} />
       </Route>
     </Routes>
   );

@@ -63,16 +63,9 @@ function Router() {
   return (
     <Switch>
       <Route path={"/login"} component={LoginPage} />
-      <Route path="/admin">
+      <Route path="/admin/:*">
         {() => (
-          <BrowserRouter>
-            <AdminApp />
-          </BrowserRouter>
-        )}
-      </Route>
-      <Route path="/admin/:rest*">
-        {() => (
-          <BrowserRouter>
+          <BrowserRouter basename="/admin">
             <AdminApp />
           </BrowserRouter>
         )}

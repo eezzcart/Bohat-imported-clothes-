@@ -120,7 +120,7 @@ export default function Products() {
           <p className="mt-1 text-sm text-slate-500">{filtered.length} of {products.length} products</p>
         </div>
         <button
-          onClick={() => navigate('/admin/products/add')}
+          onClick={() => navigate('add')}
           className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-violet-600 to-indigo-600 px-4 py-2.5 text-sm font-medium text-white shadow-md shadow-violet-200 hover:from-violet-700 hover:to-indigo-700 transition-all self-start"
         >
           <Plus className="h-4 w-4" />
@@ -250,7 +250,7 @@ export default function Products() {
                     <td className="px-4 py-3 text-right">
                       <div className="flex items-center justify-end gap-1">
                         <button
-                          onClick={() => navigate(`/admin/products/edit/${product.id}`)}
+                          onClick={() => navigate(`edit/${product.id}`)}
                           className="rounded-lg p-2 text-slate-400 hover:bg-slate-100 hover:text-violet-600 transition-colors"
                           title="Edit"
                         >
@@ -264,7 +264,7 @@ export default function Products() {
                           <Trash2 className="h-4 w-4" />
                         </button>
                         <button
-                          onClick={() => navigate(`/admin/products/${product.id}`)}
+                          onClick={() => navigate(`${product.id}`)}
                           className="rounded-lg p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors"
                           title="View"
                         >
@@ -289,7 +289,7 @@ export default function Products() {
           </p>
           {products.length === 0 && (
             <button
-              onClick={() => navigate('/admin/products/add')}
+              onClick={() => navigate('add')}
               className="mt-4 flex items-center gap-2 rounded-lg bg-violet-600 px-4 py-2 text-sm font-medium text-white hover:bg-violet-700 transition-colors"
             >
               <Plus className="h-4 w-4" />

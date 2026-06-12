@@ -5,10 +5,10 @@ import { useAuth } from "@/_core/hooks/useAuth";
 export default function Sidebar() {
   const { logout } = useAuth();
   const links = [
-    { to: '/admin', icon: LayoutDashboard, label: 'Dashboard' },
-    { to: '/admin/products', icon: ShoppingBag, label: 'Products' },
-    { to: '/admin/products/add', icon: PackagePlus, label: 'Add Product' },
-    { to: '/admin/categories', icon: Tag, label: 'Categories' },
+    { to: '', icon: LayoutDashboard, label: 'Dashboard' },
+    { to: 'products', icon: ShoppingBag, label: 'Products' },
+    { to: 'products/add', icon: PackagePlus, label: 'Add Product' },
+    { to: 'categories', icon: Tag, label: 'Categories' },
   ];
 
   return (
@@ -25,7 +25,7 @@ export default function Sidebar() {
           <NavLink
             key={to}
             to={to}
-            end={to === '/admin'}
+            end={to === ''}
             className={({ isActive }) =>
               `flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
                 isActive

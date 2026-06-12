@@ -56,7 +56,7 @@ export default function AddProduct() {
 
       toast.success('Product created successfully');
       await utils.products.list.invalidate();
-      navigate('/admin/products');
+      navigate('..');
     } catch (error) {
       console.error('Error saving product:', error);
     }
@@ -65,7 +65,7 @@ export default function AddProduct() {
   return (
     <div className="mx-auto max-w-2xl">
       <button
-        onClick={() => navigate('/admin/products')}
+        onClick={() => navigate('..')}
         className="mb-6 flex items-center gap-2 text-sm font-medium text-slate-500 hover:text-slate-700 transition-colors"
       >
         <ArrowLeft className="h-4 w-4" />
@@ -73,7 +73,7 @@ export default function AddProduct() {
       </button>
 
       <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-        <ProductForm onSave={handleSave} onCancel={() => navigate('/admin/products')} />
+        <ProductForm onSave={handleSave} onCancel={() => navigate('..')} />
       </div>
     </div>
   );
