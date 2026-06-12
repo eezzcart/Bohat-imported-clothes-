@@ -8,10 +8,8 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
 import FloatingNavbar from "./components/FloatingNavbar";
 import LoginPage from "./pages/LoginPage";
-import AdminDashboard from "./pages/AdminDashboard";
-import ProductsPage from "./pages/ProductsPage";
-import ProductForm from "./pages/ProductForm";
-import CategoriesPage from "./pages/CategoriesPage";
+import AdminApp from "./admin-new/App";
+import { BrowserRouter } from "react-router-dom";
 import { trpc } from "@/lib/trpc";
 import { UNAUTHED_ERR_MSG } from '@shared/const';
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -65,20 +63,19 @@ function Router() {
   return (
     <Switch>
       <Route path={"/login"} component={LoginPage} />
-      <Route path={"/admin"} component={AdminDashboard} />
-      <Route path={"/admin/products"} component={ProductsPage} />
-      <Route path={"/admin/products/new"} component={ProductForm} />
-      <Route path={"/admin/products/:id"} component={ProductForm} />
-      <Route path={"/admin/categories"} component={CategoriesPage} />
+      <Route path="/admin/:rest*">
+        {() => (
+          <BrowserRouter>
+            <AdminApp />
+          </BrowserRouter>
+        )}
+      </Route>
       <Route path={"/404"} component={NotFound} />
       <Route path="/">
         {(params) => {
           const [activeSection, setActiveSection] = React.useState('home');
           return (
-            <>
-              <FloatingNavbar onNavigate={setActiveSection} />
-              <Home activeSection={activeSection} onSectionChange={setActiveSection} />
-            </>
+            <Home activeSection={activeSection} onSectionChange={setActiveSection} />
           );
         }}
       </Route>

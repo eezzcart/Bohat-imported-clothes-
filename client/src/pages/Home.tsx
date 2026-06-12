@@ -333,6 +333,7 @@ export default function Home({ activeSection: propActiveSection, onSectionChange
       </motion.div>
 
       {/* Removed Top Announcement Bar and Header per user request */}
+      <FloatingNavbar onNavigate={scrollToSection} />
 
       {/* HOME SECTION */}
       {activeSection === 'home' && (
