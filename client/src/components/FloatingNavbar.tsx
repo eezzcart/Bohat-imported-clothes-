@@ -76,8 +76,7 @@ const FloatingNavbar = ({ onNavigate }: { onNavigate?: (section: string) => void
             {/* New working Admin Button */}
             <button
               onClick={() => {
-                // Use window.location.href for a clean navigation to the admin sub-app
-                // This ensures the correct router (wouter -> react-router-dom) transition
+                // Simple navigation to /admin
                 window.location.href = '/admin';
               }}
               className="relative z-[70] flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-tr from-cyan-500 to-blue-600 text-white shadow-lg shadow-cyan-500/20 hover:scale-105 transition-transform cursor-pointer border-none no-underline"
