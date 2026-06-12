@@ -3,11 +3,8 @@
   "buildCommand": "pnpm install && pnpm build",
   "outputDirectory": "dist/public",
   "framework": "vite",
-  "cleanUrls": true,
+
   "rewrites": [
-    { "source": "/admin", "destination": "/index.html" },
-    { "source": "/admin/(.*)", "destination": "/index.html" },
-    { "source": "/login", "destination": "/index.html" },
     { "source": "/api/trpc/(.*)", "destination": "/api/trpc/$1" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]

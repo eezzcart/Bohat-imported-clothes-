@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import FloatingNavbar from '@/components/FloatingNavbar';
+import { useLocation } from 'wouter';
 import { ShoppingBag, Heart, Search, User, Menu, X, Star, Phone, Mail, MapPin, Instagram, Facebook, Twitter, ChevronRight, ArrowRight, Check, Truck, Shield, Clock, Sparkles, Send, Award, Users, TrendingUp, Filter, Zap } from 'lucide-react';
 
 interface Product {
@@ -30,6 +31,13 @@ interface Testimonial {
 }
 
 export default function Home({ activeSection: propActiveSection, onSectionChange }: { activeSection?: string, onSectionChange?: (section: string) => void }) {
+  const [, setLocation] = useLocation();
+  
+  // Expose navigate globally for FloatingNavbar
+  useEffect(() => {
+    (window as any).wouter_navigate = setLocation;
+  }, [setLocation]);
+
   // Define static data first (before useState hooks)
   const products: Product[] = [
     {
