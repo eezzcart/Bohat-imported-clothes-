@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import FloatingNavbar from '@/components/FloatingNavbar';
 import { ShoppingBag, Heart, Search, User, Menu, X, Star, Phone, Mail, MapPin, Instagram, Facebook, Twitter, ChevronRight, ArrowRight, Check, Truck, Shield, Clock, Sparkles, Send, Award, Users, TrendingUp, Filter, Zap } from 'lucide-react';
 
 interface Product {
