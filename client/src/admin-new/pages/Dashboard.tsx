@@ -1,30 +1,37 @@
 import { useMemo } from 'react';
 import { ShoppingBag, DollarSign, Package, Tag, TrendingUp, AlertCircle } from 'lucide-react';
-import { getProducts } from '../lib/storage';
+import { trpc } from '@/lib/trpc';
 
 export default function Dashboard() {
-  const products = useMemo(() => getProducts(), []);
+  // Fetch data from backend
+  const { data: products = [] } = trpc.products.list.useQuery();
+  const { data: categories = [] } = trpc.categories.list.useQuery();
 
   const totalProducts = products.length;
-  const totalValue = products.reduce((sum, p) => sum + p.price * p.stock, 0);
+  const totalValue = products.reduce((sum, p) => sum + parseFloat(p.price) * p.stock, 0);
   const totalStock = products.reduce((sum, p) => sum + p.stock, 0);
-  const categories = [...new Set(products.map(p => p.category))].length;
-  const avgPrice = totalProducts > 0 ? products.reduce((sum, p) => sum + p.price, 0) / totalProducts : 0;
+  const categoryCount = categories.length;
+  const avgPrice = totalProducts > 0 ? products.reduce((sum, p) => sum + parseFloat(p.price), 0) / totalProducts : 0;
   const lowStock = products.filter(p => p.stock <= 10).length;
 
   const stats = [
     { label: 'Total Products', value: totalProducts, icon: ShoppingBag, color: 'from-violet-500 to-purple-600', bg: 'bg-violet-50 text-violet-600' },
     { label: 'Inventory Value', value: `$${totalValue.toLocaleString('en-US', { maximumFractionDigits: 0 })}`, icon: DollarSign, color: 'from-emerald-500 to-teal-600', bg: 'bg-emerald-50 text-emerald-600' },
     { label: 'Total Stock', value: totalStock.toLocaleString(), icon: Package, color: 'from-amber-500 to-orange-600', bg: 'bg-amber-50 text-amber-600' },
-    { label: 'Categories', value: categories, icon: Tag, color: 'from-sky-500 to-blue-600', bg: 'bg-sky-50 text-sky-600' },
+    { label: 'Categories', value: categoryCount, icon: Tag, color: 'from-sky-500 to-blue-600', bg: 'bg-sky-50 text-sky-600' },
   ];
 
   const categoryBreakdown = useMemo(() => {
-    const map: Record<string, number> = {};
+    const map: Record<number, { name: string; count: number }> = {};
     products.forEach(p => {
-      map[p.category] = (map[p.category] || 0) + 1;
+      if (p.categoryId && p.category) {
+        if (!map[p.categoryId]) {
+          map[p.categoryId] = { name: p.category.name, count: 0 };
+        }
+        map[p.categoryId].count += 1;
+      }
     });
-    return Object.entries(map).sort((a, b) => b[1] - a[1]);
+    return Object.values(map).sort((a, b) => b.count - a.count);
   }, [products]);
 
   return (
@@ -79,9 +86,9 @@ export default function Dashboard() {
         <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
           <h3 className="text-sm font-semibold text-slate-900">Products by Category</h3>
           <div className="mt-4 space-y-3">
-            {categoryBreakdown.slice(0, 5).map(([cat, count]) => (
-              <div key={cat} className="flex items-center justify-between">
-                <span className="text-sm text-slate-600">{cat}</span>
+            {categoryBreakdown.slice(0, 5).map(({ name, count }) => (
+              <div key={name} className="flex items-center justify-between">
+                <span className="text-sm text-slate-600">{name}</span>
                 <div className="flex items-center gap-2">
                   <div className="h-2 rounded-full bg-violet-200" style={{ width: `${Math.max(count * 20, 12)}px` }} />
                   <span className="text-sm font-medium text-slate-900">{count}</span>

@@ -1,33 +1,52 @@
 import { useState, useEffect } from 'react';
 import { Save, X } from 'lucide-react';
-import type { Product } from '../types';
+import type { Product, Category } from '../types';
 import ImageUpload from './ImageUpload';
+import { trpc } from '@/lib/trpc';
+import { Spinner } from '@/components/ui/spinner';
 
 interface ProductFormProps {
   product?: Product;
-  onSave: (data: { name: string; description: string; price: number; category: string; stock: number; images: string[] }) => void;
+  onSave: (data: {
+    name: string;
+    description: string;
+    price: number;
+    categoryId: number | null;
+    stock: number;
+    sku?: string;
+    status: 'active' | 'draft';
+    images: (string | File)[];
+  }) => void;
   onCancel: () => void;
 }
-
-const CATEGORIES = ['Accessories', 'Clothing', 'Electronics', 'Home & Living', 'Sports', 'Beauty', 'Books', 'Other'];
 
 export default function ProductForm({ product, onSave, onCancel }: ProductFormProps) {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
-  const [category, setCategory] = useState(CATEGORIES[0]);
+  const [categoryId, setCategoryId] = useState<number | null>(null);
   const [stock, setStock] = useState('');
-  const [images, setImages] = useState<string[]>([]);
+  const [sku, setSku] = useState('');
+  const [status, setStatus] = useState<'active' | 'draft'>('draft');
+  const [images, setImages] = useState<(string | File)[]>([]);
   const [errors, setErrors] = useState<Record<string, string>>({});
+
+  // Fetch categories
+  const { data: categories = [], isLoading: categoriesLoading } = trpc.categories.list.useQuery();
 
   useEffect(() => {
     if (product) {
       setName(product.name);
-      setDescription(product.description);
-      setPrice(String(product.price));
-      setCategory(product.category);
+      setDescription(product.description || '');
+      setPrice(product.price);
+      setCategoryId(product.categoryId);
       setStock(String(product.stock));
-      setImages(product.images);
+      setSku(product.sku || '');
+      setStatus(product.status);
+      // Set existing images as URLs
+      if (product.images && product.images.length > 0) {
+        setImages(product.images.map(img => img.imageUrl));
+      }
     }
   }, [product]);
 
@@ -50,10 +69,20 @@ export default function ProductForm({ product, onSave, onCancel }: ProductFormPr
       name: name.trim(),
       description: description.trim(),
       price: parseFloat(parseFloat(price).toFixed(2)),
-      category,
+      categoryId,
       stock: parseInt(stock, 10),
+      sku: sku.trim() || undefined,
+      status,
       images,
     });
+  }
+
+  if (categoriesLoading) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <Spinner />
+      </div>
+    );
   }
 
   return (
@@ -122,13 +151,39 @@ export default function ProductForm({ product, onSave, onCancel }: ProductFormPr
         <div className="md:col-span-2">
           <label className="block text-sm font-medium text-slate-700 mb-1.5">Category</label>
           <select
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
+            value={categoryId || ''}
+            onChange={(e) => setCategoryId(e.target.value ? parseInt(e.target.value, 10) : null)}
             className="w-full rounded-lg border border-slate-300 px-3.5 py-2.5 text-sm outline-none transition-colors focus:ring-2 focus:ring-violet-500"
           >
-            {CATEGORIES.map((c) => (
-              <option key={c} value={c}>{c}</option>
+            <option value="">Select a category</option>
+            {categories.map((c) => (
+              <option key={c.id} value={c.id}>{c.name}</option>
             ))}
+          </select>
+        </div>
+
+        {/* SKU */}
+        <div className="md:col-span-2">
+          <label className="block text-sm font-medium text-slate-700 mb-1.5">SKU (Optional)</label>
+          <input
+            type="text"
+            value={sku}
+            onChange={(e) => setSku(e.target.value)}
+            placeholder="e.g., PROD-001"
+            className="w-full rounded-lg border border-slate-300 px-3.5 py-2.5 text-sm outline-none transition-colors focus:ring-2 focus:ring-violet-500"
+          />
+        </div>
+
+        {/* Status */}
+        <div className="md:col-span-2">
+          <label className="block text-sm font-medium text-slate-700 mb-1.5">Status</label>
+          <select
+            value={status}
+            onChange={(e) => setStatus(e.target.value as 'active' | 'draft')}
+            className="w-full rounded-lg border border-slate-300 px-3.5 py-2.5 text-sm outline-none transition-colors focus:ring-2 focus:ring-violet-500"
+          >
+            <option value="draft">Draft</option>
+            <option value="active">Active</option>
           </select>
         </div>
 

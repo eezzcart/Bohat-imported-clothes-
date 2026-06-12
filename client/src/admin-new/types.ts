@@ -1,22 +1,56 @@
+/**
+ * Admin panel types matching the backend schema
+ */
+
 export interface Product {
-  id: string;
+  id: number;
+  name: string;
+  description: string | null;
+  price: string; // Decimal from backend
+  categoryId: number | null;
+  stock: number;
+  sku: string | null;
+  status: "active" | "draft";
+  primaryImageId: number | null;
+  createdAt: Date;
+  updatedAt: Date;
+  // Populated by queries
+  images?: ProductImage[];
+  category?: Category;
+}
+
+export interface ProductImage {
+  id: number;
+  productId: number;
+  imageUrl: string;
+  imageKey: string;
+  altText: string | null;
+  displayOrder: number;
+  createdAt: Date;
+}
+
+export interface Category {
+  id: number;
+  name: string;
+  description: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export type ProductFormData = {
   name: string;
   description: string;
   price: number;
-  category: string;
+  categoryId: number | null;
   stock: number;
-  images: string[]; // base64 strings
-  createdAt: string;
-  updatedAt: string;
-}
-
-export type ProductFormData = Omit<Product, 'id' | 'images' | 'createdAt' | 'updatedAt'> & {
-  images: (string | File)[];
+  sku?: string;
+  status: "active" | "draft";
+  images: (string | File)[]; // URLs or File objects
 };
 
 export interface ProductFilters {
   search: string;
   category: string;
-  sortBy: 'name' | 'price' | 'stock' | 'createdAt';
-  sortDir: 'asc' | 'desc';
+  sortBy: "name" | "price" | "stock" | "createdAt";
+  sortDir: "asc" | "desc";
 }

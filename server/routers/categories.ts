@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { protectedProcedure, router } from "../_core/trpc";
+import { adminProcedure, router } from "../_core/trpc";
 import {
   getAllCategories,
   getCategoryById,
@@ -11,7 +11,7 @@ import { TRPCError } from "@trpc/server";
 
 export const categoriesRouter = router({
   // List all categories
-  list: protectedProcedure.query(async () => {
+  list: adminProcedure.query(async () => {
     try {
       const categories = await getAllCategories();
       return categories;
@@ -25,7 +25,7 @@ export const categoriesRouter = router({
   }),
 
   // Get single category by ID
-  getById: protectedProcedure.input(z.object({ id: z.number() })).query(async ({ input }) => {
+  getById: adminProcedure.input(z.object({ id: z.number() })).query(async ({ input }) => {
     try {
       const category = await getCategoryById(input.id);
       if (!category) {
@@ -46,7 +46,7 @@ export const categoriesRouter = router({
   }),
 
   // Create category
-  create: protectedProcedure
+  create: adminProcedure
     .input(
       z.object({
         name: z.string().min(1, "Category name is required"),
@@ -67,7 +67,7 @@ export const categoriesRouter = router({
     }),
 
   // Update category
-  update: protectedProcedure
+  update: adminProcedure
     .input(
       z.object({
         id: z.number(),
@@ -95,7 +95,7 @@ export const categoriesRouter = router({
     }),
 
   // Delete category
-  delete: protectedProcedure.input(z.object({ id: z.number() })).mutation(async ({ input }) => {
+  delete: adminProcedure.input(z.object({ id: z.number() })).mutation(async ({ input }) => {
     try {
       await deleteCategory(input.id);
       return { success: true };

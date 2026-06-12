@@ -1,36 +1,61 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import { ArrowLeft, Edit, Trash2, Calendar, DollarSign, Package, AlertCircle } from 'lucide-react';
-import { useEffect, useState } from 'react';
-import { getProduct, deleteProduct } from '../lib/storage';
-import type { Product } from '../types';
+import { useState } from 'react';
 import DeleteModal from '../components/DeleteModal';
+import { trpc } from '@/lib/trpc';
+import { toast } from 'sonner';
+import type { Product } from '../types';
 
 export default function ProductDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const [product, setProduct] = useState<Product | null>(null);
-  const [notFound, setNotFound] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const utils = trpc.useUtils();
 
-  useEffect(() => {
-    if (!id) { setNotFound(true); return; }
-    const found = getProduct(id);
-    if (found) {
-      setProduct(found);
-      if (found.images.length > 0) setSelectedImage(found.images[0]);
-    } else {
-      setNotFound(true);
-    }
-  }, [id]);
+  const productId = id ? parseInt(id, 10) : null;
+
+  // Fetch product
+  const { data: product, isLoading, isError } = trpc.products.getById.useQuery(
+    { id: productId! },
+    { enabled: !!productId }
+  );
+
+  const deleteProductMutation = trpc.products.delete.useMutation({
+    onSuccess: async () => {
+      toast.success('Product deleted successfully');
+      await utils.products.list.invalidate();
+      navigate('/admin/products');
+    },
+    onError: (error) => {
+      toast.error(error.message || 'Failed to delete product');
+    },
+  });
 
   function handleDelete() {
-    if (!id) return;
-    deleteProduct(id);
-    navigate('/admin/products');
+    if (!productId) return;
+    deleteProductMutation.mutate({ id: productId });
   }
 
-  if (notFound) {
+  if (!productId) {
+    return (
+      <div className="flex flex-col items-center justify-center py-24">
+        <AlertCircle className="mb-4 h-12 w-12 text-red-400" />
+        <h2 className="text-lg font-semibold text-slate-900">Invalid Product ID</h2>
+        <button onClick={() => navigate('/admin/products')} className="mt-4 rounded-lg bg-violet-600 px-4 py-2 text-sm font-medium text-white hover:bg-violet-700">Back to Products</button>
+      </div>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-24">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-violet-200 border-t-violet-600" />
+      </div>
+    );
+  }
+
+  if (isError || !product) {
     return (
       <div className="flex flex-col items-center justify-center py-24">
         <AlertCircle className="mb-4 h-12 w-12 text-red-400" />
@@ -40,12 +65,9 @@ export default function ProductDetail() {
     );
   }
 
-  if (!product) {
-    return (
-      <div className="flex items-center justify-center py-24">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-violet-200 border-t-violet-600" />
-      </div>
-    );
+  // Set initial selected image
+  if (!selectedImage && product.images && product.images.length > 0) {
+    setSelectedImage(product.images[0].imageUrl);
   }
 
   return (
@@ -70,17 +92,17 @@ export default function ProductDetail() {
               </div>
             )}
           </div>
-          {product.images.length > 1 && (
+          {product.images && product.images.length > 1 && (
             <div className="flex gap-2 overflow-x-auto pb-1">
               {product.images.map((img, idx) => (
                 <button
                   key={idx}
-                  onClick={() => setSelectedImage(img)}
+                  onClick={() => setSelectedImage(img.imageUrl)}
                   className={`h-16 w-16 flex-shrink-0 overflow-hidden rounded-lg border-2 transition-colors ${
-                    selectedImage === img ? 'border-violet-500' : 'border-slate-200 hover:border-slate-400'
+                    selectedImage === img.imageUrl ? 'border-violet-500' : 'border-slate-200 hover:border-slate-400'
                   }`}
                 >
-                  <img src={img} alt={`${product.name} ${idx + 1}`} className="h-full w-full object-cover" />
+                  <img src={img.imageUrl} alt={`${product.name} ${idx + 1}`} className="h-full w-full object-cover" />
                 </button>
               ))}
             </div>
@@ -94,10 +116,10 @@ export default function ProductDetail() {
               <div className="space-y-1">
                 <h1 className="text-2xl font-bold text-slate-900">{product.name}</h1>
                 <span className="inline-block rounded-full bg-violet-50 px-3 py-1 text-xs font-medium text-violet-700">
-                  {product.category}
+                  {product.category?.name || 'Uncategorized'}
                 </span>
               </div>
-              <span className="text-3xl font-bold text-violet-600">${product.price.toFixed(2)}</span>
+              <span className="text-3xl font-bold text-violet-600">${parseFloat(product.price).toFixed(2)}</span>
             </div>
 
             <p className="mt-5 text-sm leading-relaxed text-slate-600">{product.description}</p>
@@ -118,7 +140,7 @@ export default function ProductDetail() {
                 <div>
                   <p className="text-xs text-slate-500">Inventory Value</p>
                   <p className="text-sm font-semibold text-slate-900">
-                    ${(product.price * product.stock).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    ${(parseFloat(product.price) * product.stock).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </p>
                 </div>
               </div>
@@ -154,8 +176,8 @@ export default function ProductDetail() {
         </div>
       </div>
 
-      {showDelete && (
-        <DeleteModal product={product} onConfirm={handleDelete} onCancel={() => setShowDelete(false)} />
+      {showDelete && product && (
+        <DeleteModal product={product as any} onConfirm={handleDelete} onCancel={() => setShowDelete(false)} />
       )}
     </div>
   );

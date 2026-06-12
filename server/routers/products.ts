@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { protectedProcedure, router } from "../_core/trpc";
+import { adminProcedure, router } from "../_core/trpc";
 import {
   getAllProducts,
   getProductById,
@@ -18,7 +18,7 @@ import { TRPCError } from "@trpc/server";
 
 export const productsRouter = router({
   // List all products
-  list: protectedProcedure.query(async () => {
+  list: adminProcedure.query(async () => {
     try {
       const products = await getAllProducts();
       return products;
@@ -32,7 +32,7 @@ export const productsRouter = router({
   }),
 
   // Get product by ID with images
-  getById: protectedProcedure
+  getById: adminProcedure
     .input(z.object({ id: z.number() }))
     .query(async ({ input }) => {
       try {
@@ -56,7 +56,7 @@ export const productsRouter = router({
     }),
 
   // Create product
-  create: protectedProcedure
+  create: adminProcedure
     .input(
       z.object({
         name: z.string().min(1, "Product name is required"),
@@ -79,7 +79,9 @@ export const productsRouter = router({
           sku: input.sku,
           status: input.status,
         });
-        return { success: true, productId: (result as any).insertId };
+        const insertId = (result as any).insertId;
+        const product = await getProductById(insertId);
+        return product;
       } catch (error) {
         console.error("Failed to create product:", error);
         throw new TRPCError({
@@ -90,7 +92,7 @@ export const productsRouter = router({
     }),
 
   // Update product
-  update: protectedProcedure
+  update: adminProcedure
     .input(
       z.object({
         id: z.number(),
@@ -126,7 +128,7 @@ export const productsRouter = router({
     }),
 
   // Delete product
-  delete: protectedProcedure
+  delete: adminProcedure
     .input(z.object({ id: z.number() }))
     .mutation(async ({ input }) => {
       try {
@@ -142,7 +144,7 @@ export const productsRouter = router({
     }),
 
   // Upload product image
-  uploadImage: protectedProcedure
+  uploadImage: adminProcedure
     .input(
       z.object({
         productId: z.number(),
@@ -177,7 +179,7 @@ export const productsRouter = router({
     }),
 
   // Delete product image
-  deleteImage: protectedProcedure.input(z.object({ imageId: z.number() })).mutation(async ({ input }) => {
+  deleteImage: adminProcedure.input(z.object({ imageId: z.number() })).mutation(async ({ input }) => {
     try {
       await deleteProductImage(input.imageId);
       return { success: true };
@@ -191,7 +193,7 @@ export const productsRouter = router({
   }),
 
   // Reorder product images
-  reorderImages: protectedProcedure
+  reorderImages: adminProcedure
     .input(
       z.object({
         images: z.array(
@@ -216,7 +218,7 @@ export const productsRouter = router({
     }),
 
   // Set primary image
-  setPrimaryImage: protectedProcedure
+  setPrimaryImage: adminProcedure
     .input(
       z.object({
         productId: z.number(),
@@ -237,7 +239,7 @@ export const productsRouter = router({
     }),
 
   // Clear primary image
-  clearPrimaryImage: protectedProcedure
+  clearPrimaryImage: adminProcedure
     .input(z.object({ productId: z.number() }))
     .mutation(async ({ input }) => {
       try {
@@ -253,7 +255,7 @@ export const productsRouter = router({
     }),
 
   // Get product images
-  getImages: protectedProcedure
+  getImages: adminProcedure
     .input(z.object({ productId: z.number() }))
     .query(async ({ input }) => {
       try {

@@ -1,21 +1,65 @@
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import ProductForm from '../components/ProductForm';
-import { addProduct } from '../lib/storage';
+import { trpc } from '@/lib/trpc';
+import { toast } from 'sonner';
 
 export default function AddProduct() {
   const navigate = useNavigate();
+  const utils = trpc.useUtils();
 
-  function handleSave(data: {
+  const createProductMutation = trpc.products.create.useMutation({
+    onError: (error) => {
+      toast.error(error.message || 'Failed to create product');
+    },
+  });
+
+  const uploadImageMutation = trpc.products.uploadImage.useMutation({
+    onError: (error) => {
+      toast.error(error.message || 'Failed to upload image');
+    },
+  });
+
+  async function handleSave(data: {
     name: string;
     description: string;
     price: number;
-    category: string;
+    categoryId: number | null;
     stock: number;
-    images: string[];
+    sku?: string;
+    status: 'active' | 'draft';
+    images: (string | File)[];
   }) {
-    addProduct(data);
-    navigate('/admin/products');
+    try {
+      // Create product first
+      const product = await createProductMutation.mutateAsync({
+        name: data.name,
+        description: data.description,
+        price: data.price,
+        categoryId: data.categoryId,
+        stock: data.stock,
+        sku: data.sku,
+        status: data.status,
+      });
+
+      // Upload images if any
+      if (data.images.length > 0 && product && product.id) {
+        for (const image of data.images) {
+          if (image instanceof File) {
+            await uploadImageMutation.mutateAsync({
+              productId: product.id,
+              imageFile: image,
+            });
+          }
+        }
+      }
+
+      toast.success('Product created successfully');
+      await utils.products.list.invalidate();
+      navigate('/admin/products');
+    } catch (error) {
+      console.error('Error saving product:', error);
+    }
   }
 
   return (

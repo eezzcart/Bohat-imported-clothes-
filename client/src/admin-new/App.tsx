@@ -1,5 +1,4 @@
 import { Routes, Route } from 'react-router-dom';
-import { useEffect } from 'react';
 import Layout from './components/Layout';
 import Dashboard from './pages/Dashboard';
 import Products from './pages/Products';
@@ -7,12 +6,8 @@ import AddProduct from './pages/AddProduct';
 import EditProduct from './pages/EditProduct';
 import ProductDetail from './pages/ProductDetail';
 import Categories from './pages/Categories';
-import { seedDemoProducts } from './lib/storage';
 
 export default function App() {
-  useEffect(() => {
-    seedDemoProducts();
-  }, []);
 
   return (
     <Routes>

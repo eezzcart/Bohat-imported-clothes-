@@ -13,12 +13,12 @@ import {
   Eye,
 } from 'lucide-react';
 import type { Product, ProductFilters } from '../types';
-import { getProducts, deleteProduct } from '../lib/storage';
 import DeleteModal from '../components/DeleteModal';
+import { trpc } from '@/lib/trpc';
+import { toast } from 'sonner';
 
 export default function Products() {
   const navigate = useNavigate();
-  const [products, setProducts] = useState<Product[]>(() => getProducts());
   const [filters, setFilters] = useState<ProductFilters>({
     search: '',
     category: '',
@@ -28,8 +28,23 @@ export default function Products() {
   const [deleteTarget, setDeleteTarget] = useState<Product | null>(null);
   const [viewImage, setViewImage] = useState<string | null>(null);
 
+  // Fetch products from backend
+  const { data: products = [], isLoading, refetch } = trpc.products.list.useQuery();
+  
+  // Delete mutation
+  const deleteProductMutation = trpc.products.delete.useMutation({
+    onSuccess: () => {
+      toast.success('Product deleted successfully');
+      refetch();
+      setDeleteTarget(null);
+    },
+    onError: (error) => {
+      toast.error(error.message || 'Failed to delete product');
+    },
+  });
+
   const categories = useMemo(
-    () => [...new Set(products.map((p) => p.category))].sort(),
+    () => [...new Set(products.map((p) => p.category?.name).filter(Boolean))].sort() as string[],
     [products]
   );
 
@@ -41,19 +56,19 @@ export default function Products() {
       list = list.filter(
         (p) =>
           p.name.toLowerCase().includes(q) ||
-          p.description.toLowerCase().includes(q) ||
-          p.category.toLowerCase().includes(q)
+          (p.description?.toLowerCase().includes(q) ?? false) ||
+          (p.category?.name.toLowerCase().includes(q) ?? false)
       );
     }
 
     if (filters.category) {
-      list = list.filter((p) => p.category === filters.category);
+      list = list.filter((p) => p.category?.name === filters.category);
     }
 
     list.sort((a, b) => {
       let cmp = 0;
       if (filters.sortBy === 'name') cmp = a.name.localeCompare(b.name);
-      else if (filters.sortBy === 'price') cmp = a.price - b.price;
+      else if (filters.sortBy === 'price') cmp = parseFloat(a.price) - parseFloat(b.price);
       else if (filters.sortBy === 'stock') cmp = a.stock - b.stock;
       else cmp = new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
       return filters.sortDir === 'asc' ? cmp : -cmp;
@@ -75,9 +90,7 @@ export default function Products() {
 
   function handleDelete() {
     if (!deleteTarget) return;
-    deleteProduct(deleteTarget.id);
-    setProducts(getProducts());
-    setDeleteTarget(null);
+    deleteProductMutation.mutate({ id: deleteTarget.id });
   }
 
   function SortIcon({ col }: { col: ProductFilters['sortBy'] }) {
@@ -87,6 +100,14 @@ export default function Products() {
       <ChevronUp className="h-3.5 w-3.5 text-violet-600" />
     ) : (
       <ChevronDown className="h-3.5 w-3.5 text-violet-600" />
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-24">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-violet-200 border-t-violet-600" />
+      </div>
     );
   }
 
@@ -185,10 +206,10 @@ export default function Products() {
                     className="border-b border-slate-100 transition-colors hover:bg-slate-50"
                   >
                     <td className="px-4 py-3">
-                      {product.images.length > 0 ? (
-                        <button onClick={() => setViewImage(product.images[0])}>
+                      {product.images && product.images.length > 0 ? (
+                        <button onClick={() => setViewImage(product.images![0].imageUrl)}>
                           <img
-                            src={product.images[0]}
+                            src={product.images[0].imageUrl}
                             alt={product.name}
                             className="h-10 w-10 rounded-lg object-cover border border-slate-200"
                           />
@@ -207,11 +228,11 @@ export default function Products() {
                     </td>
                     <td className="px-4 py-3">
                       <span className="rounded-full bg-violet-50 px-2.5 py-1 text-xs font-medium text-violet-700">
-                        {product.category}
+                        {product.category?.name || 'Uncategorized'}
                       </span>
                     </td>
                     <td className="px-4 py-3 font-medium text-slate-900">
-                      ${product.price.toFixed(2)}
+                      ${parseFloat(product.price).toFixed(2)}
                     </td>
                     <td className="px-4 py-3">
                       <span
