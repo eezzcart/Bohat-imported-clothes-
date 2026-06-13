@@ -1,11 +1,25 @@
 import { Outlet } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import { useAuth } from "@/_core/hooks/useAuth";
+import { useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { getLoginUrl } from "@/const";
 
 export default function Layout() {
-  const { loading, user } = useAuth();
+  const { loading, user, logout } = useAuth();
+
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'hidden') {
+        logout();
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [logout]);
 
   if (loading) {
     return (
