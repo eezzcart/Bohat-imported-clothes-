@@ -4,7 +4,7 @@ import { Home, Info, Mail, ShoppingBag, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const FloatingNavbar = ({ onNavigate }: { onNavigate?: (section: string) => void }) => {
-  const [location] = useLocation();
+  const [location, setLocation] = useLocation();
 
   const navItems = [
     { name: 'Home', section: 'home', icon: Home },
@@ -73,12 +73,9 @@ const FloatingNavbar = ({ onNavigate }: { onNavigate?: (section: string) => void
               );
             })}
             
-            {/* New working Admin Button */}
+            {/* Admin Button - uses wouter navigation */}
             <button
-              onClick={() => {
-                // Clean navigation to /admin to ensure sub-app isolation
-                window.location.href = '/admin';
-              }}
+              onClick={() => setLocation('/login')}
               className="relative z-[70] flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-tr from-cyan-500 to-blue-600 text-white shadow-lg shadow-cyan-500/20 hover:scale-105 transition-transform cursor-pointer border-none no-underline"
             >
               <User className="w-4 h-4" />

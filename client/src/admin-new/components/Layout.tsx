@@ -1,12 +1,12 @@
-import { Outlet } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import { useAuth } from "@/_core/hooks/useAuth";
-import { useEffect } from 'react';
+import { useEffect, ReactNode } from 'react';
 import { Button } from "@/components/ui/button";
-import { getLoginUrl } from "@/const";
+import { useLocation } from 'wouter';
 
-export default function Layout() {
+export default function Layout({ children }: { children?: ReactNode }) {
   const { loading, user, logout } = useAuth();
+  const [, setLocation] = useLocation();
 
   useEffect(() => {
     const handleVisibilityChange = () => {
@@ -43,7 +43,7 @@ export default function Layout() {
           </div>
           <Button
             onClick={() => {
-              window.location.href = getLoginUrl();
+              setLocation('/login');
             }}
             size="lg"
             className="w-full shadow-lg hover:shadow-xl transition-all"
@@ -60,7 +60,7 @@ export default function Layout() {
       <Sidebar />
       <main className="ml-64 min-h-screen">
         <div className="p-8">
-          <Outlet />
+          {children}
         </div>
       </main>
     </div>

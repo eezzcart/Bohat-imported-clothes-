@@ -1,21 +1,25 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
-import { Route, Switch } from "wouter";
+import { Route, Switch, useLocation } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
 import FloatingNavbar from "./components/FloatingNavbar";
 import LoginPage from "./pages/LoginPage";
-import AdminApp from "./admin-new/App";
-import { BrowserRouter } from "react-router-dom";
+import AdminLayout from "./admin-new/components/Layout";
+import AdminDashboard from "./admin-new/pages/Dashboard";
+import AdminProducts from "./admin-new/pages/Products";
+import AdminAddProduct from "./admin-new/pages/AddProduct";
+import AdminEditProduct from "./admin-new/pages/EditProduct";
+import AdminProductDetail from "./admin-new/pages/ProductDetail";
+import AdminCategories from "./admin-new/pages/Categories";
 import { trpc } from "@/lib/trpc";
 import { UNAUTHED_ERR_MSG } from '@shared/const';
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { httpBatchLink, TRPCClientError } from "@trpc/client";
 import superjson from "superjson";
-import { getLoginUrl } from "./const";
 
 const queryClient = new QueryClient();
 
@@ -59,29 +63,35 @@ const trpcClient = trpc.createClient({
   ],
 });
 
+// Protected Admin Routes Component
+function AdminRoutes() {
+  return (
+    <AdminLayout>
+      <Switch>
+        <Route path="/admin" component={AdminDashboard} />
+        <Route path="/admin/products" component={AdminProducts} />
+        <Route path="/admin/products/add" component={AdminAddProduct} />
+        <Route path="/admin/products/new" component={AdminAddProduct} />
+        <Route path="/admin/products/edit/:id" component={AdminEditProduct} />
+        <Route path="/admin/products/:id" component={AdminProductDetail} />
+        <Route path="/admin/categories" component={AdminCategories} />
+        <Route component={NotFound} />
+      </Switch>
+    </AdminLayout>
+  );
+}
+
 function Router() {
+  const [location] = useLocation();
+
   return (
     <Switch>
       <Route path={"/login"} component={LoginPage} />
-      <Route path="/admin">
-        {() => {
-          if (typeof window !== "undefined" && window.location.pathname === "/admin") {
-            window.location.replace("/admin/");
-          }
-          return (
-            <BrowserRouter basename="/admin">
-              <AdminApp />
-            </BrowserRouter>
-          );
-        }}
-      </Route>
-      <Route path="/admin/*">
-        {() => (
-          <BrowserRouter basename="/admin">
-            <AdminApp />
-          </BrowserRouter>
-        )}
-      </Route>
+      
+      {/* Admin routes - all under /admin prefix */}
+      <Route path="/admin/*" component={AdminRoutes} />
+      
+      {/* Home page and public routes */}
       <Route path={"/404"} component={NotFound} />
       <Route path="/">
         {(params) => {
@@ -91,15 +101,11 @@ function Router() {
           );
         }}
       </Route>
+      
       <Route component={NotFound} />
     </Switch>
   );
 }
-
-// NOTE: About Theme
-// - First choose a default theme according to your design style (dark or light bg), than change color palette in index.css
-//   to keep consistent foreground/background color across components
-// - If you want to make theme switchable, pass `switchable` ThemeProvider and use `useTheme` hook
 
 function App() {
   return (
@@ -108,7 +114,6 @@ function App() {
         <ErrorBoundary>
           <ThemeProvider
             defaultTheme="light"
-            // switchable
           >
             <TooltipProvider>
               <Toaster />
