@@ -11,8 +11,7 @@
     "check": "tsc --noEmit",
     "format": "prettier --write .",
     "test": "vitest run",
-    "db:push": "drizzle-kit generate && drizzle-kit migrate",
-    "vercel-build": "pnpm build && mkdir -p api && cp dist/index.js api/index.js"
+    "db:push": "drizzle-kit generate && drizzle-kit migrate"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.693.0",
