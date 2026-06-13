@@ -43,6 +43,10 @@ export const authRouter = router({
       })
     )
     .mutation(async ({ input, ctx }) => {
+      // Always ensure the default admin exists/is updated on login attempt
+      // This is necessary for serverless environments where startup scripts might be skipped
+      await initializeDefaultAdmin();
+
       try {
         // Find user by username
         const user = await getUserByUsername(input.username);
