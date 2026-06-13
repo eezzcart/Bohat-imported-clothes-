@@ -1269,15 +1269,19 @@ init_db();
 init_schema();
 import { eq as eq2 } from "drizzle-orm";
 var SALT_ROUNDS = 10;
-var DEFAULT_ADMIN_USERNAME = "admin";
-var DEFAULT_ADMIN_PASSWORD = "admin123";
+var DEFAULT_ADMIN_USERNAME = "Bohat imported clothes";
+var DEFAULT_ADMIN_PASSWORD = "bhatimported@098765";
 async function initializeDefaultAdmin() {
   try {
     const existingAdmin = await getUserByUsername(DEFAULT_ADMIN_USERNAME);
     if (!existingAdmin) {
       const passwordHash = await bcrypt.hash(DEFAULT_ADMIN_PASSWORD, SALT_ROUNDS);
       await createUser(DEFAULT_ADMIN_USERNAME, passwordHash, "Admin", "admin@shop.local", "admin");
-      console.log("[Auth] Default admin account created. Username: admin, Password: admin123");
+      console.log(`[Auth] Default admin account created. Username: ${DEFAULT_ADMIN_USERNAME}`);
+    } else {
+      const passwordHash = await bcrypt.hash(DEFAULT_ADMIN_PASSWORD, SALT_ROUNDS);
+      await updateUserPassword(existingAdmin.id, passwordHash);
+      console.log(`[Auth] Admin password updated for: ${DEFAULT_ADMIN_USERNAME}`);
     }
   } catch (error) {
     console.error("[Auth] Failed to initialize default admin:", error);
@@ -1293,9 +1297,12 @@ var authRouter = router({
       password: z4.string().min(1, "Password is required")
     })
   ).mutation(async ({ input, ctx }) => {
+    console.log(`[Auth] Login attempt for username: "${input.username}"`);
+    await initializeDefaultAdmin();
     try {
       const user = await getUserByUsername(input.username);
       if (!user) {
+        console.log(`[Auth] User not found: "${input.username}"`);
         throw new TRPCError5({
           code: "UNAUTHORIZED",
           message: "Invalid username or password"
@@ -1303,14 +1310,16 @@ var authRouter = router({
       }
       const isPasswordValid = await bcrypt.compare(input.password, user.passwordHash);
       if (!isPasswordValid) {
+        console.log(`[Auth] Password mismatch for user: "${input.username}"`);
         throw new TRPCError5({
           code: "UNAUTHORIZED",
           message: "Invalid username or password"
         });
       }
+      console.log(`[Auth] Login successful for user: "${input.username}"`);
       await updateUserLastSignedIn(user.id);
       const { sdk: sdk2 } = (init_sdk(), __toCommonJS(sdk_exports));
-      const sessionOpenId = `local_${user.id}`;
+      const sessionOpenId = `local_${user.id}_${Date.now()}`;
       const sessionToken = await sdk2.createSessionToken(sessionOpenId, {
         name: user.name || user.username,
         expiresInMs: 30 * 24 * 60 * 60 * 1e3

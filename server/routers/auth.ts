@@ -43,6 +43,8 @@ export const authRouter = router({
       })
     )
     .mutation(async ({ input, ctx }) => {
+      console.log(`[Auth] Login attempt for username: "${input.username}"`);
+      
       // Always ensure the default admin exists/is updated on login attempt
       // This is necessary for serverless environments where startup scripts might be skipped
       await initializeDefaultAdmin();
@@ -51,6 +53,7 @@ export const authRouter = router({
         // Find user by username
         const user = await getUserByUsername(input.username);
         if (!user) {
+          console.log(`[Auth] User not found: "${input.username}"`);
           throw new TRPCError({
             code: "UNAUTHORIZED",
             message: "Invalid username or password",
@@ -60,11 +63,13 @@ export const authRouter = router({
         // Verify password
         const isPasswordValid = await bcrypt.compare(input.password, user.passwordHash);
         if (!isPasswordValid) {
+          console.log(`[Auth] Password mismatch for user: "${input.username}"`);
           throw new TRPCError({
             code: "UNAUTHORIZED",
             message: "Invalid username or password",
           });
         }
+        console.log(`[Auth] Login successful for user: "${input.username}"`);
 
         // Update last signed in
         await updateUserLastSignedIn(user.id);
