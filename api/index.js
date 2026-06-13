@@ -113,8 +113,8 @@ var init_env = __esm({
   "server/_core/env.ts"() {
     "use strict";
     ENV = {
-      appId: process.env.VITE_APP_ID ?? "",
-      cookieSecret: process.env.JWT_SECRET ?? "",
+      appId: process.env.VITE_APP_ID ?? "bohat-imported-clothes",
+      cookieSecret: process.env.JWT_SECRET ?? "bohat-secret-key-12345",
       databaseUrl: process.env.DATABASE_URL ?? "",
       oAuthServerUrl: process.env.OAUTH_SERVER_URL ?? "",
       ownerOpenId: process.env.OWNER_OPEN_ID ?? "",
@@ -538,16 +538,17 @@ var init_sdk = __esm({
           });
           const { openId, appId, name } = payload;
           if (!isNonEmptyString(openId) || !isNonEmptyString(appId) || !isNonEmptyString(name)) {
-            console.warn("[Auth] Session payload missing required fields");
+            console.warn("[Auth] Session payload missing required fields", { openId, appId, name });
             return null;
           }
+          console.log("[Auth] Session verified for:", openId);
           return {
             openId,
             appId,
             name
           };
         } catch (error) {
-          console.warn("[Auth] Session verification failed", String(error));
+          console.warn("[Auth] Session verification failed for cookie:", cookieValue?.substring(0, 10) + "...", String(error));
           return null;
         }
       }

@@ -217,17 +217,18 @@ class SDKServer {
         !isNonEmptyString(appId) ||
         !isNonEmptyString(name)
       ) {
-        console.warn("[Auth] Session payload missing required fields");
+        console.warn("[Auth] Session payload missing required fields", { openId, appId, name });
         return null;
       }
 
+      console.log("[Auth] Session verified for:", openId);
       return {
         openId,
         appId,
         name,
       };
     } catch (error) {
-      console.warn("[Auth] Session verification failed", String(error));
+      console.warn("[Auth] Session verification failed for cookie:", cookieValue?.substring(0, 10) + "...", String(error));
       return null;
     }
   }
