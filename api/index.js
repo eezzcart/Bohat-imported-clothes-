@@ -1326,14 +1326,19 @@ var authRouter = router({
         // 30 days
       });
       const cookieOptions = getSessionCookieOptions(ctx.req);
-      ctx.res.setHeader("Set-Cookie", `${COOKIE_NAME}=${sessionToken}; ${Object.entries(cookieOptions).map(([key, value]) => {
-        if (key === "maxAge") return `Max-Age=${value}`;
-        if (key === "httpOnly") return "HttpOnly";
-        if (key === "secure") return "Secure";
-        if (key === "sameSite") return `SameSite=${value}`;
-        if (key === "path") return `Path=${value}`;
-        return `${key}=${value}`;
-      }).join("; ")}`);
+      const cookieParts = [
+        `${COOKIE_NAME}=${sessionToken}`,
+        `Path=${cookieOptions.path || "/"}`,
+        `Max-Age=${30 * 24 * 60 * 60}`,
+        // 30 days
+        "HttpOnly",
+        "SameSite=Lax"
+        // Changed from 'None' to 'Lax' for better browser compatibility without 'Secure' requirement in some environments
+      ];
+      if (cookieOptions.secure || process.env.NODE_ENV === "production") {
+        cookieParts.push("Secure");
+      }
+      ctx.res.setHeader("Set-Cookie", cookieParts.join("; "));
       return {
         success: true,
         user: {
