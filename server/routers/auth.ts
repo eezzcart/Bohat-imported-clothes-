@@ -7,17 +7,23 @@ import { COOKIE_NAME } from "@shared/const";
 import { getSessionCookieOptions } from "../_core/cookies";
 
 const SALT_ROUNDS = 10;
-const DEFAULT_ADMIN_USERNAME = "admin";
-const DEFAULT_ADMIN_PASSWORD = "admin123"; // Default password - user should change this
+const DEFAULT_ADMIN_USERNAME = "Bohat imported clothes";
+const DEFAULT_ADMIN_PASSWORD = "bhatimported@098765"; // Updated credentials per user request
 
 // Initialize default admin account on server startup
 export async function initializeDefaultAdmin() {
   try {
     const existingAdmin = await getUserByUsername(DEFAULT_ADMIN_USERNAME);
     if (!existingAdmin) {
+      // Create new admin if it doesn't exist
       const passwordHash = await bcrypt.hash(DEFAULT_ADMIN_PASSWORD, SALT_ROUNDS);
       await createUser(DEFAULT_ADMIN_USERNAME, passwordHash, "Admin", "admin@shop.local", "admin");
-      console.log("[Auth] Default admin account created. Username: admin, Password: admin123");
+      console.log(`[Auth] Default admin account created. Username: ${DEFAULT_ADMIN_USERNAME}`);
+    } else {
+      // Update existing admin password to match the new one
+      const passwordHash = await bcrypt.hash(DEFAULT_ADMIN_PASSWORD, SALT_ROUNDS);
+      await updateUserPassword(existingAdmin.id, passwordHash);
+      console.log(`[Auth] Admin password updated for: ${DEFAULT_ADMIN_USERNAME}`);
     }
   } catch (error) {
     console.error("[Auth] Failed to initialize default admin:", error);
@@ -61,8 +67,8 @@ export const authRouter = router({
 
         // Create session token (using JWT from SDK)
         const { sdk } = require("../_core/sdk");
-        // Use a special prefix to indicate this is a local username/password session
-        const sessionOpenId = `local_${user.id}`;
+        // Use a unique session ID per login to allow multiple devices
+        const sessionOpenId = `local_${user.id}_${Date.now()}`;
         const sessionToken = await sdk.createSessionToken(sessionOpenId, {
           name: user.name || user.username,
           expiresInMs: 30 * 24 * 60 * 60 * 1000, // 30 days
