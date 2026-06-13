@@ -64,13 +64,18 @@ function Router() {
     <Switch>
       <Route path={"/login"} component={LoginPage} />
       <Route path="/admin">
-        {() => (
-          <BrowserRouter basename="/admin">
-            <AdminApp />
-          </BrowserRouter>
-        )}
+        {() => {
+          if (typeof window !== "undefined" && window.location.pathname === "/admin") {
+            window.location.replace("/admin/");
+          }
+          return (
+            <BrowserRouter basename="/admin">
+              <AdminApp />
+            </BrowserRouter>
+          );
+        }}
       </Route>
-      <Route path="/admin/:rest*">
+      <Route path="/admin/*">
         {() => (
           <BrowserRouter basename="/admin">
             <AdminApp />
