@@ -13,7 +13,14 @@ export const categoriesRouter = router({
   // List all categories
   list: adminProcedure.query(async () => {
     try {
-      const categories = await getAllCategories();
+      let categories = await getAllCategories();
+      
+      // If no categories exist, create a default one to prevent UI issues
+      if (categories.length === 0) {
+        await createCategory("General", "Default category");
+        categories = await getAllCategories();
+      }
+      
       return categories;
     } catch (error) {
       console.error("Failed to list categories:", error);

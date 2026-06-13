@@ -1174,7 +1174,11 @@ var categoriesRouter = router({
   // List all categories
   list: adminProcedure.query(async () => {
     try {
-      const categories2 = await getAllCategories();
+      let categories2 = await getAllCategories();
+      if (categories2.length === 0) {
+        await createCategory("General", "Default category");
+        categories2 = await getAllCategories();
+      }
       return categories2;
     } catch (error) {
       console.error("Failed to list categories:", error);
