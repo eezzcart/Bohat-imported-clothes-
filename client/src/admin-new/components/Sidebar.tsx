@@ -53,7 +53,11 @@ export default function Sidebar() {
 
       <div className="border-t border-slate-200 p-4 space-y-2">
         <button
-          onClick={() => setLocation('/')}
+          onClick={async () => {
+            // Logout before returning to store for security
+            await logout();
+            setLocation('/');
+          }}
           className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-blue-600 transition-colors hover:bg-blue-50"
         >
           <Home className="h-5 w-5" />

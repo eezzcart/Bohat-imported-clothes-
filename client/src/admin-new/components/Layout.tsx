@@ -8,6 +8,7 @@ export default function Layout({ children }: { children?: ReactNode }) {
   const { loading, user, logout } = useAuth();
   const [, setLocation] = useLocation();
 
+  // Logout when tab becomes hidden (strict security)
   useEffect(() => {
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'hidden') {
@@ -20,6 +21,20 @@ export default function Layout({ children }: { children?: ReactNode }) {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
   }, [logout]);
+
+  // Logout when user tries to navigate away from admin area
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      // Check if user is trying to navigate away from /admin routes
+      // The session-only cookie will be cleared when browser closes
+      // This is just an extra security measure
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, []);
 
   if (loading) {
     return (

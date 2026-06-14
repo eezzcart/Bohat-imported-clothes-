@@ -80,15 +80,15 @@ export const authRouter = router({
         const sessionOpenId = `local_${user.id}_${Date.now()}`;
         const sessionToken = await sdk.createSessionToken(sessionOpenId, {
           name: user.name || user.username,
-          expiresInMs: 30 * 24 * 60 * 60 * 1000, // 30 days
+          expiresInMs: 1 * 60 * 60 * 1000, // 1 hour session timeout
         });
 
-            // Set session cookie
+            // Set session cookie - Session-only (expires when browser closes)
         const cookieOptions = getSessionCookieOptions(ctx.req);
         const cookieParts = [
           `${COOKIE_NAME}=${sessionToken}`,
           `Path=${cookieOptions.path || "/"}`,
-          `Max-Age=${30 * 24 * 60 * 60}`, // 30 days
+          // NO Max-Age: Session-only cookie (expires when browser closes)
           "HttpOnly",
           "SameSite=Lax" // Changed from 'None' to 'Lax' for better browser compatibility without 'Secure' requirement in some environments
         ];
