@@ -36,9 +36,26 @@ interface Testimonial {
 
 export default function Home({ activeSection: propActiveSection, onSectionChange }: { activeSection?: string, onSectionChange?: (section: string) => void }) {
 
-  // Fetch products and categories from database
-  const { data: dbProducts = [], isLoading: productsLoading } = trpc.publicProducts.list.useQuery();
-  const { data: dbCategories = [], isLoading: categoriesLoading } = trpc.publicCategories.list.useQuery();
+  // Fetch products and categories from database with refetch on window focus
+  const { data: dbProducts = [], isLoading: productsLoading, refetch: refetchProducts } = trpc.publicProducts.list.useQuery(undefined, {
+    refetchOnWindowFocus: true,
+    staleTime: 0, // Always consider data stale
+  });
+  const { data: dbCategories = [], isLoading: categoriesLoading, refetch: refetchCategories } = trpc.publicCategories.list.useQuery(undefined, {
+    refetchOnWindowFocus: true,
+    staleTime: 0, // Always consider data stale
+  });
+
+  // Refetch products when window regains focus (e.g., returning from admin panel)
+  useEffect(() => {
+    const handleFocus = () => {
+      refetchProducts();
+      refetchCategories();
+    };
+
+    window.addEventListener('focus', handleFocus);
+    return () => window.removeEventListener('focus', handleFocus);
+  }, [refetchProducts, refetchCategories]);
 
   // Static testimonials (can be moved to DB later)
   const testimonials: Testimonial[] = [
