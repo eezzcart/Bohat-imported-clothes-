@@ -219,6 +219,19 @@ export default defineConfig({
   build: {
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
+    chunkSizeWarningLimit: 1000, // Increase limit to 1MB to suppress warnings
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          // Split large dependencies into separate chunks
+          'react-vendor': ['react', 'react-dom'],
+          'ui-vendor': ['@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu', '@radix-ui/react-select'],
+          'form-vendor': ['react-hook-form', '@hookform/resolvers'],
+          'query-vendor': ['@tanstack/react-query', '@trpc/react-query'],
+          'chart-vendor': ['recharts'],
+        },
+      },
+    },
   },
   server: {
     port: 3000,
